@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Joglo Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="viewport"></div>
+
+  <header class="brand">
+    <svg class="mark" viewBox="0 0 48 32" aria-hidden="true">
+      <path d="M24 2 29 12 36 15.5 46 21H2l10-5.5L19 12Z" fill="currentColor" />
+      <path d="M9 21v9M17 21v9M31 21v9M39 21v9M21 21v9M27 21v9" stroke="currentColor" stroke-width="1.6" />
+    </svg>
+    <div>
+      <h1>Joglo Yogyakarta</h1>
+      <p>Pendapa · interactive anatomy</p>
+    </div>
+    <div class="mobile-toggles">
+      <button class="chip" data-toggle="show-left">Parts</button>
+      <button class="chip" data-toggle="show-right">Controls</button>
+    </div>
+  </header>
+
+  <!-- Anatomy list -->
+  <aside class="panel left" id="anatomy">
+    <div class="panel-head">
+      <h2>Anatomy</h2>
+      <span class="muted" id="partCount"></span>
+    </div>
+    <div class="search"><input id="search" type="search" placeholder="Search parts…" autocomplete="off" /></div>
+    <div class="scroll" id="partList"></div>
+    <div class="panel-foot">
+      <button class="btn ghost" id="showAll">Show all</button>
+      <button class="btn ghost" id="aboutBtn">About the joglo</button>
+    </div>
+    <p class="credit">Made by <a href="https://nurasyrof.com" target="_blank" rel="noopener">nurasyrof</a></p>
+  </aside>
+
+  <!-- Controls -->
+  <aside class="panel right" id="controls">
+    <div class="panel-head"><h2>Controls</h2><span class="kbd-hint muted">? shortcuts</span></div>
+    <div class="scroll">
+
+      <details open>
+        <summary>View</summary>
+        <div class="seg" id="viewSeg">
+          <button data-v="iso" class="on">3D</button>
+          <button data-v="front">Front</button>
+          <button data-v="side">Side</button>
+          <button data-v="top">Plan</button>
+          <button data-v="inside">Inside</button>
+        </div>
+        <label class="switch"><input type="checkbox" id="autoRotate" /><span></span>Auto-rotate</label>
+        <label class="switch"><input type="checkbox" id="labels" /><span></span>Part labels</label>
+      </details>
+
+      <details open>
+        <summary>Explode</summary>
+        <div class="range-row">
+          <input type="range" id="explode" min="0" max="100" value="0" />
+          <output id="explodeOut">0%</output>
+        </div>
+        <div class="row">
+          <button class="btn" id="explodeBtn">Explode</button>
+          <button class="btn ghost" id="assembleBtn">Assemble</button>
+        </div>
+      </details>
+
+      <details open>
+        <summary>Display</summary>
+        <div class="label">Render style</div>
+        <div class="seg" id="styleSeg">
+          <button data-v="realistic" class="on">Real</button>
+          <button data-v="clay">Clay</button>
+          <button data-v="xray">X-ray</button>
+          <button data-v="blueprint">Blueprint</button>
+        </div>
+        <div class="label">Roof opacity</div>
+        <div class="range-row">
+          <input type="range" id="roofOpacity" min="0" max="100" value="100" />
+          <output id="roofOut">100%</output>
+        </div>
+      </details>
+
+      <details open>
+        <summary>Section cut</summary>
+        <label class="switch"><input type="checkbox" id="secOn" /><span></span>Enable section</label>
+        <div class="seg" id="axisSeg">
+          <button data-v="x" class="on">X · long</button>
+          <button data-v="z">Z · cross</button>
+          <button data-v="y">Y · plan</button>
+        </div>
+        <div class="range-row">
+          <input type="range" id="secPos" min="-10" max="10" step="0.05" value="0" />
+          <output id="secOut">0.0 m</output>
+        </div>
+        <label class="switch"><input type="checkbox" id="secFlip" /><span></span>Flip side</label>
+        <label class="switch"><input type="checkbox" id="secPlane" checked /><span></span>Show cutting plane</label>
+      </details>
+
+      <details open>
+        <summary>Materials</summary>
+        <select id="preset"></select>
+        <div class="swatches" id="swatches"></div>
+        <div class="label">Roughness</div>
+        <div class="range-row">
+          <input type="range" id="rough" min="0" max="100" value="72" />
+          <output id="roughOut">0.72</output>
+        </div>
+        <label class="switch"><input type="checkbox" id="textures" checked /><span></span>Surface textures</label>
+      </details>
+
+      <details>
+        <summary>Lighting</summary>
+        <div class="label">Time of day</div>
+        <div class="range-row">
+          <input type="range" id="time" min="6" max="18" step="0.25" value="9.5" />
+          <output id="timeOut">09:30</output>
+        </div>
+        <div class="label">Exposure</div>
+        <div class="range-row">
+          <input type="range" id="exposure" min="40" max="180" value="100" />
+          <output id="expOut">1.00</output>
+        </div>
+        <label class="switch"><input type="checkbox" id="shadows" checked /><span></span>Shadows</label>
+      </details>
+    </div>
+  </aside>
+
+  <!-- Selected component -->
+  <section class="info hidden" id="info" aria-live="polite">
+    <div class="info-top">
+      <span class="cat-chip" id="infoCat"></span>
+      <span class="muted" id="infoIndex"></span>
+      <div class="spacer"></div>
+      <button class="icon" id="prevBtn" title="Previous part (←)">‹</button>
+      <button class="icon" id="nextBtn" title="Next part (→)">›</button>
+      <button class="icon" id="closeInfo" title="Close (Esc)">✕</button>
+    </div>
+    <h3 id="infoName"></h3>
+    <p class="alias"><span id="infoEn"></span> · <em id="infoAlias"></em></p>
+    <p id="infoDesc"></p>
+    <div class="cols">
+      <div><h4>Function</h4><p id="infoFn"></p></div>
+      <div><h4>Meaning</h4><p id="infoMeaning"></p></div>
+    </div>
+    <div class="info-foot">
+      <div class="specs" id="infoSpecs"></div>
+      <div class="spacer"></div>
+      <div class="seg small" id="focusSeg">
+        <button data-v="none">Highlight</button>
+        <button data-v="ghost" class="on">Ghost others</button>
+        <button data-v="isolate">Isolate</button>
+      </div>
+      <button class="btn" id="focusBtn">Focus</button>
+    </div>
+  </section>
+
+  <nav class="dock" aria-label="Camera">
+    <button class="icon" id="zoomIn" title="Zoom in">+</button>
+    <button class="icon" id="zoomOut" title="Zoom out">−</button>
+    <button class="icon" id="fitBtn" title="Frame model (R)">⤢</button>
+    <button class="icon" id="fsBtn" title="Fullscreen">⛶</button>
+    <button class="icon" id="shotBtn" title="Save screenshot">◉</button>
+  </nav>
+
+  <div class="hint" id="hint">Drag to orbit · Right-drag to pan · Scroll to zoom · <b>Click any part</b> to learn about it</div>
+  <div id="tooltip"></div>
+
+  <dialog id="about">
+    <form method="dialog">
+      <h3 id="aboutTitle"></h3>
+      <div id="aboutBody"></div>
+      <h4>Shortcuts</h4>
+      <div class="keys">
+        <span><kbd>1</kbd>–<kbd>5</kbd> views</span><span><kbd>E</kbd> explode</span><span><kbd>S</kbd> section</span>
+        <span><kbd>X</kbd> cycle style</span><span><kbd>L</kbd> labels</span><span><kbd>F</kbd> focus part</span>
+        <span><kbd>H</kbd> hide part</span><span><kbd>←</kbd><kbd>→</kbd> prev/next</span><span><kbd>Esc</kbd> deselect</span>
+      </div>
+      <div class="about-foot">
+        <p class="credit">Made by <a href="https://nurasyrof.com" target="_blank" rel="noopener">nurasyrof</a></p>
+        <button class="btn">Close</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="loading"><div class="spinner"></div><span>Raising the saka guru…</span></div>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
