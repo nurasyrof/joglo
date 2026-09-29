@@ -138,6 +138,20 @@
         </div>
         <label class="switch"><input type="checkbox" id="shadows" checked /><span></span>Shadows</label>
       </details>
+
+      <details id="exportSec">
+        <summary>Download 3D</summary>
+        <div class="seg" id="fmtSeg">
+          <button data-v="glb" class="on">GLB</button>
+          <button data-v="obj">OBJ</button>
+          <button data-v="stl">STL</button>
+          <button data-v="usdz">USDZ</button>
+        </div>
+        <p class="note" id="fmtNote"></p>
+        <label class="switch"><input type="checkbox" id="exVisible" checked /><span></span>Only visible parts</label>
+        <label class="switch"><input type="checkbox" id="exExploded" /><span></span>Keep exploded layout</label>
+        <button class="btn wide" id="downloadBtn">Download .glb</button>
+      </details>
     </div>
   </aside>
 
@@ -176,6 +190,7 @@
     <button class="icon" id="fitBtn" title="Frame model (R)">⤢</button>
     <button class="icon" id="fsBtn" title="Fullscreen">⛶</button>
     <button class="icon" id="shotBtn" title="Save screenshot">◉</button>
+    <button class="icon" id="dlDock" title="Download 3D model">⤓</button>
   </nav>
 
   <div class="hint" id="hint">Drag to orbit · Right-drag to pan · Scroll to zoom · <b>Click any part</b> to learn about it</div>

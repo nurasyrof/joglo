@@ -6,6 +6,7 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { buildJoglo } from './joglo.js';
 import { COMPONENTS, CATEGORIES, ABOUT } from './components.js';
 import { PRESETS, CLAY, SLOTS, createMaterialFactory } from './materials.js';
+import { FORMATS, export3D } from './exporter.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -125,6 +126,7 @@ for (const def of COMPONENTS) {
     const mesh = new THREE.Mesh(geom, mat);
     mesh.castShadow = mesh.receiveShadow = true;
     mesh.userData.comp = def.id;
+    mesh.userData.slot = slot;
     group.add(mesh);
     c.meshes.push(mesh);
     c.mats.push(mat);
@@ -605,6 +607,57 @@ function screenshot() {
   a.href = out.toDataURL('image/png');
   a.click();
 }
+
+// Download 3D
+const EX = { format: 'glb' };
+function setFormat(f) {
+  EX.format = f;
+  setSeg($('#fmtSeg'), f);
+  $('#fmtNote').textContent = FORMATS[f].note;
+  $('#downloadBtn').textContent = `Download .${FORMATS[f].ext}`;
+}
+bindSeg($('#fmtSeg'), setFormat);
+// Export uses the current material preset, independent of the on-screen render style.
+function exportMaterial(slot, name) {
+  const col = slot === 'plank'
+    ? new THREE.Color(S.colors.wood).lerp(new THREE.Color('#e8d2b4'), 0.18)
+    : new THREE.Color(S.colors[slot]);
+  const m = new THREE.MeshStandardMaterial({
+    name, color: col,
+    map: S.textures ? MF.texFor(slot) : null,
+    roughness: slot === 'accent' ? Math.max(0.2, S.rough - 0.35) : S.rough,
+    metalness: slot === 'accent' ? S.accentMetal : 0,
+  });
+  return m;
+}
+$('#downloadBtn').addEventListener('click', async () => {
+  const btn = $('#downloadBtn');
+  const label = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Preparing…';
+  try {
+    const size = await export3D(EX.format, comps, {
+      onlyVisible: $('#exVisible').checked,
+      exploded: $('#exExploded').checked,
+      material: exportMaterial,
+    });
+    $('#fmtNote').textContent = `Saved ${(size / 1048576).toFixed(1)} MB. ${FORMATS[EX.format].note}`;
+  } catch (err) {
+    console.error(err);
+    $('#fmtNote').textContent = `Export failed: ${err.message}`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = label;
+  }
+});
+$('#dlDock').addEventListener('click', () => {
+  const d = $('#exportSec');
+  d.open = true;
+  document.body.classList.remove('show-left');
+  document.body.classList.add('show-right');
+  requestAnimationFrame(() => { const sc = d.closest('.scroll'); sc.scrollTop = sc.scrollHeight; });
+});
+setFormat('glb');
 
 // Mobile panel toggles
 $$('[data-toggle]').forEach((b) => b.addEventListener('click', () => {
