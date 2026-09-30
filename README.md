@@ -51,6 +51,8 @@ A house is either **a single building** or **a site** (a compound) with several 
 
 In a site, the viewer opens on the whole compound (`#/joglo`). Click a building for its card, and **Enter** (or double-click) to open its anatomy (`#/joglo/dalem`). Roofs lift and fade in site view, and the overlay draws the zones and axis. Parts in the `roof` category are the ones that lift.
 
+A site can also have a **guided walk** (`site.walk.stops`). Each stop has a `title`, `local` subtitle and `text`, a camera `pos` and `target` in site coordinates (or a named `view` such as `'top'`), and optionally `via` waypoints to steer the camera through doorways, `buildings` to highlight (use only for views from outside) and `overlay: true` to show the site-logic overlay.
+
 ## Adding a house
 
 1. **List it** in `src/houses/index.js` with its metadata and a 120 × 72 SVG silhouette. Leave `status: 'soon'` until the model is ready.

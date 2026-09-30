@@ -324,6 +324,7 @@ export async function openHouse(meta, def, bldId = null) {
   $('#aboutTitle').textContent = def.about.title;
   $('#aboutBody').replaceChildren(...def.about.paras.map((t) => { const p = document.createElement('p'); p.textContent = t; return p; }));
   document.body.classList.toggle('single-building', H.single);
+  document.body.classList.toggle('has-walk', !!H.site.walk);
   buildMaterialUI();
   setPreset(Object.keys(def.presets)[0]);
 
@@ -334,6 +335,7 @@ export async function openHouse(meta, def, bldId = null) {
 }
 
 export function closeViewer() {
+  if (W.on) stopWalk({ fly: false });
   active = false;
   loadToken++;
   document.body.classList.remove('mode-viewer', 'has-selection', 'show-left', 'show-right');
@@ -351,6 +353,7 @@ function showBuilding(bldId) {
 }
 
 function setMode(mode, B = null, { intro = false } = {}) {
+  if (W.on) stopWalk({ fly: false });
   S.mode = mode;
   cur = mode === 'building' ? B : null;
   S.selected = S.hovered = S.selBld = S.hovBld = null;
@@ -396,7 +399,7 @@ function updateModeUI() {
   $('#exVisibleLabel').textContent = site ? 'Only visible buildings' : 'Only visible parts';
   $('#exExplodedLabel').textContent = site ? 'Keep roofs lifted' : 'Keep exploded layout';
   if (H.overlay) {
-    H.overlay.visible = site && S.siteLogic;
+    H.overlay.visible = site && (S.siteLogic || W.overlay);
     for (const l of H.overlay.userData.labels) l.visible = H.overlay.visible;
   }
 }
@@ -491,7 +494,7 @@ function updateEmissive() {
   if (!H) return;
   for (const B of H.blds) for (const c of B.comps) {
     const sel = inBuilding() ? B === cur && S.selected === c.id : S.selBld === B.id;
-    const hov = inBuilding() ? B === cur && S.hovered === c.id : S.hovBld === B.id;
+    const hov = inBuilding() ? B === cur && S.hovered === c.id : S.hovBld === B.id || W.hi.has(B.id);
     for (const m of c.mats) {
       m.emissive.set(sel ? '#ff9b2f' : hov ? '#ffc070' : '#000000');
       m.emissiveIntensity = sel ? 0.3 : hov ? 0.2 : 0;
@@ -588,9 +591,11 @@ function setTime(t) {
 
 // ── Camera ───────────────────────────────────────────────────────────
 let tween = null;
-controls.addEventListener('start', () => { tween = null; });
-function flyTo(pos, target, dur = 1) {
+controls.addEventListener('start', () => { tween = null; if (W.auto) setWalkAuto(false); });
+// Moves the camera to pos/target; `via` points bend the path (e.g. through a doorway).
+function flyTo(pos, target, dur = 1, via = []) {
   tween = { p0: camera.position.clone(), t0: controls.target.clone(), p1: pos.clone(), t1: target.clone(), start: performance.now(), dur: dur * 1000 };
+  if (via.length) tween.curve = new THREE.CatmullRomCurve3([tween.p0, ...via, tween.p1], false, 'centripetal');
 }
 function fitFov() {
   const vfov = THREE.MathUtils.degToRad(camera.fov);
@@ -688,10 +693,10 @@ cvs.addEventListener('pointerup', (e) => {
   if (!downAt || e.button !== 0) return;
   const moved = Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]);
   downAt = null;
-  if (moved < 5) select(pick(e.clientX, e.clientY));
+  if (moved < 5 && !W.on) select(pick(e.clientX, e.clientY));
 });
 cvs.addEventListener('dblclick', (e) => {
-  const id = pick(e.clientX, e.clientY);
+  const id = W.on ? null : pick(e.clientX, e.clientY);
   if (!id) return;
   if (inBuilding()) { select(id); focusOn(id); } else enterBuilding(id);
 });
@@ -1065,6 +1070,100 @@ $$('[data-toggle]').forEach((b) => b.addEventListener('click', () => {
 }));
 cvs.addEventListener('pointerdown', () => document.body.classList.remove('show-left', 'show-right'));
 
+// ── Guided walk (site mode) ──────────────────────────────────────────
+// A camera tour through the compound defined by `site.walk.stops`: each stop has a title,
+// text, camera pos/target (or a named `view`), optional `via` waypoints, the buildings to
+// highlight and whether to show the site-logic overlay.
+const W = { on: false, i: 0, auto: false, arrive: 0, wait: 0, hi: new Set(), overlay: false };
+const walkEl = $('#walk');
+
+function startWalk() {
+  if (!H?.site?.walk || inBuilding()) return;
+  select(null);
+  setExplode(0);
+  W.on = true;
+  document.body.classList.add('walking');
+  walkEl.classList.remove('hidden');
+  $('#walkDots').replaceChildren(...H.site.walk.stops.map((st, i) => {
+    const b = document.createElement('button');
+    b.title = st.title;
+    b.addEventListener('click', () => goStop(i));
+    return b;
+  }));
+  setWalkAuto(false);
+  goStop(0);
+}
+
+function stopWalk({ fly = true } = {}) {
+  W.on = false;
+  W.hi.clear();
+  W.overlay = false;
+  document.body.classList.remove('walking');
+  walkEl.classList.add('hidden');
+  if (!H) return;
+  updateModeUI();
+  updateEmissive();
+  if (fly) goView('iso', 1.8);
+}
+
+function goStop(i) {
+  const stops = H.site.walk.stops;
+  if (i < 0 || i >= stops.length) return;
+  W.i = i;
+  const st = stops[i];
+  $('#walkIndex').textContent = `${i + 1} / ${stops.length}`;
+  $('#walkTitle').textContent = st.title;
+  $('#walkLocal').textContent = st.local || '';
+  $('#walkText').textContent = st.text;
+  $('#walkPrev').disabled = i === 0;
+  $('#walkNext').textContent = i === stops.length - 1 ? 'Finish' : 'Next stop →';
+  $$('#walkDots button').forEach((b, k) => { b.classList.toggle('on', k === i); b.classList.toggle('done', k < i); });
+
+  W.hi = new Set(st.buildings || []);
+  W.overlay = !!st.overlay;
+  updateModeUI();
+  updateEmissive();
+
+  const pose = st.view ? viewPose(st.view, 0) : { pos: new THREE.Vector3(...st.pos), target: new THREE.Vector3(...st.target) };
+  const via = (st.via || []).map((v) => new THREE.Vector3(...v));
+  const dist = [camera.position, ...via, pose.pos].reduce((sum, p, k, a) => sum + (k ? p.distanceTo(a[k - 1]) : 0), 0);
+  const dur = Math.min(4.5, Math.max(1.4, dist / 6));
+  flyTo(pose.pos, pose.target, dur, via);
+  W.arrive = performance.now() + dur * 1000;
+  W.wait = Math.min(15000, Math.max(6000, st.text.length * 50));
+}
+
+function walkNext() {
+  if (W.i >= H.site.walk.stops.length - 1) stopWalk();
+  else goStop(W.i + 1);
+}
+
+function setWalkAuto(on) {
+  W.auto = on;
+  const b = $('#walkPlay');
+  b.textContent = on ? '❚❚' : '▶';
+  b.title = on ? 'Pause (space)' : 'Auto-play (space)';
+  b.classList.toggle('on', on);
+  if (on && !tween) W.arrive = performance.now();
+}
+
+function tickWalk() {
+  const now = performance.now();
+  const p = W.auto ? Math.min(1, Math.max(0, (now - W.arrive) / W.wait)) : 0;
+  $('#walkProgress').style.transform = `scaleX(${p})`;
+  if (W.auto && !tween && p >= 1) {
+    if (W.i >= H.site.walk.stops.length - 1) setWalkAuto(false);
+    else goStop(W.i + 1);
+  }
+}
+
+$('#walkBtn').addEventListener('click', startWalk);
+$('#walkStartCtl').addEventListener('click', startWalk);
+$('#walkClose').addEventListener('click', () => stopWalk());
+$('#walkPrev').addEventListener('click', () => goStop(W.i - 1));
+$('#walkNext').addEventListener('click', walkNext);
+$('#walkPlay').addEventListener('click', () => setWalkAuto(!W.auto));
+
 // Keyboard
 addEventListener('keydown', (e) => {
   if (!active || !H) return;
@@ -1072,6 +1171,14 @@ addEventListener('keydown', (e) => {
   if (document.body.classList.contains('switcher-open')) return;
   if (!bldMenu.classList.contains('hidden')) { if (e.key === 'Escape') openBldMenu(false); return; }
   const k = e.key.toLowerCase();
+  if (W.on) {
+    if (k === 'escape') stopWalk();
+    else if (k === 'arrowright' || k === 'enter') walkNext();
+    else if (k === 'arrowleft') goStop(W.i - 1);
+    else if (k === ' ') { e.preventDefault(); setWalkAuto(!W.auto); }
+    return;
+  }
+  if (k === 'w' && !inBuilding() && H.site.walk) { startWalk(); return; }
   const sel = inBuilding() ? S.selected : S.selBld;
   const views = { 1: 'iso', 2: 'front', 3: 'side', 4: 'top', 5: 'inside' };
   if (views[k]) goView(views[k]);
@@ -1120,12 +1227,14 @@ function frame() {
   if (tween) {
     const k = Math.min(1, (performance.now() - tween.start) / tween.dur);
     const e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
-    camera.position.lerpVectors(tween.p0, tween.p1, e);
+    if (tween.curve) camera.position.copy(tween.curve.getPoint(e));
+    else camera.position.lerpVectors(tween.p0, tween.p1, e);
     controls.target.lerpVectors(tween.t0, tween.t1, e);
     if (k >= 1) tween = null;
   }
   controls.update();
   if (camera.position.y < 0.3) camera.position.y = 0.3;
+  if (W.on) tickWalk();
 
   if (pointer.dirty && !pointer.buttons) { pointer.dirty = false; setHover(pick(pointer.x, pointer.y)); }
   if (H) {

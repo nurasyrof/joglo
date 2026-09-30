@@ -120,6 +120,58 @@ export default {
       ],
       axis: { from: [0, 20], to: [0, -22.6], text: 'Central axis · regol → senthong tengah' },
     },
+    // Guided walk along the central axis, from the street to the senthong tengah.
+    // pos/target are camera position and look-at point in site coordinates (eye level ≈ floor + 1.65 m).
+    // `buildings` glow while the stop is shown; use it only for views from outside.
+    walk: {
+      stops: [
+        {
+          title: 'Regol', local: 'The gateway', buildings: ['regol'],
+          pos: [0, 1.65, 31], target: [0, 2.4, 20],
+          text: 'A joglo household turns a plain wall to the street. The only formal way in is the regol, a gateway set on the compound’s central axis. Everything you are about to pass through lines up behind it.',
+        },
+        {
+          title: 'Latar', local: 'The front courtyard',
+          pos: [0, 1.65, 18.4], target: [0, 3.2, 6],
+          text: 'Inside the gate is the open courtyard, with a stone path leading straight to the pendapa. This front part of the compound, the ngarep, is the public side of the household, where visitors are welcome.',
+        },
+        {
+          title: 'Pendapa', local: 'Where guests are received',
+          pos: [0.6, 2.25, 11.8], target: [0, 5.8, 5.5],
+          text: 'Step up under the pendapa. It has no walls: guests, meetings, dances and gamelan all happen here in full view. Look up: four saka guru carry the stepped tumpang sari and the steep roof above it.',
+        },
+        {
+          title: 'Pringgitan', local: 'The threshold',
+          pos: [-1.1, 2.3, 0.4], target: [0, 2.1, -5.5],
+          text: 'Behind the pendapa, the pringgitan links the public front to the family house. Wayang kulit is performed here, on a screen between the guests in the pendapa and the family behind. Most visitors go no further.',
+        },
+        {
+          title: 'Gebyok', local: 'The family’s front wall',
+          pos: [-0.4, 2.35, -7.4], target: [0, 2.2, -10.2], via: [[-3.4, 2.3, -3.6], [-3.3, 2.35, -6.5]],
+          text: 'The carved teak wall of the dalem closes off the view. Its central double door leads into the family house, open to the household and to honoured guests. Beyond it, the house is private.',
+        },
+        {
+          title: 'Dalem', local: 'The family house',
+          pos: [0, 2.45, -12.2], target: [0, 2.0, -22], via: [[0, 2.4, -9.3]],
+          text: 'Inside is the same joglo frame as the pendapa, now enclosed. The floor is higher than the pendapa’s: every step inward has also been a step up. Ahead, three senthong rooms line the back wall.',
+        },
+        {
+          title: 'Senthong Tengah', local: 'The end of the axis',
+          pos: [1.4, 2.45, -16.9], target: [0, 1.8, -22.6],
+          text: 'The middle room holds the krobongan, dedicated to Dewi Sri, goddess of rice and fertility, with the loro blonyo pair in front of it. The line that began at the regol ends here, in the most sacred place in the house.',
+        },
+        {
+          title: 'Mburi', local: 'The working back', buildings: ['gandhok_kiwa', 'gandhok_tengen', 'gadri', 'pawon', 'pekiwan'],
+          pos: [0, 17, -54], target: [0, 1.5, -26], via: [[0, 14, -24]],
+          text: 'Around and behind the dalem are the everyday buildings: the gandhok wings with their rooms, the gadri where the family eats, the pawon kitchen and the well. The seketheng walls keep this side of life out of guests’ sight.',
+        },
+        {
+          title: 'From public to private', local: 'Reading the whole omah', overlay: true,
+          pos: [0, 140, 15], target: [0, 0, 10],
+          text: 'Seen from above, the plan is a sequence of thresholds: regol, pendapa, pringgitan, gebyok and senthong. Each one is deeper, higher and more private than the last.',
+        },
+      ],
+    },
   },
 
   // Material slots shared by every building. `tex` names a texture in viewer/materials.js.
