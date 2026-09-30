@@ -1,0 +1,126 @@
+// Anatomy data for the Minangkabau Rumah Gadang.
+
+export const CATEGORIES = [
+  { id: 'base',     label: 'Foundation', local: 'Dasar',   color: '#9a948a' },
+  { id: 'struct',   label: 'Structure',  local: 'Struktur', color: '#b27a45' },
+  { id: 'walls',    label: 'Walls',      local: 'Dindiang', color: '#dcab52' },
+  { id: 'roof',     label: 'Roof',       local: 'Atap',    color: '#cf5b3f' },
+  { id: 'compound', label: 'Compound',   local: 'Halaman', color: '#7fa37a' },
+];
+
+export const COMPONENTS = [
+  {
+    id: 'batu_sandi', cat: 'base', name: 'Batu Sandi', alias: 'Batu tapakan', en: 'Stone footings',
+    explode: [0, 0, 0], anchor: [8.4, 0.3, 3.6],
+    desc: 'Flat stones set on the ground under every column. The posts stand on them rather than being sunk into the earth.',
+    fn: 'Keep the timber off damp soil. West Sumatra is highly seismic, and a frame resting loosely on stones can rock and settle in an earthquake instead of breaking.',
+    meaning: 'A foundation that yields rather than resists, much like the adat saying that the house should bend with nature, not against it.',
+    specs: ['32 stones', 'Columns rest, not buried'],
+  },
+  {
+    id: 'tiang', cat: 'struct', name: 'Tiang', alias: 'Tiang tuo', en: 'Columns',
+    explode: [0, 1.4, 0], anchor: [-6, 1.2, 3.6], focusDir: [0.4, 0.15, 1],
+    desc: 'A forest of round timber columns carries the whole house. The first one raised, the tiang tuo, is treated as the principal column.',
+    fn: 'Lift the floor about two metres off the ground and carry the roof. The length of a rumah gadang is counted in ruang, the bays between columns.',
+    meaning: 'Raising the tiang tuo is a communal event for the whole kaum (clan), who share the work of building the house.',
+    specs: ['32 columns', '7 ruang long', 'Round timber'],
+  },
+  {
+    id: 'rasuak_paran', cat: 'struct', name: 'Rasuak & Paran', alias: 'Rasuk, paran', en: 'Tie beams & top beams',
+    explode: [0, 2.6, 0], anchor: [0, 1.75, 3.6],
+    desc: 'Rasuak are beams that pass through the columns below the floor; paran run across the column heads under the roof.',
+    fn: 'Lock the columns into a rigid grid with timber pegs (pasak) instead of nails, and spread the roof load onto every post.',
+    meaning: 'Like the members of a clan, no single beam stands alone. The frame is strong because every piece is tied to the others.',
+    specs: ['Pegged joints', 'No nails'],
+  },
+  {
+    id: 'lantai', cat: 'struct', name: 'Lantai', alias: 'Lantai papan', en: 'Raised floor',
+    explode: [0, 3.4, 0], anchor: [-3, 2.05, 0],
+    desc: 'A timber floor of long boards laid over the rasuak, about two metres above the ground.',
+    fn: 'Keeps the living space dry, cool and safe from animals. The space underneath (kolong) is used for storage, tools and livestock.',
+    meaning: 'The long open hall above is where the family gathers and where ceremonies are held.',
+    specs: ['17.5 × 7.9 m', 'Floor +2.0 m'],
+  },
+  {
+    id: 'tangga', cat: 'struct', name: 'Tangga', alias: 'Tangga & surambi', en: 'Entrance stair & porch',
+    explode: [0, 3.4, 3.2], anchor: [0.9, 1.2, 7.0], focusDir: [0.8, 0.3, 1],
+    desc: 'The main entrance is reached by a timber stair up to a small covered porch in the middle of the front wall.',
+    fn: 'Brings visitors up to floor level under shelter from the rain. The porch has its own gonjong roof.',
+    meaning: 'Traditionally a jar of water stood by the stairs so that visitors could wash their feet before entering.',
+    specs: ['8 steps', 'Own gonjong roof'],
+  },
+  {
+    id: 'dinding_ukiran', cat: 'walls', name: 'Dinding Ukiran', alias: 'Dindiang baukia', en: 'Carved walls',
+    explode: [0, 4.6, 0], anchor: [-7.8, 3.3, 4.2],
+    desc: 'The front and side walls are made of timber panels carved and painted in red, black and gold, with motifs taken from nature such as kaluak paku (fern tendrils) and itiak pulang patang (ducks returning home at dusk).',
+    fn: 'Enclose the hall and form the public face of the house. The walls lean outward as they rise, following the flare of the roof.',
+    meaning: 'The carvings reflect the Minangkabau philosophy alam takambang jadi guru: nature, as it unfolds, is the teacher.',
+    specs: ['Leans out 0.4 m', 'Painted carving'],
+  },
+  {
+    id: 'dinding_sasak', cat: 'walls', name: 'Dinding Sasak', alias: 'Dindiang sasak', en: 'Woven bamboo back wall',
+    explode: [0, 4.6, -3.2], anchor: [3, 3.3, -4.2], focusDir: [0.3, 0.2, -1],
+    desc: 'The back wall is made of split bamboo woven in a twill pattern, lighter and plainer than the carved front.',
+    fn: 'Lets air pass through while keeping out the view. Private sleeping rooms (biliak) for the married daughters line the back of the house.',
+    meaning: 'The contrast is deliberate: the carved front faces the public, the plain back shelters private family life.',
+    specs: ['Split bamboo', 'Twill weave'],
+  },
+  {
+    id: 'jendela', cat: 'walls', name: 'Pintu & Jendela', alias: 'Pintu, jandela', en: 'Door & windows',
+    explode: [0, 4.6, 2.4], anchor: [-4.8, 3.3, 4.4],
+    desc: 'A row of windows with painted shutters runs along the front and ends; the main door opens from the entrance porch.',
+    fn: 'Bring daylight and breeze into the long central hall.',
+    meaning: 'Windows along the facade let the family watch over the courtyard and the rangkiang in front of the house.',
+    specs: ['10 windows', '1 main door'],
+  },
+  {
+    id: 'singok', cat: 'walls', name: 'Singok', alias: 'Singkok', en: 'Carved gable ends',
+    explode: [0, 6.2, 0], anchor: [9.15, 5.4, 0], focusDir: [1, 0.2, 0.35],
+    desc: 'The triangular gable walls under the upswept ends of the roof, usually carved and painted like the front.',
+    fn: 'Close the space between the walls and the rising curve of the roof.',
+    meaning: 'Seen from afar, the carved gables and horns make each house recognisable to its clan.',
+    specs: ['3 gables', 'Painted carving'],
+  },
+  {
+    id: 'kasau', cat: 'roof', name: 'Kasau', alias: 'Kasau & bubuangan', en: 'Rafters & ridge beam',
+    explode: [0, 7.4, 0], anchor: [2.5, 6.4, 2.6],
+    desc: 'Rafters follow the sweep of the roof down from a sagging ridge beam (bubuangan) that curves upward at each end.',
+    fn: 'Give the roof its saddle shape and carry the heavy thatch.',
+    meaning: 'The curve is built into the frame itself. The roof is not bent afterwards; its shape is designed from the start.',
+    specs: ['{kasau} rafters', 'Curved ridge beams'],
+  },
+  {
+    id: 'atap_ijuak', cat: 'roof', name: 'Atap Ijuak', alias: 'Atap ijuk', en: 'Sugar-palm fibre roof', roof: true,
+    explode: [0, 9.4, 0], anchor: [0, 7.4, 2.2],
+    desc: 'The roof is thatched with thick layers of black ijuk, the fibre of the sugar palm. Many houses today use corrugated zinc (seng) instead.',
+    fn: 'Ijuk sheds heavy rain, resists rot and insulates the hall from the tropical sun. The steep slopes carry water away quickly.',
+    meaning: 'A well-kept ijuk roof can last for decades, a sign of a family that looks after its heritage.',
+    specs: ['Ijuk thatch', '4 roof sections'],
+  },
+  {
+    id: 'gonjong', cat: 'roof', name: 'Gonjong', alias: 'Rumah bagonjong', en: 'Horn-shaped roof peaks', roof: true,
+    explode: [0, 10.6, 0], anchor: [6.8, 12.1, 0], focusDir: [0.8, 0.35, 1],
+    desc: 'The upswept, pointed ends of the roof, capped with metal finials. This house has five, one on the entrance porch.',
+    fn: 'The rising tips throw rainwater clear of the walls and give the roof its tall, airy inner space.',
+    meaning: 'Often likened to buffalo horns, recalling the legend of the buffalo contest that gave the Minangkabau (menang kerbau, “the winning buffalo”) their name. Others see the hull of a ship.',
+    specs: ['5 gonjong', 'Metal finials'],
+  },
+  {
+    id: 'rangkiang', cat: 'compound', name: 'Rangkiang', alias: 'Lumbuang padi', en: 'Rice granaries',
+    explode: [0, 0, 3.2], anchor: [5.2, 3.4, 11], focusDir: [0.6, 0.25, 1],
+    desc: 'Small raised granaries standing in the courtyard in front of the house, each with its own carved walls and gonjong roof.',
+    fn: 'Store the family’s rice harvest off the ground, safe from damp and pests.',
+    meaning: 'The stored rice fed the family, supported guests and ceremonies, and was kept for hard times, a visible measure of the clan’s care for its members.',
+    specs: ['2 granaries', 'Gonjong roofs'],
+  },
+];
+
+export const ABOUT = {
+  title: 'The Rumah Gadang of the Minangkabau',
+  paras: [
+    'The Rumah Gadang (“big house”), also called Rumah Bagonjong, is the ancestral house of the Minangkabau of West Sumatra. Its roof sweeps up into sharp horn-like peaks called gonjong.',
+    'The Minangkabau are matrilineal: the house belongs to the women of the clan and passes from mother to daughter. Married daughters are given their own sleeping rooms along the back of the house, while the long open hall in front is shared by the whole family.',
+    'Houses are raised on many timber columns resting on stones, joined with pegs rather than nails, and walled with carved, painted panels. A classic compound has rice granaries (rangkiang) standing in the courtyard in front.',
+    'Styles vary by adat tradition. Houses of the Koto Piliang tradition have raised floors (anjuang) at both ends, while Bodi Caniago houses keep one level. This model shows a simplified single-level house.',
+  ],
+};

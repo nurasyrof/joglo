@@ -8,8 +8,6 @@ export const FORMATS = {
   usdz: { ext: 'usdz', note: 'AR Quick Look on iPhone and iPad. Keeps materials and textures.' },
 };
 
-const SLOT_NAMES = { wood: 'Teak', carved: 'Carving', accent: 'Prada', plank: 'Plank', roof: 'Roof tiles', ornament: 'Crowns', stone: 'Stone', floor: 'Floor' };
-
 // Loads exporters on demand so they don't slow down the first page load.
 const loaders = {
   glb: () => import('three/addons/exporters/GLTFExporter.js').then((m) => m.GLTFExporter),
@@ -19,12 +17,12 @@ const loaders = {
 };
 
 // Builds a clean export scene: no edges, labels, clipping or display-only transparency.
-function buildExportScene(comps, { onlyVisible, exploded, material }) {
+function buildExportScene(comps, { onlyVisible, exploded, material, slotName, title }) {
   const mats = {};
-  const matFor = (slot) => (mats[slot] ||= material(slot, SLOT_NAMES[slot] || slot));
+  const matFor = (slot) => (mats[slot] ||= material(slot, slotName(slot)));
   const scene = new THREE.Scene();
   const root = new THREE.Group();
-  root.name = 'Joglo Pendapa';
+  root.name = title;
   scene.add(root);
   for (const c of comps) {
     if (onlyVisible && !c.group.visible) continue;
@@ -34,7 +32,7 @@ function buildExportScene(comps, { onlyVisible, exploded, material }) {
     if (exploded) g.position.copy(c.group.position);
     for (const mesh of c.meshes) {
       const m = new THREE.Mesh(mesh.geometry, matFor(mesh.userData.slot));
-      m.name = `${c.name} · ${SLOT_NAMES[mesh.userData.slot] || mesh.userData.slot}`;
+      m.name = `${c.name} · ${slotName(mesh.userData.slot)}`;
       g.add(m);
     }
     root.add(g);
@@ -72,7 +70,7 @@ export async function export3D(format, comps, opts) {
   const blob = new Blob([data], { type });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `joglo-pendapa${opts.exploded ? '-exploded' : ''}.${FORMATS[format].ext}`;
+  a.download = `${opts.filename}${opts.exploded ? '-exploded' : ''}.${FORMATS[format].ext}`;
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 2000);
   return blob.size;

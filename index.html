@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Joglo Explorer</title>
+  <title>Rumah Nusantara · Traditional houses of Indonesia</title>
+  <meta name="description" content="Explore Indonesia's traditional houses in 3D: take them apart, cut through them and learn what every part means." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -18,25 +19,77 @@
   </script>
 </head>
 <body>
+
+  <!-- ═══ Directory (#/) ═══════════════════════════════════════════ -->
+  <main id="directory">
+    <header class="dir-top">
+      <a class="dir-brand" href="#/">
+        <svg class="mark" viewBox="0 0 48 32" aria-hidden="true">
+          <path d="M24 2 29 12 36 15.5 46 21H2l10-5.5L19 12Z" fill="currentColor" />
+          <path d="M9 21v9M17 21v9M31 21v9M39 21v9M21 21v9M27 21v9" stroke="currentColor" stroke-width="1.6" />
+        </svg>
+        <span>Rumah Nusantara</span>
+      </a>
+      <a class="dir-credit" href="https://nurasyrof.com" target="_blank" rel="noopener">Made by nurasyrof</a>
+    </header>
+
+    <section class="hero">
+      <p class="eyebrow">Rumah adat · Traditional houses of Indonesia</p>
+      <h1>The architecture of the archipelago, one house at a time</h1>
+      <p class="lede">Explore Indonesia’s traditional houses in 3D. Take them apart, cut through them and learn what every beam, roof and carving means.</p>
+      <p class="stats" id="dirStats"></p>
+    </section>
+
+    <section class="dir-controls" aria-label="Filter houses">
+      <div class="dir-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="dirSearch" type="search" placeholder="Search by name, province or people…" autocomplete="off" />
+      </div>
+      <div class="chips" id="islandChips" role="group" aria-label="Island group"></div>
+      <label class="switch"><input type="checkbox" id="only3d" /><span></span>Only houses in 3D</label>
+    </section>
+
+    <section class="grid" id="houseGrid" aria-live="polite"></section>
+    <p class="dir-empty" id="dirEmpty" hidden>No houses match your search.</p>
+
+    <footer class="dir-foot">
+      More houses are being modelled. Each one is built from real proportions and checked against published sources.
+      <span>Made by <a href="https://nurasyrof.com" target="_blank" rel="noopener">nurasyrof</a></span>
+    </footer>
+  </main>
+
+  <!-- ═══ Viewer (#/<house>) ═══════════════════════════════════════ -->
   <div id="viewport"></div>
 
-  <header class="brand">
-    <svg class="mark" viewBox="0 0 48 32" aria-hidden="true">
-      <path d="M24 2 29 12 36 15.5 46 21H2l10-5.5L19 12Z" fill="currentColor" />
-      <path d="M9 21v9M17 21v9M31 21v9M39 21v9M21 21v9M27 21v9" stroke="currentColor" stroke-width="1.6" />
-    </svg>
-    <div>
-      <h1>Joglo Yogyakarta</h1>
-      <p>Pendapa · interactive anatomy</p>
-    </div>
+  <header class="brand viewer-ui">
+    <button class="house-switch" id="houseSwitch" aria-haspopup="dialog" aria-expanded="false" aria-controls="switcher" title="Switch house">
+      <svg class="mark" id="houseArt" viewBox="0 0 120 72" fill="currentColor" aria-hidden="true"></svg>
+      <span class="hs-title">
+        <h1 id="houseName"></h1>
+        <p id="houseSub"></p>
+      </span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
     <div class="mobile-toggles">
       <button class="chip" data-toggle="show-left">Parts</button>
       <button class="chip" data-toggle="show-right">Controls</button>
     </div>
   </header>
 
+  <div class="switcher hidden" id="switcher" role="dialog" aria-label="Switch house">
+    <div class="hs-head">
+      <a class="hs-back" href="#/">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 18 9 12l6-6"/></svg>
+        All houses
+      </a>
+      <span class="muted">Switch house</span>
+    </div>
+    <div class="search"><input id="hsSearch" type="search" placeholder="Search houses…" autocomplete="off" /></div>
+    <div class="scroll" id="hsList"></div>
+  </div>
+
   <!-- Anatomy list -->
-  <aside class="panel left" id="anatomy">
+  <aside class="panel left viewer-ui" id="anatomy">
     <div class="panel-head">
       <h2>Anatomy</h2>
       <span class="muted" id="partCount"></span>
@@ -45,13 +98,13 @@
     <div class="scroll" id="partList"></div>
     <div class="panel-foot">
       <button class="btn ghost" id="showAll">Show all</button>
-      <button class="btn ghost" id="aboutBtn">About the joglo</button>
+      <button class="btn ghost" id="aboutBtn">About this house</button>
     </div>
     <p class="credit">Made by <a href="https://nurasyrof.com" target="_blank" rel="noopener">nurasyrof</a></p>
   </aside>
 
   <!-- Controls -->
-  <aside class="panel right" id="controls">
+  <aside class="panel right viewer-ui" id="controls">
     <div class="panel-head"><h2>Controls</h2><span class="kbd-hint muted">? shortcuts</span></div>
     <div class="scroll">
 
@@ -184,16 +237,16 @@
     </div>
   </section>
 
-  <nav class="dock" aria-label="Camera">
+  <nav class="dock viewer-ui" aria-label="Camera">
     <button class="icon" id="zoomIn" title="Zoom in">+</button>
     <button class="icon" id="zoomOut" title="Zoom out">−</button>
-    <button class="icon" id="fitBtn" title="Frame model (R)">⤢</button>
+    <button class="icon" id="fitBtn" title="Frame model">⤢</button>
     <button class="icon" id="fsBtn" title="Fullscreen">⛶</button>
     <button class="icon" id="shotBtn" title="Save screenshot">◉</button>
     <button class="icon" id="dlDock" title="Download 3D model">⤓</button>
   </nav>
 
-  <div class="hint" id="hint">Drag to orbit · Right-drag to pan · Scroll to zoom · <b>Click any part</b> to learn about it</div>
+  <div class="hint viewer-ui" id="hint">Drag to orbit · Right-drag to pan · Scroll to zoom · <b>Click any part</b> to learn about it</div>
   <div id="tooltip"></div>
 
   <dialog id="about">
@@ -213,7 +266,7 @@
     </form>
   </dialog>
 
-  <div id="loading"><div class="spinner"></div><span>Raising the saka guru…</span></div>
+  <div id="loading"><div class="spinner"></div><span id="loadingText">Building…</span></div>
 
   <script type="module" src="src/main.js"></script>
 </body>
