@@ -35,7 +35,7 @@ export const HOUSES = [
   },
   {
     id: 'joglo', name: 'Joglo', local: 'Omah Joglo', island: 'Java', province: 'DI Yogyakarta', people: 'Javanese',
-    blurb: 'A tiered teak pavilion whose steep crown rests on four master columns.',
+    blurb: 'A walled compound laid out from public to private: open pendapa, wayang hall and the enclosed dalem.',
     status: 'ready', load: () => import('./joglo/index.js'),
     art: `<path d="M60 6l8 14 12 6 26 14H14l26-14 12-6Z"/>${stilts([22, 34, 48, 72, 86, 98], 40, 62)}<rect x="12" y="62" width="96" height="4"/>`,
   },

@@ -17,7 +17,8 @@ const loaders = {
 };
 
 // Builds a clean export scene: no edges, labels, clipping or display-only transparency.
-function buildExportScene(comps, { onlyVisible, exploded, material, slotName, title }) {
+// `transform(c)` gives each part's world matrix (building placement, plus explode if wanted).
+function buildExportScene(comps, { onlyVisible, material, slotName, title, transform, nameOf = (c) => c.name }) {
   const mats = {};
   const matFor = (slot) => (mats[slot] ||= material(slot, slotName(slot)));
   const scene = new THREE.Scene();
@@ -27,12 +28,12 @@ function buildExportScene(comps, { onlyVisible, exploded, material, slotName, ti
   for (const c of comps) {
     if (onlyVisible && !c.group.visible) continue;
     const g = new THREE.Group();
-    g.name = c.name;
+    g.name = nameOf(c);
     g.userData = { id: c.id, local: c.alias, english: c.en };
-    if (exploded) g.position.copy(c.group.position);
+    transform(c).decompose(g.position, g.quaternion, g.scale);
     for (const mesh of c.meshes) {
       const m = new THREE.Mesh(mesh.geometry, matFor(mesh.userData.slot));
-      m.name = `${c.name} · ${slotName(mesh.userData.slot)}`;
+      m.name = `${g.name} · ${slotName(mesh.userData.slot)}`;
       g.add(m);
     }
     root.add(g);

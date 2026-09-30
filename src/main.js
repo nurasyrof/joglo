@@ -136,9 +136,12 @@ function setHeader(h) {
 }
 
 // ── Routing ──────────────────────────────────────────────────────────
+// #/<house>            a house (compounds open on the whole site)
+// #/<house>/<building> one building of a compound
 let viewer = null;
+const defs = {};
 async function route() {
-  const id = location.hash.replace(/^#\/?/, '');
+  const [id = '', sub = null] = location.hash.replace(/^#\/?/, '').split('/');
   const h = houseById(id);
   openSwitcher(false);
   if ((!h || h.status !== 'ready') && !SHOW_DIRECTORY) {
@@ -158,14 +161,16 @@ async function route() {
   document.body.classList.remove('mode-dir');
   document.title = `${h.name} · ${SITE}`;
   setHeader(h);
-  if (current === id) return;
   current = id;
-  $('#loading').classList.remove('done');
-  document.body.classList.add('mode-viewer');
-  const [v, mod] = await Promise.all([viewer || import('./viewer/viewer.js'), h.load()]);
+  if (!viewer || !defs[id]) {
+    $('#loading').classList.remove('done');
+    document.body.classList.add('mode-viewer');
+  }
+  const [v, mod] = await Promise.all([viewer || import('./viewer/viewer.js'), defs[id] || h.load()]);
   viewer = v;
+  defs[id] = mod;
   if (current !== id) return;
-  await viewer.openHouse(h, mod.default);
+  await viewer.openHouse(h, mod.default, sub);
 }
 $('.hs-back').hidden = !SHOW_DIRECTORY;
 addEventListener('hashchange', route);

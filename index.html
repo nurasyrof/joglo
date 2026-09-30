@@ -70,6 +70,13 @@
       </span>
       <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
     </button>
+    <span class="crumb" id="crumb" hidden>
+      <span class="crumb-sep" aria-hidden="true">›</span>
+      <button class="house-switch bld-switch" id="bldSwitch" aria-haspopup="dialog" aria-expanded="false" aria-controls="bldMenu" title="Switch building">
+        <span class="hs-title"><h1 id="bldName"></h1></span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+    </span>
     <div class="mobile-toggles">
       <button class="chip" data-toggle="show-left">Parts</button>
       <button class="chip" data-toggle="show-right">Controls</button>
@@ -88,10 +95,19 @@
     <div class="scroll" id="hsList"></div>
   </div>
 
-  <!-- Anatomy list -->
+  <div class="switcher bld-menu hidden" id="bldMenu" role="dialog" aria-label="Switch building">
+    <div class="hs-head"><span class="muted">Buildings in this compound</span></div>
+    <div class="scroll" id="bmList"></div>
+  </div>
+
+  <!-- Building list (compound) or part list (building) -->
   <aside class="panel left viewer-ui" id="anatomy">
+    <button class="back-btn" id="backToSite">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 18 9 12l6-6"/></svg>
+      Whole compound
+    </button>
     <div class="panel-head">
-      <h2>Anatomy</h2>
+      <h2 id="panelTitle">Anatomy</h2>
       <span class="muted" id="partCount"></span>
     </div>
     <div class="search"><input id="search" type="search" placeholder="Search parts…" autocomplete="off" /></div>
@@ -122,7 +138,7 @@
       </details>
 
       <details open>
-        <summary>Explode</summary>
+        <summary id="explodeTitle">Explode</summary>
         <div class="range-row">
           <input type="range" id="explode" min="0" max="100" value="0" />
           <output id="explodeOut">0%</output>
@@ -147,6 +163,7 @@
           <input type="range" id="roofOpacity" min="0" max="100" value="100" />
           <output id="roofOut">100%</output>
         </div>
+        <label class="switch" id="siteLogicRow" hidden><input type="checkbox" id="siteLogic" /><span></span>Site logic overlay</label>
       </details>
 
       <details open>
@@ -201,8 +218,8 @@
           <button data-v="usdz">USDZ</button>
         </div>
         <p class="note" id="fmtNote"></p>
-        <label class="switch"><input type="checkbox" id="exVisible" checked /><span></span>Only visible parts</label>
-        <label class="switch"><input type="checkbox" id="exExploded" /><span></span>Keep exploded layout</label>
+        <label class="switch"><input type="checkbox" id="exVisible" checked /><span></span><em id="exVisibleLabel">Only visible parts</em></label>
+        <label class="switch"><input type="checkbox" id="exExploded" /><span></span><em id="exExplodedLabel">Keep exploded layout</em></label>
         <button class="btn wide" id="downloadBtn">Download .glb</button>
       </details>
     </div>

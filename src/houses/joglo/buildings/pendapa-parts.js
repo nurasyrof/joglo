@@ -1,4 +1,4 @@
-// Anatomy data for each joglo component: naming, explode vector, label anchor and learning notes.
+// Anatomy data for the pendapa's parts: naming, explode vector, label anchor and learning notes.
 
 export const CATEGORIES = [
   { id: 'base',   label: 'Foundation', local: 'Dasar',  color: '#9a948a' },
@@ -153,13 +153,3 @@ export const COMPONENTS = [
     specs: ['2 crowns', 'Ridge + 12 hip caps', 'Terracotta'],
   },
 ];
-
-export const ABOUT = {
-  title: 'The Joglo of Yogyakarta',
-  paras: [
-    'The joglo is the most prestigious form of the traditional Javanese house. Its steep central roof over four master columns was once reserved for the nobility (priyayi) and the courts of Yogyakarta and Surakarta.',
-    'A full joglo compound is laid out front to back: the open pendapa, a reception pavilion for guests, meetings and performances; the pringgitan, where wayang shadow plays are staged; and the private dalem with its three senthong rooms. This model shows a pendapa.',
-    'The frame is joined only with timber joints, tenons and wedges, and sits loosely on stone bases. That makes it strong in earthquakes and lets it be taken apart and moved.',
-    'Known variants include Joglo Lawakan, Sinom, Jompongan, Pangrawit, Mangkurat, Hageng, Semar Tinandhu and Lambangsari. They differ mainly in roof tiers and in how the saka guru and tumpang sari are arranged.',
-  ],
-};

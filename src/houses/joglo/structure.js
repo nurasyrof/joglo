@@ -1,7 +1,8 @@
-// Procedural geometry for a Yogyakarta joglo pendapa.
-// Units are metres; y is up, the ridge runs along x, the front faces +z.
-import * as THREE from 'three';
-import { V, reseed, partStore, box, beam, frame, ring, lathe, slab, tierFaces, rafters, battens } from '../../lib/geometry.js';
+// The joglo frame shared by the pendapa and the dalem: three column rings on umpak,
+// sunduk & kili, blandar, tumpang sari, dhadha peksi, uleng, lambang sari and the three
+// roof tiers with rafters, hips, ridge and crowns. Units are metres, floor at DIM.floorTop.
+import { V, box, beam, frame, ring, lathe, slab, tierFaces, rafters, battens } from '../../lib/geometry.js';
+import { umpak } from '../../lib/kit.js';
 
 export const DIM = {
   floorTop: 0.6,
@@ -15,20 +16,17 @@ export const DIM = {
   slab: 0.1,
 };
 
-export function build() {
-  reseed(20240917);
-  const { parts, P } = partStore();
-  const { floorTop: F, guru, pen, pit } = DIM;
+// Default part ids (the pendapa's); pass `ids` to merge pieces into fewer parts.
+const IDS = {
+  umpak: 'umpak', guru: 'saka_guru', pen: 'saka_penanggap', pit: 'saka_penitih',
+  sunduk: 'sunduk_kili', blandar: 'blandar', tumpang: 'tumpang_sari', dadha: 'dadha_peksi',
+  uleng: 'uleng', lambang: 'lambang_sari', usuk: 'usuk', dudur: 'dudur', molo: 'molo', mustaka: 'mustaka',
+  brunjung: 'atap_brunjung', penanggap: 'atap_penanggap', penitih: 'atap_penitih',
+};
 
-  // ── Bebatur: plinth, tiled floor, steps
-  P('bebatur')
-    .add('stone', box(16.6, 0.5, 14.6, 0, 0.25, 0, 'stone', 1.5))
-    .add('stone', box(16.95, 0.14, 14.95, 0, 0.07, 0, 'stone', 1.5))
-    .add('floor', box(16.4, 0.1, 14.4, 0, 0.55, 0, 'world', 1));
-  for (const s of [1, -1]) {
-    P('bebatur').add('stone', box(4.6, 0.4, 0.42, 0, 0.2, s * (7.3 + 0.21), 'stone', 1.5));
-    P('bebatur').add('stone', box(4.6, 0.2, 0.42, 0, 0.1, s * (7.3 + 0.63), 'stone', 1.5));
-  }
+export function jogloStructure(P, ids = {}) {
+  const I = { ...IDS, ...ids };
+  const { floorTop: F, guru, pen, pit } = DIM;
 
   // ── Columns and their umpak
   const guruPos = ring([-guru.x, guru.x], [-guru.z, guru.z], guru.x, guru.z);
@@ -36,48 +34,39 @@ export function build() {
   const pitPos = ring(
     [-pit.x, -pen.x, -guru.x, guru.x, pen.x, pit.x],
     [-pit.z, -pen.z, -guru.z, guru.z, pen.z, pit.z], pit.x, pit.z);
-
-  const umpak = (x, z, rt, rb, h) => {
-    const g = new THREE.CylinderGeometry(rt, rb, h - 0.08, 4, 1);
-    g.rotateY(Math.PI / 4);
-    g.translate(x, F + 0.08 + (h - 0.08) / 2, z);
-    P('umpak').add('stone', g);
-    const side = rb * Math.SQRT2 + 0.06;
-    P('umpak').add('stone', box(side, 0.08, side, x, F + 0.04, z, 'stone', 1));
-  };
   const columns = (id, pos, c, ur) => {
     for (const [x, z] of pos) {
-      umpak(x, z, ur[0], ur[1], c.base - F);
+      umpak(P(I.umpak), x, z, F, c.base - F, ur[0], ur[1]);
       P(id).add('wood', box(c.s, c.top - c.base, c.s, x, (c.top + c.base) / 2, z));
     }
   };
-  columns('saka_guru', guruPos, guru, [0.3, 0.42]);
-  columns('saka_penanggap', penPos, pen, [0.26, 0.36]);
-  columns('saka_penitih', pitPos, pit, [0.22, 0.31]);
+  columns(I.guru, guruPos, guru, [0.3, 0.42]);
+  columns(I.pen, penPos, pen, [0.26, 0.36]);
+  columns(I.pit, pitPos, pit, [0.22, 0.31]);
 
   // ── Sunduk (through-beams) and kili (wedges)
   const yS = guru.top - 1.0;
-  const SK = P('sunduk_kili');
+  const SK = P(I.sunduk);
   for (const z of [-guru.z, guru.z]) SK.add('wood', box(2 * guru.x + 0.7, 0.26, 0.12, 0, yS, z));
   for (const x of [-guru.x, guru.x]) SK.add('wood', box(0.12, 0.26, 2 * guru.z + 0.7, x, yS - 0.34, 0));
   for (const z of [-guru.z, guru.z]) for (const sx of [-1, 1]) SK.add('accent', box(0.05, 0.36, 0.16, sx * (guru.x + 0.27), yS, z));
   for (const x of [-guru.x, guru.x]) for (const sz of [-1, 1]) SK.add('accent', box(0.16, 0.36, 0.05, x, yS - 0.34, sz * (guru.z + 0.27)));
 
   // ── Blandar & pengeret ring beams
-  frame(P('blandar'), 'wood', guru.x, guru.z, guru.top + 0.11, 0.26, 0.22, 0.22);
-  frame(P('blandar'), 'wood', pen.x, pen.z, pen.top + 0.09, 0.2, 0.18, 0.18);
-  frame(P('blandar'), 'wood', pit.x, pit.z, pit.top + 0.08, 0.18, 0.16, 0.28);
+  frame(P(I.blandar), 'wood', guru.x, guru.z, guru.top + 0.11, 0.26, 0.22, 0.22);
+  frame(P(I.blandar), 'wood', pen.x, pen.z, pen.top + 0.09, 0.2, 0.18, 0.18);
+  frame(P(I.blandar), 'wood', pit.x, pit.z, pit.top + 0.08, 0.18, 0.16, 0.28);
 
   // ── Tumpang sari: five courses stepping outward
   const tsBase = guru.top + 0.22;
   for (let i = 0; i < 5; i++) {
-    frame(P('tumpang_sari'), i % 2 ? 'accent' : 'carved',
+    frame(P(I.tumpang), i % 2 ? 'accent' : 'carved',
       2.3 + 0.14 * i, 2.0 + 0.13 * i, tsBase + 0.09 + 0.18 * i, 0.26, 0.18, 0.08);
   }
   const tsTop = tsBase + 5 * 0.18;
 
   // ── Dhadha peksi across the middle
-  P('dadha_peksi')
+  P(I.dadha)
     .add('carved', box(2 * 2.3 + 0.26, 0.36, 0.3, 0, tsBase + 0.2, 0))
     .add('accent', box(2 * 2.3 - 0.3, 0.05, 0.34, 0, tsBase + 0.005, 0))
     .add('accent', box(0.5, 0.2, 0.36, 0, tsBase - 0.1, 0));
@@ -85,13 +74,13 @@ export function build() {
   // ── Uleng: inward stepped ceiling above the tumpang sari
   let ux = 2.62, uz = 2.41;
   for (let j = 0; j < 4; j++) {
-    frame(P('uleng'), j % 2 ? 'accent' : 'carved', ux, uz, tsTop + 0.08 + 0.16 * j, 0.22, 0.16, 0);
+    frame(P(I.uleng), j % 2 ? 'accent' : 'carved', ux, uz, tsTop + 0.08 + 0.16 * j, 0.22, 0.16, 0);
     if (j < 3) { ux -= 0.3; uz -= 0.28; }
   }
-  P('uleng').add('accent', box(2 * ux + 0.22, 0.04, 2 * uz + 0.22, 0, tsTop + 0.64 + 0.02, 0));
+  P(I.uleng).add('accent', box(2 * ux + 0.22, 0.04, 2 * uz + 0.22, 0, tsTop + 0.64 + 0.02, 0));
 
   // ── Lambang sari: rings and short posts at the brunjung / penanggap junction
-  const LS = P('lambang_sari');
+  const LS = P(I.lambang);
   const lx = 3.25, lz = 2.95;
   frame(LS, 'wood', lx, lz, 6.04, 0.14, 0.16, 0.05);
   frame(LS, 'wood', lx, lz, 6.86, 0.12, 0.14, 0.05);
@@ -106,29 +95,29 @@ export function build() {
   let nRafters = 0, nBattens = 0;
   const t = DIM.slab;
   const corners = [[1, 1], [1, -1], [-1, 1], [-1, -1]];
-  for (const [id, tier] of [['atap_brunjung', DIM.brunjung], ['atap_penanggap', DIM.penanggap], ['atap_penitih', DIM.penitih]]) {
+  for (const [id, tier] of [[I.brunjung, DIM.brunjung], [I.penanggap, DIM.penanggap], [I.penitih, DIM.penitih]]) {
     for (const q of tierFaces(tier)) {
       const s = slab(q, t);
       P(id).add('roof', s.top).add('plank', s.under);
-      nRafters += rafters(P('usuk'), q, t);
-      nBattens += battens(P('usuk'), q, t);
+      nRafters += rafters(P(I.usuk), q, t);
+      nBattens += battens(P(I.usuk), q, t);
     }
     for (const [sx, sz] of corners) {
       const a = V(sx * tier.AX, tier.y0, sz * tier.AZ);
       const b = V(sx * tier.ix, tier.y1, sz * tier.iz);
       const dn = V(0, -(t + 0.12), 0), up = V(0, 0.05, 0);
-      P('dudur').add('wood', beam(a.clone().add(dn), b.clone().add(dn), 0.14, 0.2));
-      P('mustaka').add('ornament', beam(a.clone().add(up), b.clone().add(up), 0.2, 0.1, 0.05));
+      P(I.dudur).add('wood', beam(a.clone().add(dn), b.clone().add(dn), 0.14, 0.2));
+      P(I.mustaka).add('ornament', beam(a.clone().add(up), b.clone().add(up), 0.2, 0.1, 0.05));
     }
   }
 
   // ── Molo (ridge beam) and ridge crown ornaments
   const B = DIM.brunjung;
-  P('molo').add('wood', box(2 * B.ix + 0.5, 0.26, 0.2, 0, B.y1 - t - 0.14, 0));
-  P('mustaka').add('ornament', box(2 * B.ix + 0.3, 0.16, 0.26, 0, B.y1 + 0.06, 0, 'stone', 1));
+  P(I.molo).add('wood', box(2 * B.ix + 0.5, 0.26, 0.2, 0, B.y1 - t - 0.14, 0));
+  P(I.mustaka).add('ornament', box(2 * B.ix + 0.3, 0.16, 0.26, 0, B.y1 + 0.06, 0, 'stone', 1));
   const prof = [[0, 0], [0.2, 0], [0.22, 0.06], [0.14, 0.12], [0.12, 0.2], [0.24, 0.34], [0.2, 0.46],
     [0.1, 0.56], [0.07, 0.66], [0.12, 0.74], [0.05, 0.86], [0, 0.95]];
-  for (const sx of [-1, 1]) P('mustaka').add('ornament', lathe(prof, V(sx * (B.ix + 0.05), B.y1 + 0.1, 0)));
+  for (const sx of [-1, 1]) P(I.mustaka).add('ornament', lathe(prof, V(sx * (B.ix + 0.05), B.y1 + 0.1, 0)));
 
-  return { parts, counts: { rafters: nRafters, battens: nBattens } };
+  return { rafters: nRafters, battens: nBattens };
 }

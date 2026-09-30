@@ -25,12 +25,15 @@ src/
   main.js               routing, directory page, title house switcher
   houses/
     index.js            registry: every house, its metadata and silhouette
-    joglo/              one folder per modelled house
-      index.js          house definition (slots, presets, views)
-      parts.js          anatomy: names, explode offsets, descriptions
-      build.js          procedural geometry
-    rumah-gadang/
-  lib/geometry.js       shared building blocks (beams, hipped and saddle roofs, gables…)
+    joglo/              a compound: several buildings on one site
+      index.js          site layout, zones, overlay, shared materials
+      structure.js      the joglo frame shared by pendapa and dalem
+      buildings/        one file per building (build + anatomy)
+    rumah-gadang/       a single-building house
+      index.js · parts.js · build.js
+  lib/
+    geometry.js         low-level pieces: beams, slabs, hipped and saddle roofs, gables
+    kit.js              building pieces: plinths, walls with openings, doors, full roofs
   viewer/               the 3D engine, shared by every house
     viewer.js
     materials.js        procedural textures + material factory
@@ -39,15 +42,21 @@ src/
 
 The directory page doesn't load Three.js. The viewer and each house load only when opened.
 
+## Houses, sites and buildings
+
+A house is either **a single building** or **a site** (a compound) with several buildings.
+
+- **Single building**: `index.js` exports `build`, `parts`, `categories`, `slots`, `presets`, `about`, `views` and `sectionY`. It opens straight into building view. Example: `rumah-gadang`.
+- **Site**: `index.js` exports `slots`, `presets`, `about` and a `site` with `buildings`, `categories` (zones), `views`, `sectionY` and an optional `overlay`. Each building entry has `id`, `name`, `zone`, `at: [x, z]`, `rot`, its card text (`desc`, `fn`, `meaning`, `specs`) and a `def` with `build`, `parts`, `categories`, `views` and `sectionY`. Example: `joglo`.
+
+In a site, the viewer opens on the whole compound (`#/joglo`). Click a building for its card, and **Enter** (or double-click) to open its anatomy (`#/joglo/dalem`). Roofs lift and fade in site view, and the overlay draws the zones and axis. Parts in the `roof` category are the ones that lift.
+
 ## Adding a house
 
 1. **List it** in `src/houses/index.js` with its metadata and a 120 × 72 SVG silhouette. Leave `status: 'soon'` until the model is ready.
-2. **Create `src/houses/<id>/`** with three files:
-   - `build.js` exports `build()`, which returns `{ parts, counts }`. Use `partStore()` from `lib/geometry.js` and add geometry per part and material slot, e.g. `P('tiang').add('wood', …)`.
-   - `parts.js` exports `CATEGORIES`, `COMPONENTS` and `ABOUT`. Every part id in `build()` needs an entry in `COMPONENTS` with `explode`, `anchor`, `desc`, `fn`, `meaning` and `specs` (specs can use `{count}` placeholders filled from `counts`).
-   - `index.js` exports the definition: `slots` (each material slot and its texture), `presets`, `views.inside`, `sectionY` and a `loading` line.
+2. **Create `src/houses/<id>/`** as a single building or a site (see above). Every `build()` returns `{ parts, counts }`: use `partStore()` from `lib/geometry.js` and add geometry per part and material slot, e.g. `P('tiang').add('wood', …)`. Every part id needs an entry in the building's `parts` with `explode`, `anchor`, `desc`, `fn`, `meaning` and `specs` (specs can use `{count}` placeholders filled from `counts`).
 3. **Switch it on** by setting `status: 'ready'` and `load: () => import('./<id>/index.js')` in the registry.
 
-The camera views, section ranges and shadows are calculated from the model's size, so nothing in the viewer needs changing. Loading houses modelled in Blender (GLB with mesh names matching part ids) isn't supported yet; it would need a small loader that returns the same `{ parts }` shape as `build()`.
+The camera views, section ranges and shadows are calculated from each model's size, so nothing in the viewer needs changing. Loading houses modelled in Blender (GLB with mesh names matching part ids) isn't supported yet; it would need a small loader that returns the same `{ parts }` shape as `build()`.
 
 Check part names and descriptions against published sources before switching a house on.
