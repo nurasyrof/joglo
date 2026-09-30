@@ -1,6 +1,6 @@
-# Rumah Nusantara
+# rumahadat.id
 
-An interactive 3D directory of Indonesia's traditional houses, built with Three.js. Each house can be exploded, cut through, restyled and downloaded, and every part explains what it is and what it means.
+An interactive 3D directory of Indonesia's traditional houses (rumah adat), built with Three.js. Live at [rumahadat.id](https://rumahadat.id). Each house can be exploded, cut through, restyled and downloaded, and every part explains what it is and what it means.
 
 Made by [nurasyrof](https://nurasyrof.com).
 

@@ -4,7 +4,7 @@ import { HOUSES, ISLANDS, houseById } from './houses/index.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-const SITE = 'Rumah Nusantara';
+const SITE = 'rumahadat.id';
 
 // The directory landing page (#/) stays hidden until there are enough houses in 3D (roughly 10–15).
 // While it's off, the site opens straight into DEFAULT_HOUSE and the title switcher is the only way to browse.
