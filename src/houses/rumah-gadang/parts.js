@@ -1,11 +1,11 @@
-// Anatomy data for the Minangkabau Rumah Gadang.
+// Anatomy data for the Rumah Gadang house.
 
 export const CATEGORIES = [
   { id: 'base',     label: 'Foundation', local: 'Dasar',   color: '#9a948a' },
   { id: 'struct',   label: 'Structure',  local: 'Struktur', color: '#b27a45' },
   { id: 'walls',    label: 'Walls',      local: 'Dindiang', color: '#dcab52' },
   { id: 'roof',     label: 'Roof',       local: 'Atap',    color: '#cf5b3f' },
-  { id: 'compound', label: 'Compound',   local: 'Halaman', color: '#7fa37a' },
+  { id: 'interior', label: 'Interior',   local: 'Dalam',   color: '#b3674a' },
 ];
 
 export const COMPONENTS = [
@@ -74,6 +74,14 @@ export const COMPONENTS = [
     specs: ['10 windows', '1 main door'],
   },
   {
+    id: 'biliak', cat: 'interior', name: 'Biliak', alias: 'Bilik', en: 'Sleeping rooms of the daughters',
+    explode: [0, 3.0, -2.6], anchor: [-4.8, 3.6, -1.1], focusDir: [0.3, 0.55, 1],
+    desc: 'A row of small rooms along the back of the long hall, one in each bay between the columns, each with its own door.',
+    fn: 'Each married daughter of the house has her own biliak, where she lives with her husband and young children.',
+    meaning: 'The heart of the matrilineal house: the house belongs to its women, and husbands come to live in their wives’ rooms.',
+    specs: ['7 rooms', 'One per ruang'],
+  },
+  {
     id: 'singok', cat: 'walls', name: 'Singok', alias: 'Singkok', en: 'Carved gable ends',
     explode: [0, 6.2, 0], anchor: [9.15, 5.4, 0], focusDir: [1, 0.2, 0.35],
     desc: 'The triangular gable walls under the upswept ends of the roof, usually carved and painted like the front.',
@@ -105,22 +113,4 @@ export const COMPONENTS = [
     meaning: 'Often likened to buffalo horns, recalling the legend of the buffalo contest that gave the Minangkabau (menang kerbau, “the winning buffalo”) their name. Others see the hull of a ship.',
     specs: ['5 gonjong', 'Metal finials'],
   },
-  {
-    id: 'rangkiang', cat: 'compound', name: 'Rangkiang', alias: 'Lumbuang padi', en: 'Rice granaries',
-    explode: [0, 0, 3.2], anchor: [5.2, 3.4, 11], focusDir: [0.6, 0.25, 1],
-    desc: 'Small raised granaries standing in the courtyard in front of the house, each with its own carved walls and gonjong roof.',
-    fn: 'Store the family’s rice harvest off the ground, safe from damp and pests.',
-    meaning: 'The stored rice fed the family, supported guests and ceremonies, and was kept for hard times, a visible measure of the clan’s care for its members.',
-    specs: ['2 granaries', 'Gonjong roofs'],
-  },
 ];
-
-export const ABOUT = {
-  title: 'The Rumah Gadang of the Minangkabau',
-  paras: [
-    'The Rumah Gadang (“big house”), also called Rumah Bagonjong, is the ancestral house of the Minangkabau of West Sumatra. Its roof sweeps up into sharp horn-like peaks called gonjong.',
-    'The Minangkabau are matrilineal: the house belongs to the women of the clan and passes from mother to daughter. Married daughters are given their own sleeping rooms along the back of the house, while the long open hall in front is shared by the whole family.',
-    'Houses are raised on many timber columns resting on stones, joined with pegs rather than nails, and walled with carved, painted panels. A classic compound has rice granaries (rangkiang) standing in the courtyard in front.',
-    'Styles vary by adat tradition. Houses of the Koto Piliang tradition have raised floors (anjuang) at both ends, while Bodi Caniago houses keep one level. This model shows a simplified single-level house.',
-  ],
-};

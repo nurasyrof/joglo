@@ -100,13 +100,15 @@ function HouseTitle({ meta }) {
   );
 }
 
-function BuildingTitle() {
+function BuildingTitle({ meta }) {
   const { engine, s } = useEngine();
   if (!s.building) return null;
+  // When the main building shares the house's name, show what it is instead of repeating it.
+  const label = s.building.name === meta.name ? s.building.en.replace(/^\w/, (c) => c.toUpperCase()) : s.building.name;
   return (
     <DropdownMenu>
       <div className="flex items-center gap-3 pl-6 md:pl-12">
-        <span className={cn('max-w-[8rem] truncate font-heading text-xl leading-none font-semibold md:max-w-none md:text-[1.6rem]', onScene)}>{s.building.name}</span>
+        <span className={cn('max-w-[8rem] truncate font-heading text-xl leading-none font-semibold md:max-w-none md:text-[1.6rem]', onScene)}>{label}</span>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" className={chevronBtn} aria-label="Switch building"><ChevronDown /></Button>
         </DropdownMenuTrigger>
@@ -139,7 +141,7 @@ export function TitleBar({ meta }) {
   return (
     <div className="pointer-events-auto flex items-center">
       <HouseTitle meta={meta} />
-      <BuildingTitle />
+      <BuildingTitle meta={meta} />
     </div>
   );
 }

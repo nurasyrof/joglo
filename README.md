@@ -36,7 +36,8 @@ src/
   houses/
     index.js            registry: every house, its metadata and silhouette
     joglo/              a compound: several buildings on one site
-    rumah-gadang/       a single-building house
+    rumah-gadang/       a compound: house, four rangkiang, surau and yard
+    uma-mbatangu/       a village: clan houses around a plaza of stone tombs
   lib/
     geometry.js · kit.js  procedural building blocks
     utils.js            shadcn `cn` helper
@@ -50,7 +51,7 @@ Light mode is the default; the theme menu offers light, dark and system, and the
 
 A house is either **a single building** or **a site** (a compound) with several buildings.
 
-- **Single building**: `index.js` exports `build`, `parts`, `categories`, `slots`, `presets`, `about`, `views` and `sectionY`. It opens straight into building view. Example: `rumah-gadang`.
+- **Single building**: `index.js` exports `build`, `parts`, `categories`, `slots`, `presets`, `about`, `views` and `sectionY`. It opens straight into building view. (No house uses this at the moment, but it is still supported.)
 - **Site**: `index.js` exports `slots`, `presets`, `about` and a `site` with `buildings`, `categories` (zones), `views`, `sectionY` and an optional `overlay`. Each building entry has `id`, `name`, `zone`, `at: [x, z]`, `rot`, its card text (`desc`, `fn`, `meaning`, `specs`) and a `def` with `build`, `parts`, `categories`, `views` and `sectionY`. Example: `joglo`.
 
 In a site, the viewer opens on the whole compound (`#/joglo`). Click a building for its card, and **Enter** (or double-click) to open its anatomy (`#/joglo/dalem`). Roofs lift and fade in site view, and the overlay draws the zones and axis. Parts in the `roof` category are the ones that lift.

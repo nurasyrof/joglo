@@ -239,6 +239,7 @@ export function battens(part, q, t, slot = 'plank') {
 //   yR, yE   ridge and eave height at the lowest point; H: how far the horns rise
 //   d0       half-width across the ridge; ends: 'both' | 'pos' | 'neg' (which ends rise)
 //   t        shell thickness; split: rise fraction beyond which triangles count as "horn"
+//   converge false keeps the eaves level to the ends (no horns, with H = 0 and pinch = 0)
 export function saddleRoof(o) {
   const cfg = { gamma: 0.85, p: 3.5, pinch: 0.93, nu: 56, nv: 16, split: 0.7, t: 0.3, ...o };
   const { axis, cx, cz, len, yR, yE, H, d0, ends, t, gamma, p, pinch, nu, nv, split } = cfg;
@@ -247,7 +248,8 @@ export function saddleRoof(o) {
   const surf = (s, v, off = 0) => {
     const r = rise(s);
     const R = yR + H * Math.pow(r, p);
-    const D = (yR - yE) * (1 - Math.pow(r, 10)) + 0.25 * Math.pow(r, 10);
+    // Eaves rise to meet the ridge at the horns, unless `converge` is false (plain saddle).
+    const D = cfg.converge === false ? yR - yE : (yR - yE) * (1 - Math.pow(r, 10)) + 0.25 * Math.pow(r, 10);
     const y = R - D * Math.pow(Math.abs(v), gamma) - off;
     const a = s * len, b = v * width(s);
     return axis === 'x' ? V(cx + a, y, cz + b) : V(cx + b, y, cz + a);

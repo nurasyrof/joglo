@@ -1,7 +1,9 @@
-// Procedural geometry for a Minangkabau Rumah Gadang (West Sumatra).
+// The Rumah Gadang itself: the Minangkabau family house at the centre of the compound.
 // Units are metres; y is up, the house runs along x, the front faces +z.
 import * as THREE from 'three';
 import { V, reseed, partStore, box, beam, hexa, lathe, saddleRoof, saddleFrame, gablePanel } from '../../lib/geometry.js';
+import { wallRun, opening as doorway } from '../../lib/kit.js';
+import { CATEGORIES, COMPONENTS } from './parts.js';
 
 const FLOOR = 2.0, WALL_TOP = 4.5, FLARE = 0.4;
 const XS = [-8.4, -6, -3.6, -1.2, 1.2, 3.6, 6, 8.4];
@@ -68,31 +70,15 @@ function gable(roof, at, half, bottom) {
   return gablePanel(pts, 0.1, cfg.axis, at);
 }
 
-function finials(part, roof, scale = 1) {
+// Metal spires on the tips of a gonjong roof (shared with the rangkiang).
+export function finials(part, roof, scale = 1) {
   for (const { at, dir } of roof.tips) {
     const prof = SPIRE.map(([r, y]) => [r * scale, y * scale]);
     part.add('metal', lathe(prof, at.clone().addScaledVector(dir, -0.15 * scale), dir, 10));
   }
 }
 
-function rangkiang(P, cx, cz) {
-  const R = P('rangkiang');
-  for (const [dx, dz] of [[-0.6, -0.6], [0.6, -0.6], [-0.6, 0.6], [0.6, 0.6]]) {
-    R.add('stone', box(0.34, 0.12, 0.34, cx + dx, 0.06, cz + dz, 'stone', 1));
-    R.add('wood', new THREE.CylinderGeometry(0.09, 0.09, 1.3, 8).translate(cx + dx, 0.77, cz + dz));
-  }
-  R.add('wood', box(1.7, 0.1, 1.7, cx, 1.45, cz));
-  const b = 0.72, t = 0.98, y0 = 1.5, y1 = 2.95;
-  R.add('ukiran', hexa(
-    [V(cx - b, y0, cz - b), V(cx + b, y0, cz - b), V(cx + b, y0, cz + b), V(cx - b, y0, cz + b)],
-    [V(cx - t, y1, cz - t), V(cx + t, y1, cz - t), V(cx + t, y1, cz + t), V(cx - t, y1, cz + t)],
-    (p) => [(p.x + p.z) / 1.2, p.y / 1.2]));
-  const roof = saddleRoof({ axis: 'x', cx, cz, len: 1.35, yR: 3.75, yE: 2.95, H: 1.25, d0: 1.3, ends: 'both', t: 0.15, nu: 28, nv: 10 });
-  R.add('thatch', roof.main).add('thatch', roof.horn);
-  finials(R, roof, 0.5);
-}
-
-export function build() {
+function build() {
   reseed(19930);
   const { parts, P } = partStore();
 
@@ -164,9 +150,21 @@ export function build() {
     .add('ukiran', gable(built.left, -(WX + FLARE - 0.03), WZ + FLARE, WALL_TOP))
     .add('ukiran', gable(built.porch, pz1 - 0.1, 1.55, 5.03));
 
-  // ── Rangkiang in the courtyard
-  rangkiang(P, -5.2, 11);
-  rangkiang(P, 5.2, 11);
+  // ── Biliak: sleeping rooms along the back of the hall, one per bay between the columns
+  const B = P('biliak');
+  const bz = -1.2, bh = 2.3;
+  const bays = XS.slice(0, -1).map((x, i) => (x + XS[i + 1]) / 2);
+  wallRun(B, 'plank', { axis: 'x', at: bz, from: XS[0], to: XS.at(-1), y0: FLOOR, h: bh, t: 0.06, openings: bays.map((c) => ({ c, w: 0.8, h: 1.9 })) });
+  for (const c of bays) doorway(B, { at: bz, c, w: 0.8, h: 1.9, y0: FLOOR, leaves: 1, open: 0.5, t: 0.06, leafSlot: 'accent', frameSlot: 'wood' });
+  for (const x of XS) wallRun(B, 'plank', { axis: 'z', at: x, from: -WZ + 0.1, to: bz, y0: FLOOR, h: bh, t: 0.06 });
 
   return { parts, counts: { kasau: nKasau } };
 }
+
+export default {
+  build,
+  categories: CATEGORIES,
+  parts: COMPONENTS,
+  sectionY: 3.3,
+  views: { inside: { pos: [-6.6, 3.6, 2.6], target: [5, 3.0, -1.3] } },
+};
