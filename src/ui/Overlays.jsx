@@ -1,6 +1,6 @@
 // Bottom toolbar and footer, hover tooltip, help dialog and loading screen.
 import { useEffect, useState } from 'react';
-import { Camera, CircleHelp, Download, Footprints, Heart, Loader2, Maximize, Minimize, Scan, ZoomIn, ZoomOut } from 'lucide-react';
+import { Camera, CircleHelp, Download, Expand, Footprints, Heart, Loader2, Shrink, ZoomIn, ZoomOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Kbd } from '@/components/ui/kbd';
@@ -20,6 +20,18 @@ function ToolButton({ label, onClick, disabled, children }) {
       </TooltipTrigger>
       <TooltipContent side="top">{label}</TooltipContent>
     </Tooltip>
+  );
+}
+
+// "Frame model": dashed frame with a solid square in one corner (drawn in Lucide's style).
+function FrameIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+      <path d="M4 9V5a1 1 0 0 1 1-1h4" />
+      <path d="M15 4h4a1 1 0 0 1 1 1v4" />
+      <path d="M20 15v4a1 1 0 0 1-1 1h-4" />
+      <rect x="4" y="13" width="7" height="7" rx="1" />
+    </svg>
   );
 }
 
@@ -43,9 +55,9 @@ export function Toolbar({ onHelp, onDownload }) {
       <ToolButton label="Zoom in" onClick={() => engine.zoomIn()}><ZoomIn /></ToolButton>
       <ToolButton label="Zoom out" onClick={() => engine.zoomOut()}><ZoomOut /></ToolButton>
       <Divider />
-      <ToolButton label="Frame model" onClick={() => engine.fit()}><Scan /></ToolButton>
+      <ToolButton label="Frame model" onClick={() => engine.fit()}><FrameIcon /></ToolButton>
       <ToolButton label={fs ? 'Exit fullscreen' : 'Fullscreen'} onClick={() => (fs ? document.exitFullscreen() : document.documentElement.requestFullscreen?.())}>
-        {fs ? <Minimize /> : <Maximize />}
+        {fs ? <Shrink /> : <Expand />}
       </ToolButton>
       <Divider />
       <ToolButton label="Save screenshot" onClick={() => engine.screenshot()}><Camera /></ToolButton>
