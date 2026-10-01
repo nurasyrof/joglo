@@ -213,7 +213,7 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
     g.visible = false;
     g.userData.labels = [];
     for (const z of ov.zones) {
-      const col = H.zoneById[z.zone]?.color || '#ffffff';
+      const col = z.color || H.zoneById[z.zone]?.color || '#ffffff';
       // A zone spans the overlay's full width unless it sets its own x0 / x1.
       const x0 = z.x0 ?? ov.x0, x1 = z.x1 ?? ov.x1;
       const w = x1 - x0, d = z.z1 - z.z0;

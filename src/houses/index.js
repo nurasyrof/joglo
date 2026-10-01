@@ -52,10 +52,10 @@ export const HOUSES = [
     art: `<path d="M60 8l28 22 24 8H96L60 16 24 38H8l24-8Z"/><rect x="28" y="36" width="64" height="20"/>${stilts(range(32, 88, 14), 56)}`,
   },
   {
-    id: 'bale-meten', name: 'Bale Meten', local: 'Bale Daja', island: 'Bali & Nusa Tenggara', province: 'Bali', people: 'Balinese',
-    blurb: 'The sleeping pavilion of a Balinese family compound, set high on a stone plinth.',
-    status: 'soon',
-    art: `<path d="M40 14h40l24 22H16Z"/><rect x="26" y="36" width="68" height="18"/><rect x="18" y="54" width="84" height="12"/>`,
+    id: 'pekarangan-bali', name: 'Pekarangan Bali', local: 'Umah Bali', island: 'Bali & Nusa Tenggara', province: 'Bali', people: 'Balinese',
+    blurb: 'A walled compound of open pavilions around a courtyard, laid out by the nine zones of the Sanga Mandala.',
+    status: 'ready', load: () => import('./pekarangan-bali/index.js'),
+    art: `<rect x="10" y="58" width="100" height="8"/><path d="M14 40h30l-6-16H20Z"/><rect x="17" y="40" width="24" height="18" fill-opacity=".55"/><path d="M48 46h28l-6-20H54Z"/><rect x="52" y="46" width="20" height="12" fill-opacity=".55"/><path d="M80 38h28l-5-18H85Z"/><rect x="84" y="38" width="20" height="20" fill-opacity=".55"/>`,
   },
   {
     id: 'bale-tani', name: 'Bale Tani', local: 'Bale Sasak', island: 'Bali & Nusa Tenggara', province: 'West Nusa Tenggara', people: 'Sasak',

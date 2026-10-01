@@ -92,6 +92,21 @@ const DRAW = {
     }
   }),
 
+  // Red brick in stretcher bond with light mortar (1 m × 1 m: 8 courses, 4 bricks per course).
+  brick: () => canvasTex(512, (g, w) => {
+    const r = rng(61), rows = 8, cols = 4, rh = w / rows, cw = w / cols;
+    g.fillStyle = '#f2efe8';
+    g.fillRect(0, 0, w, w);
+    for (let row = 0; row < rows; row++) {
+      const off = (row % 2) * cw / 2;
+      for (let c = -1; c <= cols; c++) {
+        const v = 168 + r() * 40;
+        g.fillStyle = `rgb(${v},${v - 6},${v - 10})`;
+        g.fillRect(c * cw + off + 3, row * rh + 3, cw - 6, rh - 6);
+      }
+    }
+  }),
+
   // Ijuk (sugar-palm fibre) thatch: fibres run down the slope (texture v).
   thatch: () => canvasTex(512, (g, w, h) => {
     const r = rng(77);
