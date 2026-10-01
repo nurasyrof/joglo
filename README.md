@@ -6,41 +6,45 @@ Made by [nurasyrof](https://nurasyrof.com).
 
 ## Run locally
 
-It's plain static files with no build step:
+Built with Vite, React, Tailwind CSS and [shadcn/ui](https://ui.shadcn.com); the 3D engine is plain Three.js.
 
 ```bash
-python3 -m http.server 5173
+npm install
+npm run dev
 ```
 
-Then open http://localhost:5173. Routes are hash-based: `#/joglo` opens a house.
+Then open http://localhost:5173. `npm run build` writes the static site to `dist/`.
 
-The directory landing page (`#/`) is built but switched off until there are 10–15 houses in 3D. While `SHOW_DIRECTORY` in `src/main.js` is `false`, the site opens on `DEFAULT_HOUSE` and the title switcher is the way to browse. Set it to `true` to launch the directory.
+Routes are hash-based: `#/joglo` opens a house, `#/joglo/dalem` one building of a compound. The directory landing page (`#/`) is built but switched off until there are 10–15 houses in 3D: set `SHOW_DIRECTORY` in `src/config.js` to launch it.
+
+**Deploying (Cloudflare):** build command `npm run build`, output directory `dist`.
 
 ## Structure
 
 ```
-index.html              directory + viewer markup
-styles.css
+index.html              Vite entry
 src/
-  main.js               routing, directory page, title house switcher
+  main.jsx · App.jsx    React entry, theme provider, routing
+  config.js             site name, credit, directory flag, default house
+  index.css             Tailwind + shadcn theme tokens (light default, dark)
+  components/ui/        shadcn/ui components (generated, safe to edit)
+  ui/                   app UI: header, panels, cards, walk, dock, directory
+  engine/               headless 3D engine (Three.js), no UI code
+    engine.js           scene, camera, picking, modes, walk; exposes actions + snapshots
+    materials.js        procedural textures + material factory
+    exporter.js         GLB / OBJ / STL / USDZ download
   houses/
     index.js            registry: every house, its metadata and silhouette
     joglo/              a compound: several buildings on one site
-      index.js          site layout, zones, overlay, shared materials
-      structure.js      the joglo frame shared by pendapa and dalem
-      buildings/        one file per building (build + anatomy)
     rumah-gadang/       a single-building house
-      index.js · parts.js · build.js
   lib/
-    geometry.js         low-level pieces: beams, slabs, hipped and saddle roofs, gables
-    kit.js              building pieces: plinths, walls with openings, doors, full roofs
-  viewer/               the 3D engine, shared by every house
-    viewer.js
-    materials.js        procedural textures + material factory
-    exporter.js         GLB / OBJ / STL / USDZ download
+    geometry.js · kit.js  procedural building blocks
+    utils.js            shadcn `cn` helper
 ```
 
-The directory page doesn't load Three.js. The viewer and each house load only when opened.
+The engine never touches the page UI. React subscribes to its state with `useSyncExternalStore` and calls its actions (`select`, `setStyle`, `setSection`, `startWalk`…). Labels in the 3D scene are the only DOM the engine creates.
+
+Light mode is the default; the theme menu offers light, dark and system, and the 3D sky follows it.
 
 ## Houses, sites and buildings
 
