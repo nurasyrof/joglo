@@ -14,6 +14,8 @@ import { texture, createMaterialFactory } from './materials.js';
 import { export3D } from './exporter.js';
 
 const CLAY_DEFAULT = '#e8e3da';
+// Parts that rise with "lift roofs" in site view: flagged `lift`, or in the 'roof' category.
+const lifts = (c) => c.lift ?? c.cat === 'roof';
 const VIEW_DIRS = { iso: [21, 9, 24], front: [0, 2.2, 33], side: [37, 2.2, 0.01], top: [0, 42, 1.2] };
 export const STYLES = ['realistic', 'clay', 'xray', 'blueprint'];
 
@@ -262,7 +264,7 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
       H.s0.union(B.b0);
       for (const c of B.comps) for (const m of c.meshes) {
         const bb = new THREE.Box3().setFromObject(m);
-        H.s1.union(c.cat === 'roof' ? bb.translate(new THREE.Vector3(0, B.liftH, 0)) : bb);
+        H.s1.union(lifts(c) ? bb.translate(new THREE.Vector3(0, B.liftH, 0)) : bb);
       }
     }
     H.overlay = site.overlay ? buildOverlay(site.overlay) : null;
@@ -392,7 +394,7 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
       if (inBuilding() && B !== cur) op = Math.min(op, solid ? 0.07 : 0.025);
       if (c.roof && !isSel) op = Math.min(op, S.roofOpacity);
       // In site view, roofs fade as they lift so the floor plans show through.
-      if (!inBuilding() && c.cat === 'roof') op = Math.min(op, 1 - 0.8 * S.explode);
+      if (!inBuilding() && lifts(c)) op = Math.min(op, 1 - 0.8 * S.explode);
       if (inBuilding() && B === cur && S.selected && !isSel && S.focusMode === 'ghost') op = Math.min(op, solid ? 0.1 : 0.04);
       if (isSel && !solid) op = 0.85;
       const tr = op < 0.999;
@@ -469,7 +471,7 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
     if (!H) return;
     for (const B of H.blds) for (const c of B.comps) {
       if (inBuilding() && B === cur) c.group.position.set(...c.explode).multiplyScalar(S.explode);
-      else if (!inBuilding() && c.cat === 'roof') c.group.position.set(0, B.liftH * S.explode, 0);
+      else if (!inBuilding() && lifts(c)) c.group.position.set(0, B.liftH * S.explode, 0);
       else c.group.position.set(0, 0, 0);
     }
     if (!inBuilding()) applyMaterials();

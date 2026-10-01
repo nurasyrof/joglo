@@ -82,8 +82,8 @@ function HouseTitle({ meta }) {
           >
             <Landmark className="size-9 shrink-0 drop-shadow-md md:size-10" strokeWidth={1.6} />
             <span className="flex flex-col">
-              <span className="font-heading text-2xl leading-none font-semibold group-hover/title:underline group-hover/title:decoration-white/50 group-hover/title:underline-offset-4 md:text-[1.7rem]">{meta.name}</span>
-              <span className="mt-1 hidden text-xs font-medium text-white/90 sm:block">{meta.province} · {meta.people}</span>
+              <span className="font-heading text-2xl leading-none font-semibold whitespace-nowrap group-hover/title:underline group-hover/title:decoration-white/50 group-hover/title:underline-offset-4 md:text-[1.7rem]">{meta.name}</span>
+              <span className="mt-1 hidden text-xs font-medium whitespace-nowrap text-white/90 sm:block">{meta.province} · {meta.people}</span>
             </span>
           </button>
           <PopoverTrigger asChild>

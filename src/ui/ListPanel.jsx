@@ -110,7 +110,7 @@ export function AboutCardContent({ className }) {
   const { s } = useEngine();
   const [open, setOpen] = useState(false);
   const b = s.building;
-  const title = b ? `About the ${b.name.toLowerCase()}` : 'About this house';
+  const title = b ? `About the ${b.name}` : 'About this house';
   const paras = b ? [b.desc, b.fn, b.meaning] : s.house.about.paras;
   useEffect(() => setOpen(false), [b?.id, s.house.id]);
   return (

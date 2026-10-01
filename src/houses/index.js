@@ -64,6 +64,12 @@ export const HOUSES = [
     art: `<path d="M60 10l46 42H14Z"/><rect x="30" y="52" width="60" height="8"/><rect x="22" y="60" width="76" height="6"/>`,
   },
   {
+    id: 'uma-mbatangu', name: 'Uma Mbatangu', local: 'Rumah Adat Sumba', island: 'Bali & Nusa Tenggara', province: 'East Nusa Tenggara', people: 'Sumbanese',
+    blurb: 'A village of peaked clan houses on stilts, facing a plaza of megalithic tombs.',
+    status: 'ready', load: () => import('./uma-mbatangu/index.js'),
+    art: `<path d="M60 2l7 22 33 16H20l33-16Z"/><rect x="26" y="40" width="68" height="10"/>${stilts(range(30, 90, 12), 50)}<path d="M51 1c3 2 6 2 9 0 3 2 6 2 9 0" fill="none" stroke="currentColor" stroke-width="2"/>`,
+  },
+  {
     id: 'mbaru-niang', name: 'Mbaru Niang', local: 'Wae Rebo', island: 'Bali & Nusa Tenggara', province: 'East Nusa Tenggara', people: 'Manggarai',
     blurb: 'A tall conical house of many storeys, shared by several families.',
     status: 'soon',
