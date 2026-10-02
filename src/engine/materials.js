@@ -172,6 +172,77 @@ const DRAW = {
     }
   }),
 
+  // Toraja passura': carved panels painted red, black, white and yellow, with the
+  // pa' barre allo (sun) disc between bands of interlocking spirals.
+  passura: () => canvasTex(512, (g, w) => {
+    const n = 2, s = w / n;
+    const RED = '#8e2a1c', BLACK = '#17110d', WHITE = '#efe6d2', YELLOW = '#d9a63a';
+    const curl = (cx, cy, r0, dir) => {
+      g.beginPath();
+      for (let a = 0; a < 2.4 * Math.PI * 2; a += 0.15) {
+        const r = r0 * (1 - a / (2.6 * Math.PI * 2));
+        const x = cx + Math.cos(a * dir) * r, y = cy + Math.sin(a * dir) * r;
+        a === 0 ? g.moveTo(x, y) : g.lineTo(x, y);
+      }
+      g.stroke();
+    };
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+      const x = i * s, y = j * s;
+      g.fillStyle = BLACK;
+      g.fillRect(x, y, s, s);
+      g.fillStyle = RED;
+      g.fillRect(x + 10, y + 10, s - 20, s - 20);
+      // Bands of spirals along the top and bottom
+      g.lineWidth = 4;
+      for (const by of [0.13, 0.87]) {
+        g.fillStyle = BLACK;
+        g.fillRect(x + 10, y + (by - 0.09) * s, s - 20, 0.18 * s);
+        for (let k = 0; k < 4; k++) {
+          g.strokeStyle = k % 2 ? YELLOW : WHITE;
+          curl(x + (0.14 + k * 0.24) * s, y + by * s, s * 0.075, k % 2 ? 1 : -1);
+        }
+      }
+      // Pa' barre allo: a sun disc with rays
+      const cx = x + s / 2, cy = y + s / 2;
+      g.fillStyle = YELLOW;
+      for (let k = 0; k < 16; k++) {
+        const a = (k / 16) * Math.PI * 2;
+        g.beginPath();
+        g.moveTo(cx + Math.cos(a - 0.12) * s * 0.12, cy + Math.sin(a - 0.12) * s * 0.12);
+        g.lineTo(cx + Math.cos(a) * s * 0.27, cy + Math.sin(a) * s * 0.27);
+        g.lineTo(cx + Math.cos(a + 0.12) * s * 0.12, cy + Math.sin(a + 0.12) * s * 0.12);
+        g.fill();
+      }
+      g.fillStyle = WHITE;
+      g.beginPath(); g.arc(cx, cy, s * 0.13, 0, Math.PI * 2); g.fill();
+      g.fillStyle = BLACK;
+      g.beginPath(); g.arc(cx, cy, s * 0.09, 0, Math.PI * 2); g.fill();
+      g.fillStyle = RED;
+      g.beginPath(); g.arc(cx, cy, s * 0.05, 0, Math.PI * 2); g.fill();
+    }
+  }),
+
+  // Layered split-bamboo roofing (Toraja): overlapping courses running along the ridge (texture u).
+  bambooRoof: () => canvasTex(256, (g, w) => {
+    const r = rng(19), rows = 8, rh = w / rows;
+    g.fillStyle = '#6f6a62';
+    g.fillRect(0, 0, w, w);
+    for (let row = 0; row < rows; row++) {
+      const y = row * rh;
+      for (let x = 0; x < w; x += 6 + r() * 4) {
+        const v = 180 + r() * 60, bw = 5 + r() * 3;
+        const grd = g.createLinearGradient(x, 0, x + bw, 0);
+        grd.addColorStop(0, `rgb(${v * 0.7},${v * 0.7},${v * 0.7})`);
+        grd.addColorStop(0.5, `rgb(${v},${v},${v})`);
+        grd.addColorStop(1, `rgb(${v * 0.7},${v * 0.7},${v * 0.7})`);
+        g.fillStyle = grd;
+        g.fillRect(x, y + 1, bw, rh - 2);
+      }
+      g.fillStyle = 'rgba(0,0,0,0.35)';
+      g.fillRect(0, y + rh - 4, w, 4);
+    }
+  }),
+
   // Woven bamboo (sasak / anyaman) in a twill pattern.
   bamboo: () => canvasTex(256, (g, w) => {
     const r = rng(9), n = 16, s = w / n;

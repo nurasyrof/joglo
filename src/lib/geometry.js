@@ -337,6 +337,20 @@ export function saddleFrame(part, roof, { slot = 'wood', step = 0.55, maxRise = 
   return count;
 }
 
+// Gable infill under a saddle roof's end, between `bottom` and the roof's underside.
+export function saddleGable(roof, at, half, bottom) {
+  const { surf, width, cfg } = roof;
+  const s = ((cfg.axis === 'x' ? at - cfg.cx : at - cfg.cz)) / cfg.len;
+  const w = width(s);
+  const pts = [[-half, bottom]];
+  for (let k = 0; k <= 24; k++) {
+    const u = -half + (2 * half * k) / 24;
+    pts.push([u, Math.max(bottom, surf(s, Math.max(-1, Math.min(1, u / w)), cfg.t).y - 0.02)]);
+  }
+  pts.push([half, bottom]);
+  return gablePanel(pts, 0.1, cfg.axis, at);
+}
+
 // A flat shape given in (u, y) coordinates, extruded by `depth` and placed in a vertical plane.
 //   axis 'x': plane x = at, u runs along z.   axis 'z': plane z = at, u runs along x.
 export function gablePanel(points, depth, axis, at) {

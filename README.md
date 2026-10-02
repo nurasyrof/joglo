@@ -39,6 +39,7 @@ src/
     rumah-gadang/       a compound: house, four rangkiang, surau and yard
     uma-mbatangu/       a village: clan houses around a plaza of stone tombs
     pekarangan-bali/    a Balinese compound laid out by the Sanga Mandala
+    tongkonan/          a Toraja row of houses facing their rice barns, and the rante
   lib/
     geometry.js · kit.js  procedural building blocks
     utils.js            shadcn `cn` helper

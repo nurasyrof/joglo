@@ -83,8 +83,8 @@ export const HOUSES = [
   },
   {
     id: 'tongkonan', name: 'Tongkonan', local: 'Banua Toraja', island: 'Sulawesi', province: 'South Sulawesi', people: 'Toraja',
-    blurb: 'An ancestral house on piles under a saddle roof that rises like a boat’s prow.',
-    status: 'soon',
+    blurb: 'Ancestral houses whose roofs rise like a boat’s prow, facing their rice barns across the yard.',
+    status: 'ready', load: () => import('./tongkonan/index.js'),
     art: `<path d="M4 8c20 22 40 20 56 20s36 2 56-20c-8 22-20 32-32 34H36C24 40 12 30 4 8Z"/><rect x="38" y="42" width="44" height="10"/>${stilts(range(42, 78, 9))}`,
   },
   {

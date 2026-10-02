@@ -1,7 +1,7 @@
 // The Rumah Gadang itself: the Minangkabau family house at the centre of the compound.
 // Units are metres; y is up, the house runs along x, the front faces +z.
 import * as THREE from 'three';
-import { V, reseed, partStore, box, beam, hexa, lathe, saddleRoof, saddleFrame, gablePanel } from '../../lib/geometry.js';
+import { V, reseed, partStore, box, beam, hexa, lathe, saddleRoof, saddleFrame, saddleGable } from '../../lib/geometry.js';
 import { wallRun, opening as doorway } from '../../lib/kit.js';
 import { CATEGORIES, COMPONENTS } from './parts.js';
 
@@ -54,20 +54,6 @@ function opening(part, face, along, y, w, h, leaves = 2) {
     if (face === 'z+') g.translate(off, 0, 0); else g.translate(0, 0, off);
     part.add('accent', place(g, 0.07));
   }
-}
-
-// Gable infill under a saddle roof's end, between `bottom` and the roof's underside.
-function gable(roof, at, half, bottom) {
-  const { surf, width, cfg } = roof;
-  const s = ((cfg.axis === 'x' ? at - cfg.cx : at - cfg.cz)) / cfg.len;
-  const w = width(s);
-  const pts = [[-half, bottom]];
-  for (let k = 0; k <= 24; k++) {
-    const u = -half + (2 * half * k) / 24;
-    pts.push([u, Math.max(bottom, surf(s, Math.max(-1, Math.min(1, u / w)), cfg.t).y - 0.02)]);
-  }
-  pts.push([half, bottom]);
-  return gablePanel(pts, 0.1, cfg.axis, at);
 }
 
 // Metal spires on the tips of a gonjong roof (shared with the rangkiang).
@@ -146,9 +132,9 @@ function build() {
     finials(P('gonjong'), roof);
   }
   P('singok')
-    .add('ukiran', gable(built.right, WX + FLARE - 0.03, WZ + FLARE, WALL_TOP))
-    .add('ukiran', gable(built.left, -(WX + FLARE - 0.03), WZ + FLARE, WALL_TOP))
-    .add('ukiran', gable(built.porch, pz1 - 0.1, 1.55, 5.03));
+    .add('ukiran', saddleGable(built.right, WX + FLARE - 0.03, WZ + FLARE, WALL_TOP))
+    .add('ukiran', saddleGable(built.left, -(WX + FLARE - 0.03), WZ + FLARE, WALL_TOP))
+    .add('ukiran', saddleGable(built.porch, pz1 - 0.1, 1.55, 5.03));
 
   // ── Biliak: sleeping rooms along the back of the hall, one per bay between the columns
   const B = P('biliak');
