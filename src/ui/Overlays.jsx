@@ -67,7 +67,8 @@ export function Toolbar({ onHelp, onDownload }) {
 }
 
 // Footer text sits directly on the scene, like the title.
-const footerText = 'text-xs text-white/90 [text-shadow:0_1px_6px_rgb(0_0_0/0.45)]';
+// The overlay layer ignores clicks so the scene can be dragged; footer text opts back in.
+const footerText = 'pointer-events-auto text-xs text-white/90 [text-shadow:0_1px_6px_rgb(0_0_0/0.45)]';
 
 export function FooterCredit({ className }) {
   return (
