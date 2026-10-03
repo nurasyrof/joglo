@@ -17,6 +17,8 @@ Then open http://localhost:5173. `npm run build` writes the static site to `dist
 
 Routes are hash-based: `#/joglo` opens a house, `#/joglo/dalem` one building of a compound. The directory landing page (`#/`) is built but switched off until there are 10–15 houses in 3D: set `SHOW_DIRECTORY` in `src/config.js` to launch it.
 
+Footer links: **About** and **Contribute** open as dialogs (`#/about`, `#/contribute`); **Terms & privacy** is a page (`#/terms`, and `/terms` redirects there). Contribute form messages go to `CONTACT.endpoint` in `src/config.js` (any form service that accepts a JSON POST, such as Formspree), or to an email address via `mailto:` if only `CONTACT.email` is set.
+
 **Deploying (Cloudflare):** build command `npm run build`, output directory `dist`.
 
 ## Structure

@@ -1,6 +1,6 @@
 // Bottom toolbar and footer, hover tooltip, help dialog and loading screen.
 import { useEffect, useState } from 'react';
-import { Camera, CircleHelp, Download, Expand, Footprints, Heart, Loader2, Shrink, ZoomIn, ZoomOut } from 'lucide-react';
+import { Camera, CircleHelp, Download, Expand, Footprints, Loader2, Shrink, ZoomIn, ZoomOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Kbd } from '@/components/ui/kbd';
@@ -9,7 +9,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { CREDIT } from '@/config.js';
 import { useEngine } from './engine-context.js';
 import { ThemeMenu } from './TopBar.jsx';
-import { PAGES } from './pages.jsx';
+import { SITE_LINKS } from './pages.jsx';
 import { cn } from '@/lib/utils';
 
 function ToolButton({ label, onClick, disabled, children }) {
@@ -72,8 +72,8 @@ const footerText = 'text-xs text-white/90 [text-shadow:0_1px_6px_rgb(0_0_0/0.45)
 export function FooterCredit({ className }) {
   return (
     <p className={cn(footerText, className)}>
-      © {new Date().getFullYear()} · Built with <Heart className="inline size-3 fill-current align-[-1px]" aria-label="love" /> by{' '}
-      <a href={CREDIT.url} target="_blank" rel="noopener" className="font-medium hover:underline">@{CREDIT.name}</a>
+      © {new Date().getFullYear()} · Built by{' '}
+      <a href={CREDIT.url} target="_blank" rel="noopener" className="font-medium hover:underline">{CREDIT.name}</a>
     </p>
   );
 }
@@ -81,7 +81,7 @@ export function FooterCredit({ className }) {
 export function FooterLinks({ className, linkClassName }) {
   return (
     <nav aria-label="Site" className={cn(footerText, 'flex items-center gap-1.5', className)}>
-      {PAGES.map((p, i) => (
+      {SITE_LINKS.map((p, i) => (
         <span key={p.id} className="flex items-center gap-1.5">
           {i > 0 && <span aria-hidden="true">·</span>}
           <a href={`#/${p.id}`} className={cn('hover:underline', linkClassName)}>{p.short}</a>
