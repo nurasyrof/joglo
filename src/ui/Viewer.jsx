@@ -2,15 +2,15 @@
 // and keyboard shortcuts.
 import { useEffect, useRef, useState } from 'react';
 import { createEngine } from '@/engine/engine.js';
-import { Sheet, SheetContent, SheetDescription, SheetTitle } from '@/components/ui/sheet';
 import { EngineContext, useEngineSnapshot } from './engine-context.js';
 import { useTheme } from './theme.jsx';
 import { navigate } from './router.js';
-import { PanelButton, TitleBar } from './TopBar.jsx';
-import { AboutCardContent, ListPanelContent } from './ListPanel.jsx';
+import { TitleBar } from './TopBar.jsx';
+import { AboutCardContent, ListPanelContent, aboutTitle } from './ListPanel.jsx';
 import { ControlsPanelContent } from './ControlsPanel.jsx';
 import { InfoCard, WalkCard } from './Cards.jsx';
 import { FooterCredit, FooterLinks, HelpDialog, HoverTooltip, LoadingScreen, Toolbar } from './Overlays.jsx';
+import { AboveSheet, MobileFooter, SheetCarousel, useSheet } from './MobileSheet.jsx';
 import { cn } from '@/lib/utils';
 
 const VIEW_KEYS = { 1: 'iso', 2: 'front', 3: 'side', 4: 'top', 5: 'inside' };
@@ -18,6 +18,17 @@ const DEFAULT_SECTIONS = ['view', 'explode', 'display', 'section', 'materials'];
 
 // True while a dialog, menu, popover or sheet has focus, so shortcuts stay out of the way.
 const overlayOpen = () => !!document.querySelector('[role=dialog][data-state=open], [data-slot=dropdown-menu-content], [data-slot=popover-content], [data-slot=select-content]');
+
+function useMediaQuery(query) {
+  const [match, setMatch] = useState(() => matchMedia(query).matches);
+  useEffect(() => {
+    const mq = matchMedia(query);
+    const on = () => setMatch(mq.matches);
+    mq.addEventListener('change', on);
+    return () => mq.removeEventListener('change', on);
+  }, [query]);
+  return match;
+}
 
 function useShortcuts(engine, { onHelp }) {
   useEffect(() => {
@@ -62,8 +73,13 @@ export function Viewer({ meta, building, covered = false }) {
   const { resolved } = useTheme();
   const s = useEngineSnapshot(engine);
   const [help, setHelp] = useState(false);
-  const [sheet, setSheet] = useState(null);              // 'list' | 'controls' on small screens
   const [sections, setSections] = useState(DEFAULT_SECTIONS);
+  const mobile = useMediaQuery('(max-width: 767px)');
+  const sheet = useSheet();                                // bottom sheet on small screens
+  const carousel = useRef(null);
+  const { setSnap } = sheet;
+  // Selecting something lowers the sheet so the model and its info card are in view.
+  useEffect(() => { if (s?.selected) setSnap('low'); }, [s?.selected, setSnap]);
 
   useEffect(() => {
     const e = createEngine(host.current, { onNavigate: navigate });
@@ -81,7 +97,7 @@ export function Viewer({ meta, building, covered = false }) {
 
   const openDownload = () => {
     setSections((v) => (v.includes('download') ? v : [...v, 'download']));
-    if (matchMedia('(max-width: 767px)').matches) setSheet('controls');
+    if (mobile) { setSnap('high'); carousel.current?.goTo('controls'); }
     requestAnimationFrame(() => document.querySelector('[data-slot=accordion-item]:last-child')?.scrollIntoView({ behavior: 'smooth', block: 'end' }));
   };
 
@@ -94,7 +110,7 @@ export function Viewer({ meta, building, covered = false }) {
       <div className="fixed inset-0 overflow-hidden">
         <div ref={host} className={cn('absolute inset-0', blueprint ? 'viewport-blueprint' : 'viewport-sky')} />
 
-        {ready && (
+        {ready && !mobile && (
           <div className="pointer-events-none absolute inset-0">
             <HoverTooltip />
 
@@ -102,8 +118,6 @@ export function Viewer({ meta, building, covered = false }) {
             <header className="absolute inset-x-14 top-4 flex justify-center md:inset-x-[22rem] md:top-5">
               <TitleBar meta={meta} />
             </header>
-            <div className="absolute top-4 left-3 md:hidden"><PanelButton side="left" label="About & parts" onClick={() => setSheet('list')} /></div>
-            <div className="absolute top-4 right-3 md:hidden"><PanelButton side="right" label="Controls" onClick={() => setSheet('controls')} /></div>
 
             {!walking && (
               <>
@@ -134,31 +148,29 @@ export function Viewer({ meta, building, covered = false }) {
           </div>
         )}
 
-        {ready && (
-          <>
-            <Sheet open={sheet === 'list'} onOpenChange={(o) => setSheet(o ? 'list' : null)}>
-              <SheetContent side="left" className="w-[85vw] max-w-sm gap-0 p-0">
-                <SheetTitle className="sr-only">About and parts</SheetTitle>
-                <SheetDescription className="sr-only">About this house and its buildings or parts</SheetDescription>
-                <div className="flex h-full min-h-0 flex-col">
-                  <AboutCardContent className="max-h-[45%] shrink-0 border-b pr-10" />
-                  <div className="min-h-0 flex-1"><ListPanelContent onPicked={() => setSheet(null)} /></div>
-                  <div className="border-t px-4 py-3">
-                    <FooterLinks className="text-muted-foreground [text-shadow:none]" linkClassName="hover:text-foreground" />
-                  </div>
-                </div>
-              </SheetContent>
-            </Sheet>
-            <Sheet open={sheet === 'controls'} onOpenChange={(o) => setSheet(o ? 'controls' : null)}>
-              <SheetContent side="right" className="w-[85vw] max-w-sm gap-0 p-0">
-                <SheetTitle className="sr-only">Controls</SheetTitle>
-                <SheetDescription className="sr-only">View, display and download controls</SheetDescription>
-                <ControlsPanelContent openSections={sections} setOpenSections={setSections} />
-              </SheetContent>
-            </Sheet>
-            <HelpDialog open={help} onOpenChange={setHelp} />
-          </>
+        {ready && mobile && (
+          <div className="pointer-events-none absolute inset-0">
+            <header className="absolute inset-x-3 top-4 flex justify-center">
+              <TitleBar meta={meta} />
+            </header>
+            <AboveSheet sheet={sheet} hidden={walking}>
+              {sheet.snap === 'low' && !sheet.drag && <InfoCard />}
+              <WalkCard />
+              <Toolbar onHelp={() => setHelp(true)} onDownload={openDownload} />
+            </AboveSheet>
+            <SheetCarousel
+              sheet={sheet} hidden={walking} apiRef={carousel}
+              cards={[
+                { id: 'about', title: aboutTitle(s), body: <AboutCardContent full /> },
+                { id: 'list', title: s.mode === 'site' ? 'Compound' : 'Anatomy', scroll: false, body: <ListPanelContent heading={false} /> },
+                { id: 'controls', title: 'Controls', scroll: false, body: <ControlsPanelContent heading={false} openSections={sections} setOpenSections={setSections} /> },
+              ]}
+            />
+            <MobileFooter />
+          </div>
         )}
+
+        {ready && <HelpDialog open={help} onOpenChange={setHelp} />}
 
         <LoadingScreen show={!ready || s.loading} text={s?.loadingText} />
       </div>

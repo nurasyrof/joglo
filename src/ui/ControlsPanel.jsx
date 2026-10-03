@@ -81,16 +81,18 @@ function DownloadSection() {
   );
 }
 
-export function ControlsPanelContent({ openSections, setOpenSections }) {
+export function ControlsPanelContent({ openSections, setOpenSections, heading = true }) {
   const { engine, s } = useEngine();
   const site = s.mode === 'site';
   const sec = s.section, m = s.materials, L = s.lighting;
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="flex items-baseline justify-between px-4 pt-3 pb-1">
-        <h2 className="font-heading text-xl font-semibold">Controls</h2>
-        <span className="text-xs text-muted-foreground">Press <kbd className="font-sans">?</kbd> for shortcuts</span>
-      </div>
+      {heading && (
+        <div className="flex items-baseline justify-between px-4 pt-3 pb-1">
+          <h2 className="font-heading text-xl font-semibold">Controls</h2>
+          <span className="text-xs text-muted-foreground">Press <kbd className="font-sans">?</kbd> for shortcuts</span>
+        </div>
+      )}
       <ScrollArea className="min-h-0 flex-1 [&_[data-slot=scroll-area-viewport]>div]:!block">
         <Accordion type="multiple" value={openSections} onValueChange={setOpenSections} className="px-4 pb-3">
           <AccordionItem value="view">

@@ -166,3 +166,7 @@ body { overflow: hidden; -webkit-font-smoothing: antialiased; }
 .scene-tag.bld-tag { font-size: 12.5px; font-weight: 600; padding: 4px 12px; }
 .scene-tag.zone-tag { pointer-events: none; border-radius: 6px; font-weight: 600; letter-spacing: .02em; background: color-mix(in oklch, var(--c) 22%, var(--panel)); box-shadow: 0 0 0 1px var(--c); }
 .scene-tag.zone-tag::before { display: none; }
+
+/* Horizontal carousels without a visible scrollbar */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }

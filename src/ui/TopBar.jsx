@@ -1,7 +1,7 @@
 // Centred title over the 3D view: house (with the house switcher) and, inside a compound
 // building, the building name (with the building menu). Also the theme menu used by the toolbar.
 import { useState } from 'react';
-import { Check, ChevronDown, Landmark, LayoutGrid, ListTree, Monitor, Moon, SlidersHorizontal, Sun } from 'lucide-react';
+import { Check, ChevronDown, Landmark, LayoutGrid, Monitor, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -80,10 +80,10 @@ function HouseTitle({ meta }) {
             title={inBuilding ? 'Back to the whole compound' : 'Switch house'}
             className={cn('group/title flex items-center gap-3 rounded-lg text-left outline-none focus-visible:ring-2 focus-visible:ring-white/70', onScene)}
           >
-            <Landmark className="size-9 shrink-0 drop-shadow-md md:size-10" strokeWidth={1.6} />
+            <Landmark className="hidden size-10 shrink-0 drop-shadow-md md:block" strokeWidth={1.6} />
             <span className="flex flex-col">
               <span className="font-heading text-2xl leading-none font-semibold whitespace-nowrap group-hover/title:underline group-hover/title:decoration-white/50 group-hover/title:underline-offset-4 md:text-[1.7rem]">{meta.name}</span>
-              <span className="mt-1 hidden text-xs font-medium whitespace-nowrap text-white/90 sm:block">{meta.province} · {meta.people}</span>
+              <span className="mt-1 hidden text-xs font-medium whitespace-nowrap text-white/90 md:block">{meta.province} · {meta.people}</span>
             </span>
           </button>
           <PopoverTrigger asChild>
@@ -143,15 +143,6 @@ export function TitleBar({ meta }) {
       <HouseTitle meta={meta} />
       <BuildingTitle meta={meta} />
     </div>
-  );
-}
-
-// Small screens: buttons that open the side panels as sheets.
-export function PanelButton({ label, onClick, side }) {
-  return (
-    <Button variant="ghost" size="icon" aria-label={label} onClick={onClick} className="floating pointer-events-auto size-9 rounded-xl md:hidden">
-      {side === 'left' ? <ListTree /> : <SlidersHorizontal />}
-    </Button>
   );
 }
 

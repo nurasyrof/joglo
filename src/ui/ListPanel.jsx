@@ -50,7 +50,7 @@ function Row({ item, color, site, active, hidden, onSelect, onEnter, onToggle })
   );
 }
 
-export function ListPanelContent({ onPicked }) {
+export function ListPanelContent({ onPicked, heading = true }) {
   const { engine, s } = useEngine();
   const [q, setQ] = useState('');
   const site = s.mode === 'site';
@@ -64,11 +64,13 @@ export function ListPanelContent({ onPicked }) {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="space-y-2.5 px-3 pt-3 pb-2">
-        <div className="flex items-baseline justify-between px-0.5">
-          <h2 className="font-heading text-xl font-semibold">{site ? 'Compound' : 'Anatomy'}</h2>
-          <span className="text-xs text-muted-foreground">{s.total} {site ? 'buildings' : 'parts'}</span>
-        </div>
+      <div className={cn('space-y-2.5 px-3 pb-2', heading ? 'pt-3' : 'pt-1')}>
+        {heading && (
+          <div className="flex items-baseline justify-between px-0.5">
+            <h2 className="font-heading text-xl font-semibold">{site ? 'Compound' : 'Anatomy'}</h2>
+            <span className="text-xs text-muted-foreground">{s.total} {site ? 'buildings' : 'parts'}</span>
+          </div>
+        )}
         <div className="relative">
           <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder={site ? 'Search buildings…' : 'Search parts…'} className="h-8 pl-8" />
@@ -105,17 +107,26 @@ export function ListPanelContent({ onPicked }) {
   );
 }
 
+export const aboutTitle = (s) => (s.building ? `About the ${s.building.name}` : 'About this house');
+
 // "About this house" (or the open building in a compound): clamped text that expands in place.
-export function AboutCardContent({ className }) {
+// `full` shows all of it with no heading, for the mobile sheet where the card itself scrolls.
+export function AboutCardContent({ className, full = false }) {
   const { s } = useEngine();
   const [open, setOpen] = useState(false);
   const b = s.building;
-  const title = b ? `About the ${b.name}` : 'About this house';
   const paras = b ? [b.desc, b.fn, b.meaning] : s.house.about.paras;
   useEffect(() => setOpen(false), [b?.id, s.house.id]);
+  if (full) {
+    return (
+      <div className={cn('space-y-3 px-5 pb-5 text-[13px] leading-relaxed text-foreground/80', className)}>
+        {paras.map((t, i) => <p key={i}>{t}</p>)}
+      </div>
+    );
+  }
   return (
     <div className={cn('flex min-h-0 flex-col px-4 pt-3.5 pb-3', className)}>
-      <h2 className="font-heading text-xl font-semibold">{title}</h2>
+      <h2 className="font-heading text-xl font-semibold">{aboutTitle(s)}</h2>
       <div className={cn('mt-2 min-h-0', open && 'overflow-y-auto pr-1')}>
         <p
           onClick={() => !open && setOpen(true)}
