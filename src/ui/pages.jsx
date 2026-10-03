@@ -12,7 +12,7 @@ export const SITE_LINKS = [
 ];
 export const linkById = (id) => SITE_LINKS.find((l) => l.id === id);
 
-const UPDATED = '2 October 2026';
+const UPDATED = '3 October 2026';
 
 const H2 = ({ children }) => <h2 className="mt-10 mb-3 font-heading text-2xl font-semibold">{children}</h2>;
 const P = ({ children }) => <p className="mb-4 leading-relaxed text-foreground/80">{children}</p>;
@@ -57,9 +57,10 @@ function TermsPage() {
 
       <H2>4. Using the site and downloads</H2>
       <P>
-        You may view the site, take screenshots and download the 3D models (GLB, OBJ, STL, USDZ) for personal, educational and
-        other non-commercial purposes, such as study, teaching, school projects, research and personal 3D printing. When you
-        publish or share them, please credit “{SITE} by {CREDIT.name}”.
+        The 3D models, including every download (GLB, OBJ, STL, USDZ), and the house descriptions are licensed under{' '}
+        <A href="https://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 (CC BY-NC 4.0)</A>.
+        You may share and adapt them for non-commercial purposes such as study, teaching, school projects, research and personal
+        3D printing, as long as you credit “{SITE} by {CREDIT.name}”, link to {SITE} and say if you changed anything.
       </P>
       <P>
         For commercial use, such as selling models or prints, or using them in paid products, games, films or advertising, please
@@ -70,10 +71,11 @@ function TermsPage() {
         not try to disrupt or overload the site.
       </P>
 
-      <H2>5. Ownership</H2>
+      <H2>5. Ownership and source code</H2>
       <P>
-        The 3D models, texts, design and code of {SITE} are © {CREDIT.name}, except where noted. The source code is published on{' '}
-        <A href={REPO_URL}>GitHub</A>; any licence for the code is stated in that repository. Third-party libraries such as Three.js,
+        The models, texts and design of {SITE} are © {CREDIT.name}. The source code is published on <A href={REPO_URL}>GitHub</A>{' '}
+        under two licences: the house models and their content (the <code>src/houses</code> folder) under CC BY-NC 4.0, and
+        everything else, such as the 3D engine and the interface, under the MIT License. Third-party libraries such as Three.js,
         React and shadcn/ui are used under their own open-source licences.
       </P>
 
