@@ -1,5 +1,5 @@
 // The joglo frame shared by the pendapa and the dalem: three column rings on umpak,
-// sunduk & kili, blandar, tumpang sari, dhadha peksi, uleng, lambang sari and the three
+// sunduk & kili, blandar, tumpang sari, dhadha peksi, uleng, lambang gantung and the three
 // roof tiers with rafters, hips, ridge and crowns. Units are metres, floor at DIM.floorTop.
 import { V, box, beam, frame, ring, lathe, slab, tierFaces, rafters, battens } from '../../lib/geometry.js';
 import { umpak } from '../../lib/kit.js';
@@ -20,7 +20,7 @@ export const DIM = {
 const IDS = {
   umpak: 'umpak', guru: 'saka_guru', pen: 'saka_penanggap', pit: 'saka_penitih',
   sunduk: 'sunduk_kili', blandar: 'blandar', tumpang: 'tumpang_sari', dadha: 'dadha_peksi',
-  uleng: 'uleng', lambang: 'lambang_sari', usuk: 'usuk', dudur: 'dudur', molo: 'molo', mustaka: 'mustaka',
+  uleng: 'uleng', lambang: 'lambang_gantung', usuk: 'usuk', dudur: 'dudur', molo: 'molo', mustaka: 'mustaka',
   brunjung: 'atap_brunjung', penanggap: 'atap_penanggap', penitih: 'atap_penitih',
 };
 
@@ -79,7 +79,7 @@ export function jogloStructure(P, ids = {}) {
   }
   P(I.uleng).add('accent', box(2 * ux + 0.22, 0.04, 2 * uz + 0.22, 0, tsTop + 0.64 + 0.02, 0));
 
-  // ── Lambang sari: rings and short posts at the brunjung / penanggap junction
+  // ── Lambang gantung: rings and short hanging posts (saka benthung) at the brunjung / penanggap junction
   const LS = P(I.lambang);
   const lx = 3.25, lz = 2.95;
   frame(LS, 'wood', lx, lz, 6.04, 0.14, 0.16, 0.05);

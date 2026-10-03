@@ -70,7 +70,7 @@ A site can also have a **guided walk** (`site.walk.stops`). Each stop has a `tit
 
 The camera views, section ranges and shadows are calculated from each model's size, so nothing in the viewer needs changing. Loading houses modelled in Blender (GLB with mesh names matching part ids) isn't supported yet; it would need a small loader that returns the same `{ parts }` shape as `build()`.
 
-Check part names and descriptions against published sources before switching a house on.
+Check part names and descriptions against published sources before switching a house on. Each house has a review sheet in `docs/content-review/` recording what has been checked and against which source. A `meaning` that is our own reading rather than sourced gets `interp: true` on the part, and the info card labels it **Interpretation**.
 
 ## Licence
 

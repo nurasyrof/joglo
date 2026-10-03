@@ -105,12 +105,16 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
     new THREE.MeshStandardMaterial({ color: '#8d7c63', roughness: 1, alphaMap: groundAlpha, transparent: true }));
   ground.position.y = -0.002;
   ground.receiveShadow = true;
+  // The ground is transparent (its edge fades out), so it joins the depth-sorted transparent pass.
+  // Draw it first: otherwise it can paint over faded roofs whose centres are farther away.
+  ground.renderOrder = -1;
   scene.add(ground);
 
   const grid = new THREE.GridHelper(1, 1, 0x4f86b8, 0x24476b);
   grid.material.transparent = true;
   grid.material.opacity = 0.5;
   grid.visible = false;
+  grid.renderOrder = -1;
   scene.add(grid);
 
   // ── Section plane + cap uniforms ───────────────────────────────────
@@ -851,7 +855,7 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
       hidden: [...(site ? S.hiddenBld : S.hidden)],
       card: item && {
         id: item.id, kind: site ? 'building' : 'part',
-        name: item.name, en: item.en, alias: item.alias, desc: item.desc, fn: item.fn, meaning: item.meaning, specs: item.specs,
+        name: item.name, en: item.en, alias: item.alias, desc: item.desc, fn: item.fn, meaning: item.meaning, interp: !!item.interp, specs: item.specs,
         cat: cat ? { label: cat.label, local: cat.local, color: cat.color } : null,
         index: items.indexOf(item) + 1, total: items.length,
       },

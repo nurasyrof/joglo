@@ -60,9 +60,9 @@ const BUILDINGS = [
   },
   {
     id: 'gadri', def: gadri, at: [0, -28.3], rot: 0, zone: 'family',
-    name: 'Gadri', alias: 'Gadri', en: 'Family dining room',
-    desc: 'An open-fronted hall behind the dalem.',
-    fn: 'Where the family eats and spends everyday time.',
+    name: 'Gadri', alias: 'Gadri', en: 'Family room',
+    desc: 'An open-fronted room behind the dalem.',
+    fn: 'Often used for family meals and daily life; in some houses it is part of the kitchen area.',
     meaning: 'Everyday life happens at the back, away from the formal front and the sacred dalem.',
     specs: ['14.4 × 6.6 m', 'Limasan roof'],
   },
@@ -99,7 +99,7 @@ export default {
     paras: [
       'The joglo is the most prestigious form of the traditional Javanese house. Its steep central roof over four master columns was once reserved for the nobility (priyayi) and the courts of Yogyakarta and Surakarta.',
       'A joglo is not one building but a compound (omah) laid out along a central axis, from public to private. The regol gate opens onto a courtyard and the open pendapa, where guests are received. Behind it the pringgitan, a stage for wayang, leads to the enclosed dalem, the family’s home, whose three senthong rooms close the axis. Side wings (gandhok), a family room (gadri), the kitchen (pawon) and the well (pekiwan) complete it.',
-      'The frame is joined only with timber joints and sits loosely on stone bases, so it rides out earthquakes and can be taken apart and moved.',
+      'The frame is held together by timber joints rather than nails and rests on stone bases, so it can be taken apart and rebuilt elsewhere. In the 2006 Yogyakarta earthquake, the stiff core around the four saka guru generally held up better than the lighter outer frame.',
       'This model is an idealised compound for learning. Real households vary widely in size, layout and which buildings they have.',
     ],
   },

@@ -21,6 +21,20 @@ function Nav({ label, onClick, disabled, children }) {
   );
 }
 
+// Marks a "meaning" that is our own reading of the house rather than taken from a source.
+function InterpretationBadge() {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span tabIndex={0} className="rounded-full bg-interp-muted px-1.5 py-px text-[10px] font-medium text-interp outline-none focus-visible:ring-2 focus-visible:ring-ring/50">
+          Interpretation
+        </span>
+      </TooltipTrigger>
+      <TooltipContent className="max-w-60">Our own reading of this part, not taken from a published source.</TooltipContent>
+    </Tooltip>
+  );
+}
+
 export function InfoCard() {
   const { engine, s } = useEngine();
   const c = s.card;
@@ -55,8 +69,11 @@ export function InfoCard() {
             <p className="mt-1 text-[13px] leading-relaxed text-foreground/85">{c.fn}</p>
           </div>
           <div>
-            <h4 className="text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">Meaning</h4>
-            <p className="mt-1 text-[13px] leading-relaxed text-foreground/85">{c.meaning}</p>
+            <div className="flex items-center gap-1.5">
+              <h4 className="text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">Meaning</h4>
+              {c.interp && <InterpretationBadge />}
+            </div>
+            <p className={cn('mt-1 text-[13px] leading-relaxed text-foreground/85', c.interp && 'border-l-2 border-interp pl-2.5')}>{c.meaning}</p>
           </div>
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-2">
