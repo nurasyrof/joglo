@@ -12,6 +12,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { texture, createMaterialFactory } from './materials.js';
 import { export3D } from './exporter.js';
+import { tx } from '../lib/i18n.js';
 
 const CLAY_DEFAULT = '#e8e3da';
 // Parts that rise with "lift roofs" in site view: flagged `lift`, or in the 'roof' category.
@@ -32,7 +33,12 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
     selected: null, hovered: null, focusMode: 'ghost', hidden: new Set(),     // building mode (parts)
     selBld: null, hovBld: null, hiddenBld: new Set(),                        // site mode (buildings)
     loading: false, loadingText: '',
+    lang: 'en',
   };
+  // House text may be { en, id }; X() resolves it in the current language.
+  const X = (v) => tx(v, S.lang);
+  // Indonesian writes decimals with a comma: 16.6 × 14.6 m → 16,6 × 14,6 m.
+  const localNumber = (str) => (S.lang === 'id' && typeof str === 'string' ? str.replace(/(\d)\.(\d)/g, '$1,$2') : str);
   let H = null;      // the loaded house
   let cur = null;    // the building open in building mode
   let alive = true;
@@ -133,16 +139,20 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
   scene.add(root);
 
   // ── Building the house ─────────────────────────────────────────────
+  const tags = new Set();      // every scene label, so a language switch can relabel them
   function tag(text, color, cls, onClick) {
     const el = document.createElement('button');
     el.className = `scene-tag ${cls}`;
-    el.textContent = text;
+    el.textContent = X(text);
     el.style.setProperty('--c', color);
     el.addEventListener('click', (e) => { e.stopPropagation(); onClick(); });
     const obj = new CSS2DObject(el);
     obj.visible = false;
+    obj.userData.text = text;
+    tags.add(obj);
     return obj;
   }
+  function relabel() { for (const t of tags) t.element.textContent = X(t.userData.text); }
 
   function buildBuilding(entry) {
     const def = entry.def;
@@ -163,7 +173,7 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
       pg.name = d.id;
       group.add(pg);
       const edgeMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.4, clippingPlanes: [sectionPlane] });
-      const c = { ...d, bld: B, specs: d.specs.map(fill), group: pg, meshes: [], edges: [], mats: [], edgeMat };
+      const c = { ...d, bld: B, fill, group: pg, meshes: [], edges: [], mats: [], edgeMat };
       for (const [slot, list] of Object.entries(part.parts)) {
         if (!H.slotById[slot]) console.warn(`[${entry.id}/${d.id}] undeclared material slot "${slot}"`);
         const geom = mergeGeometries(list, false);
@@ -279,12 +289,13 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
         for (const e of c.edges) e.geometry.dispose();
         c.edgeMat.dispose();
         c.label.element.remove();
+        tags.delete(c.label);
       }
-      if (B.label) { B.label.element.remove(); root.remove(B.label); }
+      if (B.label) { B.label.element.remove(); tags.delete(B.label); root.remove(B.label); }
       root.remove(B.group);
     }
     if (H.overlay) {
-      for (const l of H.overlay.userData.labels) l.element.remove();
+      for (const l of H.overlay.userData.labels) { l.element.remove(); tags.delete(l); }
       H.overlay.traverse((o) => { o.geometry?.dispose(); o.material?.dispose?.(); });
       root.remove(H.overlay);
     }
@@ -314,7 +325,7 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
     if (H && H.meta.id === meta.id) { showBuilding(bldId); return; }
     const token = ++loadToken;
     S.loading = true;
-    S.loadingText = def.loading || 'Building…';
+    S.loadingText = def.loading || { en: 'Building…', id: 'Membangun…' };
     emit();
     await new Promise((r) => setTimeout(r, 40));   // let the loading screen paint before the synchronous build
     if (token !== loadToken || !alive) return;
@@ -680,7 +691,7 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
     if (id && pointer.inside && !W.on) {
       const item = inBuilding() ? cur.compById[id] : H.bldById[id];
       const r = container.getBoundingClientRect();
-      notifyHover({ x: pointer.x - r.left, y: pointer.y - r.top, name: item.name, en: item.en });
+      notifyHover({ x: pointer.x - r.left, y: pointer.y - r.top, name: X(item.name), en: X(item.en) });
     } else notifyHover(null);
   }
 
@@ -759,7 +770,7 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
     const dur = Math.min(4.5, Math.max(1.4, dist / 6));
     flyTo(pose.pos, pose.target, dur, via);
     W.arrive = performance.now() + dur * 1000;
-    W.wait = Math.min(15000, Math.max(6000, st.text.length * 50));
+    W.wait = Math.min(15000, Math.max(6000, X(st.text).length * 50));
     emit();
   }
   function walkNext() { if (W.i >= stops().length - 1) stopWalk(); else goStop(W.i + 1); }
@@ -796,7 +807,7 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
       transform: (c) => (exploded ? c.group.matrixWorld : c.bld.group.matrixWorld).clone(),
       nameOf: (c) => (blds.length > 1 ? `${c.bld.name} · ${c.name}` : c.name),
       material: exportMaterial,
-      slotName: (slot) => H.slotById[slot]?.label || slot,
+      slotName: (slot) => X(H.slotById[slot]?.label) || slot,
       title: inBuilding() && !H.single ? `${H.meta.name} · ${cur.name}` : H.meta.name,
       filename: fileBase(),
     });
@@ -827,7 +838,7 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
   // ── Snapshot for the UI ────────────────────────────────────────────
   function buildSnapshot() {
     const base = {
-      theme: S.theme, loading: S.loading, loadingText: S.loadingText,
+      theme: S.theme, lang: S.lang, loading: S.loading, loadingText: X(S.loadingText),
       style: S.style, roofOpacity: S.roofOpacity, siteLogic: S.siteLogic, labels: S.labels, autoRotate: S.autoRotate,
       explode: S.explodeTarget, view: S.view, focusMode: S.focusMode, textures: S.textures,
       section: { ...S.section },
@@ -838,8 +849,8 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
     const items = listItems();
     const groups = (site ? H.site.categories : cur.def.categories)
       .map((g) => ({
-        id: g.id, label: g.label, local: g.local, color: g.color,
-        items: items.filter((it) => (site ? it.zone : it.cat) === g.id).map((it) => ({ id: it.id, name: it.name, en: it.en, alias: it.alias })),
+        id: g.id, label: X(g.label), local: X(g.local), color: g.color,
+        items: items.filter((it) => (site ? it.zone : it.cat) === g.id).map((it) => ({ id: it.id, name: X(it.name), en: X(it.en), alias: X(it.alias) })),
       }))
       .filter((g) => g.items.length);
     const selId = site ? S.selBld : S.selected;
@@ -849,31 +860,33 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
     return {
       ...base,
       house: {
-        id: H.meta.id, name: H.meta.name, single: H.single, about: H.def.about,
+        id: H.meta.id, name: H.meta.name, single: H.single,
+        about: H.def.about && { title: X(H.def.about.title), paras: (X(H.def.about.paras) || []).map(X) },
         hasWalk: list.length > 0, hasOverlay: !!H.overlay,
       },
       mode: S.mode,
       building: inBuilding() && !H.single
-        ? { id: cur.id, name: cur.name, en: cur.en, alias: cur.alias, desc: cur.desc, fn: cur.fn, meaning: cur.meaning }
+        ? { id: cur.id, name: X(cur.name), en: X(cur.en), alias: X(cur.alias), desc: X(cur.desc), fn: X(cur.fn), meaning: X(cur.meaning) }
         : null,
-      buildings: H.single ? [] : H.blds.map((B) => ({ id: B.id, name: B.name, en: B.en, zone: B.zone })),
-      zones: H.site.categories || [],
+      buildings: H.single ? [] : H.blds.map((B) => ({ id: B.id, name: X(B.name), en: X(B.en), zone: B.zone })),
+      zones: (H.site.categories || []).map((z) => ({ ...z, label: X(z.label), local: X(z.local) })),
       groups, total: items.length,
       selected: selId,
       hidden: [...(site ? S.hiddenBld : S.hidden)],
       card: item && {
         id: item.id, kind: site ? 'building' : 'part',
-        name: item.name, en: item.en, alias: item.alias, desc: item.desc, fn: item.fn, meaning: item.meaning, interp: !!item.interp, specs: item.specs,
-        cat: cat ? { label: cat.label, local: cat.local, color: cat.color } : null,
+        name: X(item.name), en: X(item.en), alias: X(item.alias), desc: X(item.desc), fn: X(item.fn), meaning: X(item.meaning), interp: !!item.interp,
+        specs: (X(item.specs) || []).map((sp) => (item.fill ? item.fill(X(sp)) : X(sp))).map(localNumber),
+        cat: cat ? { label: X(cat.label), local: X(cat.local), color: cat.color } : null,
         index: items.indexOf(item) + 1, total: items.length,
       },
       materials: {
         preset: S.preset, colors: { ...S.colors }, rough: S.rough,
-        presets: Object.entries(H.def.presets).map(([id, p]) => ({ id, label: p.label })),
-        slots: H.def.slots.filter((s) => s.ui !== false).map((s) => ({ id: s.id, label: s.label })),
+        presets: Object.entries(H.def.presets).map(([id, p]) => ({ id, label: X(p.label) })),
+        slots: H.def.slots.filter((s) => s.ui !== false).map((s) => ({ id: s.id, label: X(s.label) })),
       },
       walk: W.on
-        ? { on: true, index: W.i, total: list.length, auto: W.auto, stop: { title: list[W.i].title, local: list[W.i].local, text: list[W.i].text }, titles: list.map((s) => s.title) }
+        ? { on: true, index: W.i, total: list.length, auto: W.auto, stop: { title: X(list[W.i].title), local: X(list[W.i].local), text: X(list[W.i].text) }, titles: list.map((s) => X(s.title)) }
         : { on: false },
     };
   }
@@ -981,6 +994,7 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
     setExposure: set((v) => { renderer.toneMappingExposure = v; }),
     setShadows: set((v) => { S.shadows = v; applyMaterials(); }),
     setTheme: set((t) => { S.theme = t; setTime(S.time); }),
+    setLang: set((l) => { S.lang = l; relabel(); }),
 
     // Walk
     startWalk, stopWalk: () => stopWalk(),

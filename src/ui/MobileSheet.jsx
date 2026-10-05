@@ -6,6 +6,7 @@ import { ChevronDown } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { CREDIT } from '@/config.js';
 import { SITE_LINKS } from './site-links.js';
+import { useLang } from './lang.jsx';
 import { cn } from '@/lib/utils';
 
 export const FOOTER_H = 40;
@@ -97,6 +98,7 @@ function Card({ title, handle, children }) {
 // The carousel of cards. `cards` is [{ id, title, body, scroll }]; `scroll: false` means the body
 // manages its own scrolling (lists and accordions with a ScrollArea).
 export function SheetCarousel({ sheet, cards, apiRef, hidden }) {
+  const { t } = useLang();
   const track = useRef(null);
   const handle = useHandleDrag(sheet);
   const goTo = useCallback((id) => {
@@ -113,7 +115,7 @@ export function SheetCarousel({ sheet, cards, apiRef, hidden }) {
     >
       <div ref={track} className="no-scrollbar flex h-full snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain px-6">
         {cards.map((c) => (
-          <Card key={c.id} title={c.title} handle={{ ...handle, role: 'button', 'aria-label': `Resize panel (${sheet.snap})` }}>
+          <Card key={c.id} title={c.title} handle={{ ...handle, role: 'button', 'aria-label': t('Resize panel', 'Ubah tinggi panel') }}>
             {c.scroll === false ? <div className="h-full">{c.body}</div> : c.body}
           </Card>
         ))}
@@ -138,6 +140,7 @@ export function AboveSheet({ sheet, hidden, children }) {
 const footerText = 'pointer-events-auto text-xs text-white/90 [text-shadow:0_1px_6px_rgb(0_0_0/0.45)]';
 
 export function MobileFooter() {
+  const { t, tx } = useLang();
   return (
     <div className="absolute inset-x-0 bottom-0 flex items-center justify-between px-7" style={{ height: FOOTER_H }}>
       <p className={footerText}>
@@ -145,11 +148,11 @@ export function MobileFooter() {
       </p>
       <DropdownMenu>
         <DropdownMenuTrigger className={cn(footerText, 'flex items-center gap-1 rounded outline-none focus-visible:ring-2 focus-visible:ring-white/70')}>
-          About <ChevronDown className="size-3.5" />
+          {t('About', 'Tentang')} <ChevronDown className="size-3.5" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" side="top" sideOffset={8} className="w-44">
           {SITE_LINKS.map((l) => (
-            <DropdownMenuItem key={l.id} asChild><a href={`#/${l.id}`}>{l.short}</a></DropdownMenuItem>
+            <DropdownMenuItem key={l.id} asChild><a href={`#/${l.id}`}>{tx(l.short)}</a></DropdownMenuItem>
           ))}
         </DropdownMenuContent>
       </DropdownMenu>

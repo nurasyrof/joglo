@@ -34,50 +34,50 @@ function build() {
 }
 
 const CATEGORIES = [
-  { id: 'base',  label: 'Floor & frame', local: 'Rangka',  color: '#b27a45' },
-  { id: 'walls', label: 'Walls & stove', local: 'Dinding', color: '#d9c7a0' },
-  { id: 'roof',  label: 'Roof',          local: 'Atap',    color: '#cf5b3f' },
+  { id: 'base',  label: { en: 'Floor & frame', id: 'Lantai & rangka' }, local: 'Rangka',  color: '#b27a45' },
+  { id: 'walls', label: { en: 'Walls & stove', id: 'Dinding & tungku' }, local: 'Dinding', color: '#d9c7a0' },
+  { id: 'roof',  label: { en: 'Roof', id: 'Atap' },          local: 'Atap',    color: '#cf5b3f' },
 ];
 
 const PARTS = [
   {
-    id: 'lantai', cat: 'base', name: 'Lantai', alias: 'Jogan', en: 'Earth floor',
+    id: 'lantai', cat: 'base', name: 'Lantai', alias: 'Jogan', en: { en: 'Earth floor', id: 'Lantai tanah' },
     explode: [0, 0, 0], anchor: [2, 0.2, 2.9],
-    desc: 'A floor of rammed earth, barely raised above the yard.', fn: 'Tolerates fire, ash and water from cooking.',
-    meaning: 'The lowest floor in the compound, for the humblest, busiest room.',
-    specs: ['Rammed earth'],
+    desc: { en: 'A floor of rammed earth, barely raised above the yard.', id: 'Lantai tanah yang dipadatkan, nyaris sejajar dengan halaman.' }, fn: { en: 'Tolerates fire, ash and water from cooking.', id: 'Tahan terhadap api, abu, dan air dari kegiatan memasak.' },
+    meaning: { en: 'The lowest floor in the compound, for the humblest, busiest room.', id: 'Lantai paling rendah di kompleks, untuk ruang yang paling sederhana dan paling sibuk.' },
+    specs: [{ en: 'Rammed earth', id: 'Tanah dipadatkan' }],
   },
   {
-    id: 'saka', cat: 'base', name: 'Saka', alias: 'Rangka', en: 'Columns and ring beam',
+    id: 'saka', cat: 'base', name: 'Saka', alias: 'Rangka', en: { en: 'Columns and ring beam', id: 'Tiang dan balok keliling' },
     explode: [0, 1.4, 0], anchor: [3.6, 2.0, 2.4],
-    desc: 'A light timber frame of eight columns and a ring beam.', fn: 'Carries the roof.', meaning: 'Built simply and cheaply, easy to repair.',
-    specs: ['8 columns'],
+    desc: { en: 'A light timber frame of eight columns and a ring beam.', id: 'Rangka kayu ringan dari delapan tiang dan balok keliling.' }, fn: { en: 'Carries the roof.', id: 'Memikul atap.' }, meaning: { en: 'Built simply and cheaply, easy to repair.', id: 'Dibangun sederhana dan murah, mudah diperbaiki.' },
+    specs: [{ en: '8 columns', id: '8 tiang' }],
   },
   {
-    id: 'dinding', cat: 'walls', name: 'Dinding Gedhèk', alias: 'Gedhèk', en: 'Woven bamboo walls',
+    id: 'dinding', cat: 'walls', name: 'Dinding Gedhèk', alias: 'Gedhèk', en: { en: 'Woven bamboo walls', id: 'Dinding anyaman bambu' },
     explode: [0, 2.4, 0], anchor: [-3.6, 1.8, 0], focusDir: [-1, 0.3, 0.5],
-    desc: 'Walls and gable ends of woven split bamboo (gedhèk).', fn: 'Let smoke from the stove escape through the weave while keeping out rain.',
-    meaning: 'Light, breathable walls for a working room.',
-    specs: ['Woven bamboo', '1 door'],
+    desc: { en: 'Walls and gable ends of woven split bamboo (gedhèk).', id: 'Dinding dan tebeng dari anyaman bilah bambu (gedhèk).' }, fn: { en: 'Let smoke from the stove escape through the weave while keeping out rain.', id: 'Membiarkan asap tungku keluar melalui celah anyaman sambil menahan air hujan.' },
+    meaning: { en: 'Light, breathable walls for a working room.', id: 'Dinding yang ringan dan berongga untuk ruang kerja.' },
+    specs: [{ en: 'Woven bamboo', id: 'Anyaman bambu' }, { en: '1 door', id: '1 pintu' }],
   },
   {
-    id: 'luweng', cat: 'walls', name: 'Luweng', alias: 'Tungku', en: 'Clay stove',
+    id: 'luweng', cat: 'walls', name: 'Luweng', alias: 'Tungku', en: { en: 'Clay stove', id: 'Tungku tanah liat' },
     explode: [0, 1.2, 1.4], anchor: [-1.6, 1.1, -1.85], focusDir: [0.3, 0.5, 1],
-    desc: 'A wood-fired stove of clay-plastered brick with openings for the pots, and a large water jar by the door.',
-    fn: 'Cooking for the whole household.', meaning: 'The kitchen fire is the everyday heart of the household.',
-    specs: ['2 fire holes', 'Water jar'],
+    desc: { en: 'A wood-fired stove of clay-plastered brick with openings for the pots, and a large water jar by the door.', id: 'Tungku kayu bakar dari bata berlapis tanah liat dengan lubang untuk periuk, dan gentong air besar di dekat pintu.' },
+    fn: { en: 'Cooking for the whole household.', id: 'Memasak untuk seluruh rumah tangga.' }, meaning: { en: 'The kitchen fire is the everyday heart of the household.', id: 'Api dapur adalah jantung keseharian rumah tangga.' },
+    specs: [{ en: '2 fire holes', id: '2 lubang api' }, { en: 'Water jar', id: 'Gentong air' }],
   },
   {
-    id: 'usuk', cat: 'roof', name: 'Usuk & Molo', alias: 'Rangka atap', en: 'Rafters and ridge',
+    id: 'usuk', cat: 'roof', name: 'Usuk & Molo', alias: 'Rangka atap', en: { en: 'Rafters and ridge', id: 'Usuk dan bubungan' },
     explode: [0, 3.4, 0], anchor: [2, 3.1, 2.8],
-    desc: 'Rafters, battens and ridge beam.', fn: 'Carry the roof tiles.', meaning: 'The same simple system as the gandhok.',
-    specs: ['{rafters} rafters'],
+    desc: { en: 'Rafters, battens and ridge beam.', id: 'Usuk, reng, dan balok bubungan.' }, fn: { en: 'Carry the roof tiles.', id: 'Memikul genteng.' }, meaning: { en: 'The same simple system as the gandhok.', id: 'Sistem sederhana yang sama dengan gandhok.' },
+    specs: [{ en: '{rafters} rafters', id: '{rafters} usuk' }],
   },
   {
-    id: 'atap', cat: 'roof', name: 'Atap Kampung', alias: 'Kampung', en: 'Gable roof', roof: true,
+    id: 'atap', cat: 'roof', name: 'Atap Kampung', alias: 'Kampung', en: { en: 'Gable roof', id: 'Atap pelana' }, roof: true,
     explode: [0, 4.4, 0], anchor: [0, 3.9, 1.2],
-    desc: 'A simple kampung (gable) roof.', fn: 'Covers the kitchen.', meaning: 'The plainest roof form, for a service building.',
-    specs: ['2 slopes'],
+    desc: { en: 'A simple kampung (gable) roof.', id: 'Atap kampung (pelana) yang sederhana.' }, fn: { en: 'Covers the kitchen.', id: 'Menaungi dapur.' }, meaning: { en: 'The plainest roof form, for a service building.', id: 'Bentuk atap paling sederhana, untuk bangunan servis.' },
+    specs: [{ en: '2 slopes', id: '2 bidang atap' }],
   },
 ];
 

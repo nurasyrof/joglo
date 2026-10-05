@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createEngine } from '@/engine/engine.js';
 import { EngineContext, useEngineSnapshot } from './engine-context.js';
 import { useTheme } from './theme.jsx';
+import { useLang } from './lang.jsx';
 import { navigate } from './router.js';
 import { TitleBar } from './TopBar.jsx';
 import { AboutCardContent, ListPanelContent, aboutTitle } from './ListPanel.jsx';
@@ -87,6 +88,8 @@ export function Viewer({ meta, building, covered = false }) {
     return () => e.dispose();
   }, []);
   useEffect(() => { engine?.setTheme(resolved); }, [engine, resolved]);
+  const { lang, t } = useLang();
+  useEffect(() => { engine?.setLang(lang); }, [engine, lang]);
   useEffect(() => {
     if (!engine) return undefined;
     let cancelled = false;
@@ -161,9 +164,9 @@ export function Viewer({ meta, building, covered = false }) {
             <SheetCarousel
               sheet={sheet} hidden={walking} apiRef={carousel}
               cards={[
-                { id: 'about', title: aboutTitle(s), body: <AboutCardContent full /> },
-                { id: 'list', title: s.mode === 'site' ? 'Compound' : 'Anatomy', scroll: false, body: <ListPanelContent heading={false} /> },
-                { id: 'controls', title: 'Controls', scroll: false, body: <ControlsPanelContent heading={false} openSections={sections} setOpenSections={setSections} /> },
+                { id: 'about', title: aboutTitle(s, t), body: <AboutCardContent full /> },
+                { id: 'list', title: s.mode === 'site' ? t('Compound', 'Kompleks') : t('Anatomy', 'Anatomi'), scroll: false, body: <ListPanelContent heading={false} /> },
+                { id: 'controls', title: t('Controls', 'Kontrol'), scroll: false, body: <ControlsPanelContent heading={false} openSections={sections} setOpenSections={setSections} /> },
               ]}
             />
             <MobileFooter />

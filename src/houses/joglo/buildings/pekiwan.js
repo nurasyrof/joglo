@@ -39,33 +39,33 @@ function build() {
 }
 
 const CATEGORIES = [
-  { id: 'water', label: 'Water', local: 'Banyu', color: '#6fa0b8' },
-  { id: 'roof',  label: 'Shelter', local: 'Atap', color: '#cf5b3f' },
+  { id: 'water', label: { en: 'Water', id: 'Air' }, local: 'Banyu', color: '#6fa0b8' },
+  { id: 'roof',  label: { en: 'Shelter', id: 'Naungan' }, local: 'Atap', color: '#cf5b3f' },
 ];
 
 const PARTS = [
   {
-    id: 'sumur', cat: 'water', name: 'Sumur', alias: 'Sumur & kerekan', en: 'Well',
+    id: 'sumur', cat: 'water', name: 'Sumur', alias: 'Sumur & kerekan', en: { en: 'Well', id: 'Sumur' },
     explode: [0, 0, 0], anchor: [-1.6, 1.0, 0.8], focusDir: [0.4, 0.6, 1],
-    desc: 'A brick-lined well on a stone apron, with a pulley and bucket for drawing water.',
-    fn: 'The compound’s water supply for washing, bathing and cooking.',
-    meaning: 'Water work belongs at the back of the compound, far from the formal front.',
-    specs: ['Brick ring', 'Pulley & bucket'],
+    desc: { en: 'A brick-lined well on a stone apron, with a pulley and bucket for drawing water.', id: 'Sumur berdinding bata di atas lantai batu, dengan kerekan dan timba untuk menimba air.' },
+    fn: { en: 'The compound’s water supply for washing, bathing and cooking.', id: 'Sumber air kompleks untuk mencuci, mandi, dan memasak.' },
+    meaning: { en: 'Water work belongs at the back of the compound, far from the formal front.', id: 'Pekerjaan yang berurusan dengan air ditempatkan di belakang kompleks, jauh dari bagian depan yang resmi.' },
+    specs: [{ en: 'Brick ring', id: 'Cincin bata' }, { en: 'Pulley & bucket', id: 'Kerekan & timba' }],
   },
   {
-    id: 'bilik', cat: 'water', name: 'Bilik Pekiwan', alias: 'Kamar mandi', en: 'Bathing enclosure',
+    id: 'bilik', cat: 'water', name: 'Bilik Pekiwan', alias: 'Kamar mandi', en: { en: 'Bathing enclosure', id: 'Bilik mandi' },
     explode: [0, 1.2, 1.2], anchor: [2.0, 1.4, 1.3],
-    desc: 'An open-topped enclosure of woven bamboo with a large water jar, used for bathing.',
-    fn: 'Privacy for bathing with water carried from the well.',
-    meaning: 'Placed in the back corner, the least formal part of the compound.',
-    specs: ['Woven bamboo', 'Open to the sky'],
+    desc: { en: 'An open-topped enclosure of woven bamboo with a large water jar, used for bathing.', id: 'Bilik tanpa atap dari anyaman bambu dengan gentong air besar, tempat mandi.' },
+    fn: { en: 'Privacy for bathing with water carried from the well.', id: 'Memberi privasi untuk mandi dengan air yang diambil dari sumur.' },
+    meaning: { en: 'Placed in the back corner, the least formal part of the compound.', id: 'Terletak di sudut belakang, bagian kompleks yang paling tidak resmi.' },
+    specs: [{ en: 'Woven bamboo', id: 'Anyaman bambu' }, { en: 'Open to the sky', id: 'Terbuka ke langit' }],
   },
   {
-    id: 'atap', cat: 'roof', name: 'Cungkup Sumur', alias: 'Atap sumur', en: 'Well shelter', roof: true,
+    id: 'atap', cat: 'roof', name: 'Cungkup Sumur', alias: 'Atap sumur', en: { en: 'Well shelter', id: 'Cungkup sumur' }, roof: true,
     explode: [0, 2.6, 0], anchor: [-1.6, 2.8, 0.9],
-    desc: 'A small tiled roof on four posts over the well.', fn: 'Keeps leaves and rain out of the well and shades whoever draws water.',
-    meaning: 'A small, useful shelter.',
-    specs: ['4 posts', 'Clay tiles'],
+    desc: { en: 'A small tiled roof on four posts over the well.', id: 'Atap genteng kecil di atas empat tiang yang menaungi sumur.' }, fn: { en: 'Keeps leaves and rain out of the well and shades whoever draws water.', id: 'Mencegah daun dan air hujan masuk ke sumur serta meneduhi orang yang menimba.' },
+    meaning: { en: 'A small, useful shelter.', id: 'Naungan kecil yang berguna.' },
+    specs: [{ en: '4 posts', id: '4 tiang' }, { en: 'Clay tiles', id: 'Genteng tanah liat' }],
   },
 ];
 

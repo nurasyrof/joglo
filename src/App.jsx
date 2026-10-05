@@ -4,6 +4,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { houseById } from '@/houses/index.js';
 import { DEFAULT_HOUSE, SHOW_DIRECTORY, SITE } from '@/config.js';
 import { ThemeProvider } from '@/ui/theme.jsx';
+import { LangProvider, useLang } from '@/ui/lang.jsx';
 import { useHashRoute, navigate, replaceRoute } from '@/ui/router.js';
 import { Viewer } from '@/ui/Viewer.jsx';
 import { linkById } from '@/ui/site-links.js';
@@ -28,6 +29,7 @@ class Optional extends Component {
 
 function Routes() {
   const route = useHashRoute();
+  const { t, tx } = useLang();
   const link = linkById(route.house);                 // #/about, #/terms, #/contribute
   const page = link?.kind === 'page' ? link.id : null;
   const dialog = link?.kind === 'dialog' ? link.id : null;
@@ -46,8 +48,8 @@ function Routes() {
   }, [link, valid, route.house]);
 
   useEffect(() => {
-    document.title = link ? `${link.title} · ${SITE}` : valid ? `${meta.name} · ${SITE}` : `${SITE} · Traditional houses of Indonesia`;
-  }, [link, valid, meta]);
+    document.title = link ? `${tx(link.short)} · ${SITE}` : valid ? `${meta.name} · ${SITE}` : `${SITE} · ${t('Traditional houses of Indonesia', 'Rumah adat Indonesia')}`;
+  }, [link, valid, meta, t, tx]);
 
   // Dialogs load on first open, then stay mounted so they can animate closed.
   const [opened, setOpened] = useState({});
@@ -61,7 +63,7 @@ function Routes() {
       <Optional retry={route.house}>
         <Suspense fallback={null}>
           {!valid && SHOW_DIRECTORY && !page && <Directory />}
-          {page && <PageOverlay id={page} backHref={backHref} backLabel={valid ? `Back to ${meta.name}` : 'Back'} />}
+          {page && <PageOverlay id={page} backHref={backHref} backLabel={valid ? t(`Back to ${meta.name}`, `Kembali ke ${meta.name}`) : t('Back', 'Kembali')} />}
           {opened.about && <AboutDialog open={dialog === 'about'} onClose={close} />}
           {opened.contribute && <ContributeDialog open={dialog === 'contribute'} onClose={close} house={last.current.house} />}
         </Suspense>
@@ -73,9 +75,11 @@ function Routes() {
 export default function App() {
   return (
     <ThemeProvider>
-      <TooltipProvider delayDuration={350}>
-        <Routes />
-      </TooltipProvider>
+      <LangProvider>
+        <TooltipProvider delayDuration={350}>
+          <Routes />
+        </TooltipProvider>
+      </LangProvider>
     </ThemeProvider>
   );
 }

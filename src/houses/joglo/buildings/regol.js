@@ -52,41 +52,41 @@ function build() {
 }
 
 const CATEGORIES = [
-  { id: 'gate',  label: 'Gate & walls', local: 'Regol', color: '#9a948a' },
-  { id: 'yard',  label: 'Courtyard',    local: 'Latar', color: '#c9b48a' },
+  { id: 'gate',  label: { en: 'Gate & walls', id: 'Gerbang & pagar' }, local: 'Regol', color: '#9a948a' },
+  { id: 'yard',  label: { en: 'Courtyard', id: 'Halaman' },    local: 'Latar', color: '#c9b48a' },
 ];
 
 const PARTS = [
   {
-    id: 'regol', cat: 'gate', name: 'Regol', alias: 'Gapura', en: 'Gateway',
+    id: 'regol', cat: 'gate', name: 'Regol', alias: 'Gapura', en: { en: 'Gateway', id: 'Gerbang' },
     explode: [0, 1.6, 0], anchor: [2.6, 3.4, 20.4], focusDir: [0.5, 0.25, 1],
-    desc: 'The formal gateway in the front wall, with brick piers, heavy double doors and a small tiled roof.',
-    fn: 'The one ceremonial way in, lined up with the pendapa and the central axis of the house.',
-    meaning: 'Passing the regol means leaving the street and entering the family’s ordered world.',
-    specs: ['4 m opening', 'Double doors'],
+    desc: { en: 'The formal gateway in the front wall, with brick piers, heavy double doors and a small tiled roof.', id: 'Gerbang resmi di dinding depan, dengan pilar bata, pintu ganda yang berat, dan atap genteng kecil.' },
+    fn: { en: 'The one ceremonial way in, lined up with the pendapa and the central axis of the house.', id: 'Satu-satunya jalan masuk resmi, segaris dengan pendapa dan sumbu tengah rumah.' },
+    meaning: { en: 'Passing the regol means leaving the street and entering the family’s ordered world.', id: 'Melewati regol berarti meninggalkan jalan dan memasuki dunia keluarga yang tertata.' },
+    specs: [{ en: '4 m opening', id: 'Bukaan 4 m' }, { en: 'Double doors', id: 'Pintu ganda' }],
   },
   {
-    id: 'pagar', cat: 'gate', name: 'Pagar', alias: 'Pagar tembok', en: 'Compound wall',
+    id: 'pagar', cat: 'gate', name: 'Pagar', alias: 'Pagar tembok', en: { en: 'Compound wall', id: 'Pagar keliling' },
     explode: [0, 0.8, 0], anchor: [-22.8, 2.4, 4],
-    desc: 'A whitewashed masonry wall around the whole compound.', fn: 'Encloses the household and its yards.',
-    meaning: 'Draws a clear line between the outside world and the household.',
-    specs: ['2.2 m high', '46 × 57 m'],
+    desc: { en: 'A whitewashed masonry wall around the whole compound.', id: 'Tembok bata berkapur putih yang mengelilingi seluruh kompleks.' }, fn: { en: 'Encloses the household and its yards.', id: 'Melingkupi rumah tangga dan halaman-halamannya.' },
+    meaning: { en: 'Draws a clear line between the outside world and the household.', id: 'Menarik garis yang jelas antara dunia luar dan rumah tangga.' },
+    specs: [{ en: '2.2 m high', id: 'Tinggi 2,2 m' }, '46 × 57 m'],
   },
   {
-    id: 'seketheng', cat: 'gate', name: 'Seketheng', alias: 'Tembok seketheng', en: 'Dividing walls',
+    id: 'seketheng', cat: 'gate', name: 'Seketheng', alias: 'Tembok seketheng', en: { en: 'Dividing walls', id: 'Tembok pemisah' },
     explode: [0, 1.2, 0], anchor: [16.5, 2.4, -2.8],
-    desc: 'Walls with small doors that divide the front courtyard from the side yards around the dalem.',
-    fn: 'Control who can move from the public front to the family areas at the back.',
-    meaning: 'A second threshold: guests stay in front, family and servants pass through.',
-    specs: ['2 walls', '2 doors'],
+    desc: { en: 'Walls with small doors that divide the front courtyard from the side yards around the dalem.', id: 'Tembok berpintu kecil yang memisahkan halaman depan dari halaman samping di sekitar dalem.' },
+    fn: { en: 'Control who can move from the public front to the family areas at the back.', id: 'Mengatur siapa yang boleh berpindah dari bagian depan yang publik ke area keluarga di belakang.' },
+    meaning: { en: 'A second threshold: guests stay in front, family and servants pass through.', id: 'Ambang kedua: tamu tetap di depan, keluarga dan abdi boleh melintas.' },
+    specs: [{ en: '2 walls', id: '2 tembok' }, { en: '2 doors', id: '2 pintu' }],
   },
   {
-    id: 'latar', cat: 'yard', name: 'Latar', alias: 'Halaman', en: 'Courtyard', pick: false,
+    id: 'latar', cat: 'yard', name: 'Latar', alias: 'Halaman', en: { en: 'Courtyard', id: 'Halaman' }, pick: false,
     explode: [0, 0, 0], anchor: [-8, 0.3, 17],
-    desc: 'The open sandy courtyard, with a stone path from the regol to the pendapa steps.',
-    fn: 'Space for arrivals, gatherings and ceremonies in front of the pendapa.',
-    meaning: 'The open ground in front of the house is part of the sequence from public to private.',
-    specs: ['Sand & stone'],
+    desc: { en: 'The open sandy courtyard, with a stone path from the regol to the pendapa steps.', id: 'Halaman terbuka berpasir, dengan jalan batu dari regol ke tangga pendapa.' },
+    fn: { en: 'Space for arrivals, gatherings and ceremonies in front of the pendapa.', id: 'Tempat menyambut kedatangan, berkumpul, dan upacara di depan pendapa.' },
+    meaning: { en: 'The open ground in front of the house is part of the sequence from public to private.', id: 'Tanah lapang di depan rumah adalah bagian dari urutan dari publik ke privat.' },
+    specs: [{ en: 'Sand & stone', id: 'Pasir & batu' }],
   },
 ];
 

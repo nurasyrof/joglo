@@ -11,6 +11,7 @@ import { Switch } from '@/components/ui/switch';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { FORMATS } from '@/engine/exporter.js';
 import { useEngine } from './engine-context.js';
+import { useLang } from './lang.jsx';
 
 function Segmented({ value, onChange, options, ariaLabel }) {
   return (
@@ -48,6 +49,7 @@ const hhmm = (t) => `${String(Math.floor(t)).padStart(2, '0')}:${String(Math.rou
 
 function DownloadSection() {
   const { engine, s } = useEngine();
+  const { t, tx } = useLang();
   const [format, setFormat] = useState('glb');
   const [onlyVisible, setOnlyVisible] = useState(true);
   const [exploded, setExploded] = useState(false);
@@ -57,10 +59,10 @@ function DownloadSection() {
     setState({ busy: true, note: null });
     try {
       const size = await engine.exportModel({ format, onlyVisible, exploded });
-      setState({ busy: false, note: `Saved ${(size / 1048576).toFixed(1)} MB.` });
+      setState({ busy: false, note: t(`Saved ${(size / 1048576).toFixed(1)} MB.`, `Tersimpan ${(size / 1048576).toFixed(1)} MB.`) });
     } catch (err) {
       console.error(err);
-      setState({ busy: false, note: `Export failed: ${err.message}` });
+      setState({ busy: false, note: t(`Export failed: ${err.message}`, `Ekspor gagal: ${err.message}`) });
     }
   };
   return (
@@ -68,14 +70,16 @@ function DownloadSection() {
       <Segmented value={format} onChange={setFormat} ariaLabel="Format" options={Object.entries(FORMATS).map(([k]) => [k, k.toUpperCase()])} />
       <p className="text-xs leading-relaxed text-muted-foreground">
         {state.note && <span className="font-medium text-foreground">{state.note} </span>}
-        {FORMATS[format].note}
+        {tx(FORMATS[format].note)}
       </p>
       <div>
-        <SwitchRow id="ex-visible" label={site ? 'Only visible buildings' : 'Only visible parts'} checked={onlyVisible} onChange={setOnlyVisible} />
-        <SwitchRow id="ex-exploded" label={site ? 'Keep roofs lifted' : 'Keep exploded layout'} checked={exploded} onChange={setExploded} />
+        <SwitchRow id="ex-visible" label={site ? t('Only visible buildings', 'Hanya bangunan yang tampak') : t('Only visible parts', 'Hanya bagian yang tampak')} checked={onlyVisible} onChange={setOnlyVisible} />
+        <SwitchRow id="ex-exploded" label={site ? t('Keep roofs lifted', 'Biarkan atap terangkat') : t('Keep exploded layout', 'Biarkan tetap terurai')} checked={exploded} onChange={setExploded} />
       </div>
       <Button className="w-full" onClick={run} disabled={state.busy}>
-        {state.busy ? <><Loader2 className="animate-spin" /> Preparing…</> : <><Download /> Download {s.building ? s.building.name : site ? 'compound' : 'model'} (.{FORMATS[format].ext})</>}
+        {state.busy
+          ? <><Loader2 className="animate-spin" /> {t('Preparing…', 'Menyiapkan…')}</>
+          : <><Download /> {t('Download', 'Unduh')} {s.building ? s.building.name : site ? t('compound', 'kompleks') : 'model'} (.{FORMATS[format].ext})</>}
       </Button>
     </div>
   );
@@ -83,89 +87,90 @@ function DownloadSection() {
 
 export function ControlsPanelContent({ openSections, setOpenSections, heading = true }) {
   const { engine, s } = useEngine();
+  const { t } = useLang();
   const site = s.mode === 'site';
   const sec = s.section, m = s.materials, L = s.lighting;
   return (
     <div className="flex h-full min-h-0 flex-col">
       {heading && (
         <div className="flex items-baseline justify-between px-4 pt-3 pb-1">
-          <h2 className="font-heading text-xl font-semibold">Controls</h2>
-          <span className="text-xs text-muted-foreground">Press <kbd className="font-sans">?</kbd> for shortcuts</span>
+          <h2 className="font-heading text-xl font-semibold">{t('Controls', 'Kontrol')}</h2>
+          <span className="text-xs text-muted-foreground">{t('Press', 'Tekan')} <kbd className="font-sans">?</kbd> {t('for shortcuts', 'untuk pintasan')}</span>
         </div>
       )}
       <ScrollArea className="min-h-0 flex-1 [&_[data-slot=scroll-area-viewport]>div]:!block">
         <Accordion type="multiple" value={openSections} onValueChange={setOpenSections} className="px-4 pb-3">
           <AccordionItem value="view">
-            <AccordionTrigger>View</AccordionTrigger>
+            <AccordionTrigger>{t('View', 'Tampilan')}</AccordionTrigger>
             <AccordionContent className="space-y-2">
               <Segmented
-                value={s.view} onChange={(v) => engine.goView(v)} ariaLabel="Camera view"
-                options={[['iso', '3D'], ['front', 'Front'], ['side', 'Side'], ['top', 'Plan'], ['inside', site ? 'Eye level' : 'Inside']]}
+                value={s.view} onChange={(v) => engine.goView(v)} ariaLabel={t('Camera view', 'Sudut kamera')}
+                options={[['iso', '3D'], ['front', t('Front', 'Depan')], ['side', t('Side', 'Samping')], ['top', t('Plan', 'Denah')], ['inside', site ? t('Eye level', 'Setinggi mata') : t('Inside', 'Dalam')]]}
               />
               <div>
-                <SwitchRow id="auto-rotate" label="Auto-rotate" checked={s.autoRotate} onChange={(v) => engine.setAutoRotate(v)} />
-                <SwitchRow id="labels" label={site ? 'Building labels' : 'Part labels'} checked={s.labels} onChange={(v) => engine.setLabels(v)} />
+                <SwitchRow id="auto-rotate" label={t('Auto-rotate', 'Putar otomatis')} checked={s.autoRotate} onChange={(v) => engine.setAutoRotate(v)} />
+                <SwitchRow id="labels" label={site ? t('Building labels', 'Label bangunan') : t('Part labels', 'Label bagian')} checked={s.labels} onChange={(v) => engine.setLabels(v)} />
               </div>
               {site && s.house.hasWalk && (
                 <Button variant="outline" className="w-full" onClick={() => engine.startWalk()}>
-                  <Footprints /> Guided walk
+                  <Footprints /> {t('Guided walk', 'Jelajah terpandu')}
                 </Button>
               )}
             </AccordionContent>
           </AccordionItem>
 
           <AccordionItem value="explode">
-            <AccordionTrigger>{site ? 'Roofs' : 'Explode'}</AccordionTrigger>
+            <AccordionTrigger>{site ? t('Roofs', 'Atap') : t('Explode', 'Urai')}</AccordionTrigger>
             <AccordionContent className="space-y-2">
               <SliderRow
-                label={site ? 'Lift roofs' : 'Separate parts'} value={Math.round(s.explode * 100)} display={`${Math.round(s.explode * 100)}%`}
+                label={site ? t('Lift roofs', 'Angkat atap') : t('Separate parts', 'Pisahkan bagian')} value={Math.round(s.explode * 100)} display={`${Math.round(s.explode * 100)}%`}
                 min={0} max={100} onChange={(v) => engine.setExplode(v / 100)}
               />
               <div className="grid grid-cols-2 gap-2">
-                <Button variant="secondary" size="sm" onClick={() => engine.explodeAll(true)}><Layers /> {site ? 'Lift roofs' : 'Explode'}</Button>
-                <Button variant="outline" size="sm" onClick={() => engine.explodeAll(false)}>{site ? 'Lower roofs' : 'Assemble'}</Button>
+                <Button variant="secondary" size="sm" onClick={() => engine.explodeAll(true)}><Layers /> {site ? t('Lift roofs', 'Angkat atap') : t('Explode', 'Urai')}</Button>
+                <Button variant="outline" size="sm" onClick={() => engine.explodeAll(false)}>{site ? t('Lower roofs', 'Turunkan atap') : t('Assemble', 'Rakit')}</Button>
               </div>
             </AccordionContent>
           </AccordionItem>
 
           <AccordionItem value="display">
-            <AccordionTrigger>Display</AccordionTrigger>
+            <AccordionTrigger>{t('Display', 'Tampilan model')}</AccordionTrigger>
             <AccordionContent className="space-y-2">
               <Segmented
-                value={s.style} onChange={(v) => engine.setStyle(v)} ariaLabel="Render style"
-                options={[['realistic', 'Real'], ['clay', 'Clay'], ['xray', 'X-ray'], ['blueprint', 'Blueprint']]}
+                value={s.style} onChange={(v) => engine.setStyle(v)} ariaLabel={t('Render style', 'Gaya tampilan')}
+                options={[['realistic', t('Real', 'Nyata')], ['clay', t('Clay', 'Tanah liat')], ['xray', t('X-ray', 'Sinar-X')], ['blueprint', t('Blueprint', 'Cetak biru')]]}
               />
-              <SliderRow label="Roof opacity" value={Math.round(s.roofOpacity * 100)} display={`${Math.round(s.roofOpacity * 100)}%`} min={0} max={100} onChange={(v) => engine.setRoofOpacity(v / 100)} />
+              <SliderRow label={t('Roof opacity', 'Kepekatan atap')} value={Math.round(s.roofOpacity * 100)} display={`${Math.round(s.roofOpacity * 100)}%`} min={0} max={100} onChange={(v) => engine.setRoofOpacity(v / 100)} />
               {site && s.house.hasOverlay && (
-                <SwitchRow id="site-logic" label="Site logic overlay" checked={s.siteLogic} onChange={(v) => engine.setSiteLogic(v)} />
+                <SwitchRow id="site-logic" label={t('Site logic overlay', 'Lapisan logika tapak')} checked={s.siteLogic} onChange={(v) => engine.setSiteLogic(v)} />
               )}
             </AccordionContent>
           </AccordionItem>
 
           <AccordionItem value="section">
-            <AccordionTrigger>Section cut</AccordionTrigger>
+            <AccordionTrigger>{t('Section cut', 'Potongan')}</AccordionTrigger>
             <AccordionContent className="space-y-2">
-              <SwitchRow id="sec-on" label="Enable section" checked={sec.on} onChange={(v) => engine.setSection({ on: v })} />
+              <SwitchRow id="sec-on" label={t('Enable section', 'Aktifkan potongan')} checked={sec.on} onChange={(v) => engine.setSection({ on: v })} />
               <Segmented
-                value={sec.axis} onChange={(v) => engine.setSection({ axis: v })} ariaLabel="Section axis"
-                options={[['x', 'X · long'], ['z', 'Z · cross'], ['y', 'Y · plan']]}
+                value={sec.axis} onChange={(v) => engine.setSection({ axis: v })} ariaLabel={t('Section axis', 'Sumbu potongan')}
+                options={[['x', t('X · long', 'X · memanjang')], ['z', t('Z · cross', 'Z · melintang')], ['y', t('Y · plan', 'Y · denah')]]}
               />
-              <SliderRow label="Position" value={sec.pos} display={`${sec.pos.toFixed(1)} m`} min={sec.min} max={sec.max} step={0.05} disabled={!sec.on} onChange={(v) => engine.setSection({ pos: v })} />
+              <SliderRow label={t('Position', 'Posisi')} value={sec.pos} display={`${sec.pos.toFixed(1)} m`} min={sec.min} max={sec.max} step={0.05} disabled={!sec.on} onChange={(v) => engine.setSection({ pos: v })} />
               <div>
-                <SwitchRow id="sec-flip" label="Flip side" checked={sec.flip} onChange={(v) => engine.setSection({ flip: v })} />
-                <SwitchRow id="sec-plane" label="Show cutting plane" checked={sec.plane} onChange={(v) => engine.setSection({ plane: v })} />
+                <SwitchRow id="sec-flip" label={t('Flip side', 'Balik sisi')} checked={sec.flip} onChange={(v) => engine.setSection({ flip: v })} />
+                <SwitchRow id="sec-plane" label={t('Show cutting plane', 'Tampilkan bidang potong')} checked={sec.plane} onChange={(v) => engine.setSection({ plane: v })} />
               </div>
             </AccordionContent>
           </AccordionItem>
 
           <AccordionItem value="materials">
-            <AccordionTrigger>Materials</AccordionTrigger>
+            <AccordionTrigger>{t('Materials', 'Material')}</AccordionTrigger>
             <AccordionContent className="space-y-3">
               <Select value={m.preset} onValueChange={(v) => engine.setPreset(v)}>
-                <SelectTrigger className="w-full"><SelectValue placeholder="Custom" /></SelectTrigger>
+                <SelectTrigger className="w-full"><SelectValue placeholder={t('Custom', 'Kustom')} /></SelectTrigger>
                 <SelectContent>
                   {m.presets.map((p) => <SelectItem key={p.id} value={p.id}>{p.label}</SelectItem>)}
-                  {m.preset === 'custom' && <SelectItem value="custom" disabled>Custom</SelectItem>}
+                  {m.preset === 'custom' && <SelectItem value="custom" disabled>{t('Custom', 'Kustom')}</SelectItem>}
                 </SelectContent>
               </Select>
               <div className="grid grid-cols-4 gap-x-2 gap-y-3">
@@ -182,22 +187,22 @@ export function ControlsPanelContent({ openSections, setOpenSections, heading = 
                   </label>
                 ))}
               </div>
-              <SliderRow label="Roughness" value={Math.round(m.rough * 100)} display={m.rough.toFixed(2)} min={0} max={100} onChange={(v) => engine.setRough(v / 100)} />
-              <SwitchRow id="textures" label="Surface textures" checked={s.textures} onChange={(v) => engine.setTextures(v)} />
+              <SliderRow label={t('Roughness', 'Kekasaran')} value={Math.round(m.rough * 100)} display={m.rough.toFixed(2)} min={0} max={100} onChange={(v) => engine.setRough(v / 100)} />
+              <SwitchRow id="textures" label={t('Surface textures', 'Tekstur permukaan')} checked={s.textures} onChange={(v) => engine.setTextures(v)} />
             </AccordionContent>
           </AccordionItem>
 
           <AccordionItem value="lighting">
-            <AccordionTrigger>Lighting</AccordionTrigger>
+            <AccordionTrigger>{t('Lighting', 'Pencahayaan')}</AccordionTrigger>
             <AccordionContent className="space-y-2">
-              <SliderRow label="Time of day" value={L.time} display={hhmm(L.time)} min={6} max={18} step={0.25} onChange={(v) => engine.setTime(v)} />
-              <SliderRow label="Exposure" value={Math.round(L.exposure * 100)} display={L.exposure.toFixed(2)} min={40} max={180} onChange={(v) => engine.setExposure(v / 100)} />
-              <SwitchRow id="shadows" label="Shadows" checked={L.shadows} onChange={(v) => engine.setShadows(v)} />
+              <SliderRow label={t('Time of day', 'Waktu')} value={L.time} display={hhmm(L.time)} min={6} max={18} step={0.25} onChange={(v) => engine.setTime(v)} />
+              <SliderRow label={t('Exposure', 'Eksposur')} value={Math.round(L.exposure * 100)} display={L.exposure.toFixed(2)} min={40} max={180} onChange={(v) => engine.setExposure(v / 100)} />
+              <SwitchRow id="shadows" label={t('Shadows', 'Bayangan')} checked={L.shadows} onChange={(v) => engine.setShadows(v)} />
             </AccordionContent>
           </AccordionItem>
 
           <AccordionItem value="download">
-            <AccordionTrigger>Download 3D</AccordionTrigger>
+            <AccordionTrigger>{t('Download 3D', 'Unduh 3D')}</AccordionTrigger>
             <AccordionContent><DownloadSection /></AccordionContent>
           </AccordionItem>
         </Accordion>

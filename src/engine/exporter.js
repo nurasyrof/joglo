@@ -2,10 +2,22 @@
 import * as THREE from 'three';
 
 export const FORMATS = {
-  glb:  { ext: 'glb',  note: 'Blender, SketchUp, Unity, web viewers. Keeps materials and textures, one node per part.' },
-  obj:  { ext: 'obj',  note: 'Works in almost any 3D app. Geometry with named parts, no materials.' },
-  stl:  { ext: 'stl',  note: 'For 3D printing: 1:100 scale in millimetres, Z-up, single colour.' },
-  usdz: { ext: 'usdz', note: 'AR Quick Look on iPhone and iPad. Keeps materials and textures.' },
+  glb: {
+    ext: 'glb',
+    note: { en: 'Blender, SketchUp, Unity, web viewers. Keeps materials and textures, one node per part.', id: 'Blender, SketchUp, Unity, penampil web. Material dan tekstur ikut tersimpan, satu node per bagian.' },
+  },
+  obj: {
+    ext: 'obj',
+    note: { en: 'Works in almost any 3D app. Geometry with named parts, no materials.', id: 'Bisa dibuka di hampir semua aplikasi 3D. Geometri dengan nama bagian, tanpa material.' },
+  },
+  stl: {
+    ext: 'stl',
+    note: { en: 'For 3D printing: 1:100 scale in millimetres, Z-up, single colour.', id: 'Untuk cetak 3D: skala 1:100 dalam milimeter, sumbu Z ke atas, satu warna.' },
+  },
+  usdz: {
+    ext: 'usdz',
+    note: { en: 'AR Quick Look on iPhone and iPad. Keeps materials and textures.', id: 'AR Quick Look di iPhone dan iPad. Material dan tekstur ikut tersimpan.' },
+  },
 };
 
 // Loads exporters on demand so they don't slow down the first page load.

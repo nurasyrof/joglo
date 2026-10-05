@@ -51,6 +51,15 @@ The engine never touches the page UI. React subscribes to its state with `useSyn
 
 Light mode is the default; the theme menu offers light, dark and system, and the 3D sky follows it.
 
+## Languages
+
+The site is in English and Bahasa Indonesia. The first visit follows the browser's language; the toolbar's **ID / EN** button switches it, and the choice is saved.
+
+- **Interface text** is written in place as a pair: `t('Guided walk', 'Jelajah terpandu')` (from `useLang()` in `src/ui/lang.jsx`).
+- **House content**: any text field can be a plain string (same in both languages, e.g. local names like `Pendapa`) or `{ en: '…', id: '…' }`. This applies to `en`, `desc`, `fn`, `meaning`, `specs` items, `about` paragraphs, walk stops, zone and category labels, slot and preset labels. The engine resolves it in the current language, so switching is instant.
+- Spec badges use a decimal comma in Indonesian automatically (`16.6 m` → `16,6 m`).
+- When you change a text, change both languages.
+
 ## Houses, sites and buildings
 
 A house is either **a single building** or **a site** (a compound) with several buildings.
