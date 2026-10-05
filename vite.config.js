@@ -7,5 +7,19 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: { alias: { '@': path.resolve(import.meta.dirname, './src') } },
   server: { port: 5173 },
-  build: { chunkSizeWarningLimit: 1200 },
+  build: {
+    chunkSizeWarningLimit: 800,
+    rollupOptions: {
+      output: {
+        // Big libraries in their own files: they download in parallel with the app and stay
+        // cached between deploys, since they change far less often than our code.
+        // Only libraries needed at start-up are named here; lazy imports (the exporters) keep their own chunks.
+        manualChunks(id) {
+          if (id.includes('/node_modules/three/build/')) return 'three';
+          if (/\/node_modules\/(react|react-dom|scheduler)\//.test(id)) return 'react';
+          return undefined;
+        },
+      },
+    },
+  },
 });

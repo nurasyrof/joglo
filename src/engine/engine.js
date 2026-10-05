@@ -176,11 +176,6 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
         c.mats.push(mat);
         B.meshes.push(mesh);
         if (d.pick !== false) B.pickables.push(mesh);
-        const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geom, 28), edgeMat);
-        edges.visible = false;
-        edges.raycast = () => {};
-        pg.add(edges);
-        c.edges.push(edges);
       }
       c.label = tag(d.name, catById[d.cat].color, '', () => select(d.id, { focus: true }));
       c.label.position.set(...d.anchor);
@@ -417,6 +412,18 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
     updateEmissive();
   }
 
+  // Edge outlines are only needed for X-ray / Blueprint and for highlighting a selection, and
+  // computing them is a large share of a house's build time, so each part gets them on first use.
+  function ensureEdges(c) {
+    if (c.edges.length) return;
+    for (const m of c.meshes) {
+      const edges = new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry, 28), c.edgeMat);
+      edges.raycast = () => {};
+      c.group.add(edges);
+      c.edges.push(edges);
+    }
+  }
+
   function updateEdges() {
     if (!H) return;
     const st = S.style, lines = st === 'xray' || st === 'blueprint';
@@ -437,6 +444,7 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
       }
       c.edgeMat.color.set(sel ? '#ffcf6b' : hov ? '#ffe2a8' : st === 'blueprint' ? '#8ecbff' : '#f6e6c8');
       c.edgeMat.opacity = op;
+      if (show) ensureEdges(c);
       for (const e of c.edges) e.visible = show;
     }
   }

@@ -5,7 +5,7 @@ import { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'r
 import { ChevronDown } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { CREDIT } from '@/config.js';
-import { SITE_LINKS } from './pages.jsx';
+import { SITE_LINKS } from './site-links.js';
 import { cn } from '@/lib/utils';
 
 export const FOOTER_H = 40;

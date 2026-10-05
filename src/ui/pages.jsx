@@ -1,16 +1,11 @@
-// Site links in the footer. About and Contribute open as dialogs over the 3D view;
-// Terms & privacy is a full page, also shown over the view so the house doesn't rebuild.
+// Site pages: Terms & privacy, shown over the 3D view so the house doesn't rebuild.
+// Loaded on demand (see App.jsx); the footer links live in site-links.js.
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { CREDIT, DONATE_URL, REPO_URL, SITE } from '@/config.js';
 
-export const SITE_LINKS = [
-  { id: 'about', short: 'About', kind: 'dialog' },
-  { id: 'terms', short: 'Terms & privacy', kind: 'page' },
-  { id: 'contribute', short: 'Contribute', kind: 'dialog' },
-];
-export const linkById = (id) => SITE_LINKS.find((l) => l.id === id);
+import { SITE_LINKS } from './site-links.js';
 
 const UPDATED = '3 October 2026';
 
@@ -142,7 +137,8 @@ function TermsPage() {
 
 export const PAGES = { terms: { title: 'Terms & privacy', lede: 'How you may use the site and its downloads, and what data it handles.', Body: TermsPage } };
 
-export function PageOverlay({ page, backHref, backLabel }) {
+export function PageOverlay({ id, backHref, backLabel }) {
+  const page = PAGES[id];
   const { Body } = page;
   return (
     <div className="fixed inset-0 z-40 overflow-y-auto bg-background animate-in fade-in duration-200">
@@ -153,7 +149,7 @@ export function PageOverlay({ page, backHref, backLabel }) {
           </Button>
           <nav className="flex items-center gap-1" aria-label="Pages">
             {SITE_LINKS.map((l) => (
-              <Button key={l.id} variant={PAGES[l.id] === page ? 'secondary' : 'ghost'} size="sm" asChild>
+              <Button key={l.id} variant={l.id === id ? 'secondary' : 'ghost'} size="sm" asChild>
                 <a href={`#/${l.id}`}>{l.short}</a>
               </Button>
             ))}

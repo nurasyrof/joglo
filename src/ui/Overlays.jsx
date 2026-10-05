@@ -9,7 +9,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { CREDIT } from '@/config.js';
 import { useEngine } from './engine-context.js';
 import { ThemeMenu } from './TopBar.jsx';
-import { SITE_LINKS } from './pages.jsx';
+import { SITE_LINKS } from './site-links.js';
 import { cn } from '@/lib/utils';
 
 function ToolButton({ label, onClick, disabled, children }) {
