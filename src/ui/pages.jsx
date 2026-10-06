@@ -8,7 +8,7 @@ import { CREDIT, DONATE_URL, REPO_URL, SITE } from '@/config.js';
 import { SITE_LINKS } from './site-links.js';
 import { useLang } from './lang.jsx';
 
-const UPDATED = { en: '5 October 2026', id: '5 Oktober 2026' };
+const UPDATED = { en: '6 October 2026', id: '6 Oktober 2026' };
 
 const H2 = ({ children }) => <h2 className="mt-10 mb-3 font-heading text-2xl font-semibold">{children}</h2>;
 const P = ({ children }) => <p className="mb-4 leading-relaxed text-foreground/80">{children}</p>;
@@ -109,6 +109,12 @@ function TermsEn() {
           your IP address and browser type to deliver pages and protect the site from abuse, under its own privacy policy.
         </li>
         <li>
+          <strong>Visitor statistics.</strong> I use{' '}
+          <A href="https://www.cloudflare.com/web-analytics/">Cloudflare Web Analytics</A> to see how many people visit and which
+          pages they view. It sets no cookies, does not track you across sites or build a profile of you, and only shows me totals
+          such as page views, countries, referring sites and device types.
+        </li>
+        <li>
           <strong>Contribute form.</strong> If you send a message, I receive what you type: the form fields, plus your name and email
           address if you give them, and the page you sent it from. I use this only to read, act on and reply to your message, and I
           do not sell or share it with anyone else. Messages are delivered to me by{' '}
@@ -119,7 +125,7 @@ function TermsEn() {
           <strong>Links to other sites.</strong> Links to GitHub, Buy Me a Coffee or my own site take you to services with their own
           privacy policies.
         </li>
-        <li><strong>Fonts and 3D libraries</strong> are served from {SITE} itself, not loaded from third-party servers.</li>
+        <li><strong>Fonts and 3D libraries</strong> are served from {SITE} itself. The only outside script is Cloudflare’s small analytics script.</li>
       </UL>
       <P>
         You can ask what information I hold about you, or ask me to correct or delete it, through <A href="/contribute">Contribute</A>.
@@ -231,6 +237,13 @@ function TermsId() {
           sesuai kebijakan privasinya sendiri.
         </li>
         <li>
+          <strong>Statistik pengunjung.</strong> Saya memakai{' '}
+          <A href="https://www.cloudflare.com/web-analytics/">Cloudflare Web Analytics</A> untuk melihat berapa banyak orang yang
+          berkunjung dan halaman apa yang mereka lihat. Layanan ini tidak memasang cookie, tidak melacak Anda lintas situs, dan
+          tidak membuat profil Anda; saya hanya melihat angka total seperti jumlah tayangan halaman, negara, situs perujuk, dan
+          jenis perangkat.
+        </li>
+        <li>
           <strong>Formulir kontribusi.</strong> Jika Anda mengirim pesan, saya menerima apa yang Anda tulis: isi formulir, nama dan
           alamat email jika Anda mencantumkannya, serta halaman tempat Anda mengirimnya. Data ini hanya saya gunakan untuk membaca,
           menindaklanjuti, dan membalas pesan Anda, dan tidak saya jual atau bagikan kepada siapa pun. Pesan dikirimkan kepada saya
@@ -241,7 +254,7 @@ function TermsId() {
           <strong>Tautan ke situs lain.</strong> Tautan ke GitHub, Buy Me a Coffee, atau situs pribadi saya membawa Anda ke layanan
           dengan kebijakan privasi masing-masing.
         </li>
-        <li><strong>Huruf dan pustaka 3D</strong> disajikan dari {SITE} sendiri, bukan dimuat dari server pihak ketiga.</li>
+        <li><strong>Huruf dan pustaka 3D</strong> disajikan dari {SITE} sendiri. Satu-satunya skrip dari luar adalah skrip analitik kecil milik Cloudflare.</li>
       </UL>
       <P>
         Anda dapat menanyakan informasi apa yang saya simpan tentang Anda, atau meminta saya memperbaiki atau menghapusnya, melalui{' '}
