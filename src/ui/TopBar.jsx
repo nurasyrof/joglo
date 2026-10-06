@@ -25,7 +25,7 @@ const onScene = 'text-white [text-shadow:0_1px_10px_rgb(0_0_0/0.35)]';
 const chevronBtn = 'size-7 shrink-0 rounded-full bg-white/30 text-white shadow-sm backdrop-blur-md hover:bg-white/45 hover:text-white aria-expanded:bg-white/50 dark:bg-white/15 dark:hover:bg-white/25';
 
 function HouseList({ meta, onPick }) {
-  const { t, tx } = useLang();
+  const { t, tx, href } = useLang();
   return (
     <Command>
       <CommandInput placeholder={t('Search houses, provinces, peoples…', 'Cari rumah, provinsi, suku…')} />
@@ -41,7 +41,7 @@ function HouseList({ meta, onPick }) {
                 return (
                   <CommandItem
                     key={h.id} value={`${h.name} ${h.local} ${tx(h.province)} ${tx(h.people)} ${h.province.en} ${h.people.en}`} disabled={!ready}
-                    onSelect={() => { onPick(); if (!current) navigate(`#/${h.id}`); }} className="gap-3"
+                    onSelect={() => { onPick(); if (!current) navigate(href(`/${h.id}`)); }} className="gap-3"
                   >
                     <HouseArt art={h.art} className={cn('h-5 w-9 shrink-0', ready ? 'text-primary' : 'text-muted-foreground')} />
                     <span className="flex min-w-0 flex-1 flex-col">
@@ -59,7 +59,7 @@ function HouseList({ meta, onPick }) {
           <>
             <CommandSeparator />
             <CommandGroup>
-              <CommandItem onSelect={() => { onPick(); navigate('#/'); }}><LayoutGrid /> {t('All houses', 'Semua rumah')}</CommandItem>
+              <CommandItem onSelect={() => { onPick(); navigate(href('/')); }}><LayoutGrid /> {t('All houses', 'Semua rumah')}</CommandItem>
             </CommandGroup>
           </>
         )}

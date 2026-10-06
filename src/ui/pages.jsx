@@ -14,7 +14,7 @@ const H2 = ({ children }) => <h2 className="mt-10 mb-3 font-heading text-2xl fon
 const P = ({ children }) => <p className="mb-4 leading-relaxed text-foreground/80">{children}</p>;
 const UL = ({ children }) => <ul className="mb-4 list-disc space-y-1.5 pl-5 leading-relaxed text-foreground/80">{children}</ul>;
 const A = ({ href, children }) => (
-  <a className="font-medium text-primary hover:underline" href={href} {...(href.startsWith('#') ? {} : { target: '_blank', rel: 'noopener' })}>{children}</a>
+  <a className="font-medium text-primary hover:underline" href={href} {...(href.startsWith('/') ? {} : { target: '_blank', rel: 'noopener' })}>{children}</a>
 );
 
 function TermsEn() {
@@ -41,7 +41,7 @@ function TermsEn() {
       <UL>
         <li>The content is for general education. It is not an authoritative account of any community’s customs or beliefs.</li>
         <li>The models are not construction drawings. Do not use them to build, restore or assess the safety of a real structure.</li>
-        <li>If you find an error, please report it through <A href="#/contribute">Contribute</A>.</li>
+        <li>If you find an error, please report it through <A href="/contribute">Contribute</A>.</li>
       </UL>
 
       <H2>3. Respect for the cultures shown</H2>
@@ -60,7 +60,7 @@ function TermsEn() {
       </P>
       <P>
         For commercial use, such as selling models or prints, or using them in paid products, games, films or advertising, please
-        ask first through <A href="#/contribute">Contribute</A>.
+        ask first through <A href="/contribute">Contribute</A>.
       </P>
       <P>
         Please do not present the models as your own work, do not use them to misrepresent the communities they come from, and do
@@ -122,14 +122,14 @@ function TermsEn() {
         <li><strong>Fonts and 3D libraries</strong> are served from {SITE} itself, not loaded from third-party servers.</li>
       </UL>
       <P>
-        You can ask what information I hold about you, or ask me to correct or delete it, through <A href="#/contribute">Contribute</A>.
+        You can ask what information I hold about you, or ask me to correct or delete it, through <A href="/contribute">Contribute</A>.
       </P>
 
       <H2>10. Changes and contact</H2>
       <P>
         I may update these terms as the project grows. The date below shows the latest version, and continuing to use the site
         means you accept the updated terms. These terms are governed by the laws of the Republic of Indonesia. For any question,
-        get in touch through <A href="#/contribute">Contribute</A>.
+        get in touch through <A href="/contribute">Contribute</A>.
       </P>
       <p className="mt-8 text-xs text-muted-foreground">Last updated: {UPDATED.en}</p>
     </>
@@ -160,7 +160,7 @@ function TermsId() {
       <UL>
         <li>Isinya untuk pendidikan umum, bukan uraian resmi tentang adat atau kepercayaan suatu masyarakat.</li>
         <li>Model ini bukan gambar kerja. Jangan gunakan untuk membangun, memugar, atau menilai keamanan bangunan sungguhan.</li>
-        <li>Jika menemukan kekeliruan, laporkan melalui <A href="#/contribute">Kontribusi</A>.</li>
+        <li>Jika menemukan kekeliruan, laporkan melalui <A href="/id/contribute">Kontribusi</A>.</li>
       </UL>
 
       <H2>3. Menghormati budaya yang ditampilkan</H2>
@@ -180,7 +180,7 @@ function TermsId() {
       </P>
       <P>
         Untuk penggunaan komersial, misalnya menjual model atau hasil cetaknya, atau memakainya dalam produk berbayar, gim, film,
-        atau iklan, mohon minta izin terlebih dahulu melalui <A href="#/contribute">Kontribusi</A>.
+        atau iklan, mohon minta izin terlebih dahulu melalui <A href="/id/contribute">Kontribusi</A>.
       </P>
       <P>
         Mohon jangan mengaku model ini sebagai karya Anda, jangan menggunakannya untuk menggambarkan secara keliru masyarakat
@@ -245,7 +245,7 @@ function TermsId() {
       </UL>
       <P>
         Anda dapat menanyakan informasi apa yang saya simpan tentang Anda, atau meminta saya memperbaiki atau menghapusnya, melalui{' '}
-        <A href="#/contribute">Kontribusi</A>.
+        <A href="/id/contribute">Kontribusi</A>.
       </P>
 
       <H2>10. Perubahan dan kontak</H2>
@@ -253,7 +253,7 @@ function TermsId() {
         Ketentuan ini dapat saya perbarui seiring berkembangnya proyek. Tanggal di bawah menunjukkan versi terbaru, dan dengan
         terus menggunakan situs ini Anda menerima ketentuan yang diperbarui. Ketentuan ini tunduk pada hukum Republik Indonesia.
         Ini adalah terjemahan dari versi bahasa Inggris; jika ada perbedaan, versi bahasa Inggris yang berlaku. Untuk pertanyaan
-        apa pun, hubungi saya melalui <A href="#/contribute">Kontribusi</A>.
+        apa pun, hubungi saya melalui <A href="/id/contribute">Kontribusi</A>.
       </P>
       <p className="mt-8 text-xs text-muted-foreground">Terakhir diperbarui: {UPDATED.id}</p>
     </>
@@ -269,7 +269,7 @@ export const PAGES = {
 };
 
 export function PageOverlay({ id, backHref, backLabel }) {
-  const { lang, t, tx } = useLang();
+  const { lang, t, tx, href } = useLang();
   const page = PAGES[id];
   const Body = tx(page.Body);
   return (
@@ -282,7 +282,7 @@ export function PageOverlay({ id, backHref, backLabel }) {
           <nav className="flex items-center gap-1" aria-label={t('Pages', 'Halaman')}>
             {SITE_LINKS.map((l) => (
               <Button key={l.id} variant={l.id === id ? 'secondary' : 'ghost'} size="sm" asChild>
-                <a href={`#/${l.id}`}>{tx(l.short)}</a>
+                <a href={href(`/${l.id}`)}>{tx(l.short)}</a>
               </Button>
             ))}
           </nav>

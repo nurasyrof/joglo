@@ -1,4 +1,4 @@
-// About and Contribute: dialogs opened from the footer (#/about, #/contribute) over the 3D view.
+// About and Contribute: dialogs opened from the footer (/about, /contribute) over the 3D view.
 import { useEffect, useState } from 'react';
 import { ArrowUpRight, Bug, Check, Coffee, Handshake, Home, Lightbulb, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -66,7 +66,7 @@ const ABOUT = {
 };
 
 export function AboutDialog({ open, onClose }) {
-  const { lang, t } = useLang();
+  const { lang, t, href } = useLang();
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="max-h-[calc(100dvh-2rem)] gap-0 overflow-y-auto p-6 sm:max-w-xl sm:p-8">
@@ -77,7 +77,7 @@ export function AboutDialog({ open, onClose }) {
         </DialogHeader>
         <div className="space-y-4 text-[15px]">{ABOUT[lang]}</div>
         <div className="mt-7 flex flex-wrap gap-2">
-          <Button asChild><a href="#/contribute">{t('Contribute', 'Kontribusi')}</a></Button>
+          <Button asChild><a href={href('/contribute')}>{t('Contribute', 'Kontribusi')}</a></Button>
           <Button variant="outline" asChild>
             <a href={CREDIT.url} target="_blank" rel="noopener">{CREDIT.url.replace('https://', '')} <ArrowUpRight /></a>
           </Button>
@@ -175,7 +175,7 @@ function Field({ f, value, onChange }) {
 }
 
 function ContributeForm({ kind, house, onDone }) {
-  const { lang, t } = useLang();
+  const { lang, t, href } = useLang();
   // A correction starts on the house you were looking at.
   const [values, setValues] = useState(() => (kind.id === 'correction' && houseById(house)?.status === 'ready' ? { house } : {}));
   const [state, setState] = useState({ status: 'idle' });
@@ -225,7 +225,7 @@ function ContributeForm({ kind, house, onDone }) {
       {state.status === 'error' && <p className="text-sm text-destructive">{ERRORS[state.error]}</p>}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-xs text-muted-foreground">
-          {t('See', 'Lihat')} <a href="#/terms" className="underline hover:text-foreground">{t('Terms & privacy', 'Ketentuan & privasi')}</a>{' '}
+          {t('See', 'Lihat')} <a href={href('/terms')} className="underline hover:text-foreground">{t('Terms & privacy', 'Ketentuan & privasi')}</a>{' '}
           {t('for how messages are handled.', 'tentang cara pesan ditangani.')}
         </p>
         <Button type="submit" disabled={state.status === 'sending'}>

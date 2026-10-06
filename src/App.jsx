@@ -2,10 +2,11 @@
 import { Component, Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { houseById } from '@/houses/index.js';
-import { DEFAULT_HOUSE, SHOW_DIRECTORY, SITE } from '@/config.js';
+import { DEFAULT_HOUSE, SHOW_DIRECTORY } from '@/config.js';
 import { ThemeProvider } from '@/ui/theme.jsx';
 import { LangProvider, useLang } from '@/ui/lang.jsx';
-import { useHashRoute, navigate, replaceRoute } from '@/ui/router.js';
+import { useRoute, navigate, replaceRoute } from '@/ui/router.js';
+import { usePageMeta } from '@/ui/page-meta.js';
 import { Viewer } from '@/ui/Viewer.jsx';
 import { linkById } from '@/ui/site-links.js';
 
@@ -28,34 +29,34 @@ class Optional extends Component {
 }
 
 function Routes() {
-  const route = useHashRoute();
-  const { t, tx } = useLang();
-  const link = linkById(route.house);                 // #/about, #/terms, #/contribute
+  const route = useRoute();
+  const { t, href } = useLang();
+  const link = linkById(route.house);                 // /about, /terms, /contribute
   const page = link?.kind === 'page' ? link.id : null;
   const dialog = link?.kind === 'dialog' ? link.id : null;
+  // The home page shows the default house (at /) while the directory is off.
+  const home = !route.house && !SHOW_DIRECTORY;
+  const here = home ? { house: DEFAULT_HOUSE, building: null, path: '/' } : { house: route.house, building: route.building, path: `/${[route.house, route.building].filter(Boolean).join('/')}` };
   // Pages and dialogs open over the last house you viewed, so the 3D scene stays loaded behind them.
-  const last = useRef({ house: DEFAULT_HOUSE, building: null });
-  const target = link ? last.current : route;
+  const last = useRef({ house: DEFAULT_HOUSE, building: null, path: '/' });
+  const target = link ? last.current : here;
   const meta = houseById(target.house);
   const valid = meta?.status === 'ready';
-  if (!link && valid) last.current = { house: route.house, building: route.building };
+  if (!link && valid) last.current = here;
 
-  // Unknown or coming-soon houses fall back to the directory, or to the default house while it's off.
+  // Unknown or coming-soon houses fall back to the home page.
   useEffect(() => {
-    if (link || valid) return;
-    if (!SHOW_DIRECTORY) { replaceRoute(`#/${DEFAULT_HOUSE}`); dispatchEvent(new HashChangeEvent('hashchange')); }
-    else if (route.house) replaceRoute('#/');
-  }, [link, valid, route.house]);
+    if (link || valid || (!route.house && SHOW_DIRECTORY)) return;
+    replaceRoute(href('/'));
+  }, [link, valid, route.house, href]);
 
-  useEffect(() => {
-    document.title = link ? `${tx(link.short)} · ${SITE}` : valid ? `${meta.name} · ${SITE}` : `${SITE} · ${t('Traditional houses of Indonesia', 'Rumah adat Indonesia')}`;
-  }, [link, valid, meta, t, tx]);
+  usePageMeta({ lang: route.lang, page: link?.id || null, house: link ? null : (home ? null : meta), building: link ? null : route.building });
 
   // Dialogs load on first open, then stay mounted so they can animate closed.
   const [opened, setOpened] = useState({});
   if (dialog && !opened[dialog]) setOpened((o) => ({ ...o, [dialog]: true }));
 
-  const backHref = valid ? `#/${last.current.house}${last.current.building ? `/${last.current.building}` : ''}` : '#/';
+  const backHref = href(valid ? last.current.path : '/');
   const close = () => navigate(backHref);
   return (
     <>

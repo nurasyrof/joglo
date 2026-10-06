@@ -140,7 +140,7 @@ export function AboveSheet({ sheet, hidden, children }) {
 const footerText = 'pointer-events-auto text-xs text-white/90 [text-shadow:0_1px_6px_rgb(0_0_0/0.45)]';
 
 export function MobileFooter() {
-  const { t, tx } = useLang();
+  const { t, tx, href } = useLang();
   return (
     <div className="absolute inset-x-0 bottom-0 flex items-center justify-between px-7" style={{ height: FOOTER_H }}>
       <p className={footerText}>
@@ -152,7 +152,7 @@ export function MobileFooter() {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" side="top" sideOffset={8} className="w-44">
           {SITE_LINKS.map((l) => (
-            <DropdownMenuItem key={l.id} asChild><a href={`#/${l.id}`}>{tx(l.short)}</a></DropdownMenuItem>
+            <DropdownMenuItem key={l.id} asChild><a href={href(`/${l.id}`)}>{tx(l.short)}</a></DropdownMenuItem>
           ))}
         </DropdownMenuContent>
       </DropdownMenu>

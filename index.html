@@ -3,14 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>rumahadat.id · Traditional houses of Indonesia</title>
-  <meta name="description" content="Explore Indonesia's traditional houses in 3D: take them apart, cut through them and learn what every part means." />
-  <link rel="canonical" href="https://rumahadat.id/" />
-  <meta property="og:site_name" content="rumahadat.id" />
-  <meta property="og:title" content="rumahadat.id · Traditional houses of Indonesia" />
-  <meta property="og:description" content="Explore Indonesia's traditional houses in 3D: take them apart, cut through them and learn what every part means." />
-  <meta property="og:url" content="https://rumahadat.id/" />
-  <meta property="og:type" content="website" />
+  <!-- seo: replaced per page at build time (vite.config.js) and kept in sync by src/ui/page-meta.js -->
+  <title>rumahadat.id · Indonesia’s traditional houses in 3D</title>
+  <!-- /seo -->
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
   <meta name="theme-color" content="#faf8f5" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)" />
   <script>
@@ -19,12 +18,16 @@
       var t = localStorage.getItem('theme');
       if (t === 'dark' || (t === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark');
     } catch (e) {}
-    // Language: saved choice, else the browser's (same rule as src/ui/lang.jsx).
-    try {
-      var l = localStorage.getItem('lang');
-      if (l !== 'en' && l !== 'id') l = (navigator.languages || [navigator.language || 'en']).some(function (x) { return /^(id|ms)\b/i.test(x); }) ? 'id' : 'en';
-      document.documentElement.lang = l;
-    } catch (e) {}
+    // Routing before the app starts: old #/… links become real paths, and a first landing on an
+    // English URL goes to its /id version when the saved choice or the browser says Indonesian.
+    (function () {
+      if (location.hash.indexOf('#/') === 0) history.replaceState(null, '', location.hash.slice(1) || '/');
+      var p = location.pathname, id = /^\/id(\/|$)/.test(p), saved = null;
+      try { saved = localStorage.getItem('lang'); } catch (e) {}
+      var browserId = (navigator.languages || [navigator.language || 'en']).some(function (x) { return /^(id|ms)\b/i.test(x); });
+      if (!id && (saved === 'id' || (!saved && browserId))) { history.replaceState(null, '', (p === '/' ? '/id' : '/id' + p) + location.search); id = true; }
+      document.documentElement.lang = id ? 'id' : 'en';
+    })();
   </script>
   <style>
     /* Shown until the app's own loading screen takes over; matches its look. */

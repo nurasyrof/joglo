@@ -15,9 +15,9 @@ npm run dev
 
 Then open http://localhost:5173. `npm run build` writes the static site to `dist/`.
 
-Routes are hash-based: `#/joglo` opens a house, `#/joglo/dalem` one building of a compound. The directory landing page (`#/`) is built but switched off until there are 10–15 houses in 3D: set `SHOW_DIRECTORY` in `src/config.js` to launch it.
+URLs are real paths: `/joglo` opens a house, `/joglo/dalem` one building of a compound, and Indonesian pages live under `/id` (`/id/joglo`). Old `#/…` links are converted on load. The home page (`/`) shows the default house; the directory landing page is built but switched off until there are 10–15 houses in 3D: set `SHOW_DIRECTORY` in `src/config.js` to launch it.
 
-Footer links: **About** and **Contribute** open as dialogs (`#/about`, `#/contribute`); **Terms & privacy** is a page (`#/terms`, and `/terms` redirects there). Contribute form messages go to `CONTACT.endpoint` in `src/config.js` (any form service that accepts a JSON POST, such as Formspree), or to an email address via `mailto:` if only `CONTACT.email` is set.
+Footer links: **About** and **Contribute** open as dialogs (`/about`, `/contribute`); **Terms & privacy** is a page (`/terms`). Contribute form messages go to `CONTACT.endpoint` in `src/config.js` (any form service that accepts a JSON POST, such as Formspree), or to an email address via `mailto:` if only `CONTACT.email` is set.
 
 **Deploying (Cloudflare):** build command `npm run build`, output directory `dist`.
 
@@ -51,6 +51,12 @@ The engine never touches the page UI. React subscribes to its state with `useSyn
 
 Light mode is the default; the theme menu offers light, dark and system, and the 3D sky follows it.
 
+## Search engines and link previews
+
+- **Per-page tags:** `src/seo.js` describes every page (title, description, canonical, English/Indonesian alternates, Open Graph and X cards, schema.org data). At build time `scripts/prerender-meta.js` writes one HTML file per page and language (`joglo.html`, `id/joglo.html`, `joglo/dalem.html`…) with those tags filled in, plus `sitemap.xml`; in the browser `src/ui/page-meta.js` keeps the head in step as you navigate. New houses and buildings are picked up automatically.
+- **Static files** in `public/`: `icon.svg` (the source icon), `favicon.ico`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `site.webmanifest`, `robots.txt`, and the share images in `og/`.
+- **Regenerating images** (dev server only, never in the production build): open `http://localhost:5173/<house>?og=house` (and `/id/<house>?og=house`) in a 1200 × 630 window to render that house's share image into `public/og/`; `/?og=home` and `/id?og=home` render the home card; `/?icons=1` renders the PNG icons from `icon.svg` (then rebuild `favicon.ico` from them). Camera distance per house is set in `src/dev/og.js`.
+
 ## Languages
 
 The site is in English and Bahasa Indonesia. The first visit follows the browser's language; the toolbar's **ID / EN** button switches it, and the choice is saved.
@@ -67,7 +73,7 @@ A house is either **a single building** or **a site** (a compound) with several 
 - **Single building**: `index.js` exports `build`, `parts`, `categories`, `slots`, `presets`, `about`, `views` and `sectionY`. It opens straight into building view. (No house uses this at the moment, but it is still supported.)
 - **Site**: `index.js` exports `slots`, `presets`, `about` and a `site` with `buildings`, `categories` (zones), `views`, `sectionY` and an optional `overlay`. Each building entry has `id`, `name`, `zone`, `at: [x, z]`, `rot`, its card text (`desc`, `fn`, `meaning`, `specs`) and a `def` with `build`, `parts`, `categories`, `views` and `sectionY`. Example: `joglo`.
 
-In a site, the viewer opens on the whole compound (`#/joglo`). Click a building for its card, and **Enter** (or double-click) to open its anatomy (`#/joglo/dalem`). Roofs lift and fade in site view, and the overlay draws the zones and axis. Parts in the `roof` category are the ones that lift.
+In a site, the viewer opens on the whole compound (`/joglo`). Click a building for its card, and **Enter** (or double-click) to open its anatomy (`/joglo/dalem`). Roofs lift and fade in site view, and the overlay draws the zones and axis. Parts in the `roof` category are the ones that lift.
 
 A site can also have a **guided walk** (`site.walk.stops`). Each stop has a `title`, `local` subtitle and `text`, a camera `pos` and `target` in site coordinates (or a named `view` such as `'top'`), and optionally `via` waypoints to steer the camera through doorways, `buildings` to highlight (use only for views from outside) and `overlay: true` to show the site-logic overlay.
 

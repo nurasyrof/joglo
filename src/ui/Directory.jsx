@@ -1,4 +1,4 @@
-// Directory landing page (#/), shown only when SHOW_DIRECTORY is on.
+// Directory landing page (/), shown only when SHOW_DIRECTORY is on.
 import { useMemo, useState } from 'react';
 import { Search } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -16,7 +16,7 @@ import { cn } from '@/lib/utils';
 const TINTS = ['oklch(0.62 0.09 140)', 'oklch(0.62 0.11 65)', 'oklch(0.6 0.12 35)', 'oklch(0.58 0.08 180)', 'oklch(0.55 0.09 310)', 'oklch(0.56 0.09 245)'];
 
 export function Directory() {
-  const { t, tx } = useLang();
+  const { t, tx, href } = useLang();
   const [island, setIsland] = useState('all');
   const [q, setQ] = useState('');
   const [only3d, setOnly3d] = useState(false);
@@ -33,7 +33,7 @@ export function Directory() {
     <main className="h-full overflow-y-auto bg-background">
       <div className="mx-auto max-w-6xl px-4 sm:px-7">
         <header className="flex items-center justify-between py-5">
-          <a href="#/" className="font-heading text-2xl font-semibold">{SITE}</a>
+          <a href={href('/')} className="font-heading text-2xl font-semibold">{SITE}</a>
           <a href={CREDIT.url} target="_blank" rel="noopener" className="text-xs text-muted-foreground hover:text-foreground">{t('Made by', 'Dibuat oleh')} {CREDIT.name}</a>
         </header>
 
@@ -78,7 +78,7 @@ export function Directory() {
               </Card>
             );
             return isReady
-              ? <a key={h.id} href={`#/${h.id}`} className="rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-ring" style={{ color: tint }}>{body}</a>
+              ? <a key={h.id} href={href(`/${h.id}`)} className="rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-ring" style={{ color: tint }}>{body}</a>
               : <div key={h.id} style={{ color: tint }}>{body}</div>;
           })}
         </section>

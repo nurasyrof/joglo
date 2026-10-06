@@ -5,7 +5,7 @@ import { createEngine } from '@/engine/engine.js';
 import { EngineContext, useEngineSnapshot } from './engine-context.js';
 import { useTheme } from './theme.jsx';
 import { useLang } from './lang.jsx';
-import { navigate } from './router.js';
+import { navigate, pathFor } from './router.js';
 import { TitleBar } from './TopBar.jsx';
 import { AboutCardContent, ListPanelContent, aboutTitle } from './ListPanel.jsx';
 import { ControlsPanelContent } from './ControlsPanel.jsx';
@@ -13,6 +13,9 @@ import { InfoCard, WalkCard } from './Cards.jsx';
 import { FooterCredit, FooterLinks, HelpDialog, HoverTooltip, LoadingScreen, Toolbar } from './Overlays.jsx';
 import { AboveSheet, MobileFooter, SheetCarousel, useSheet } from './MobileSheet.jsx';
 import { cn } from '@/lib/utils';
+
+// Development only: ?og=house or ?og=home renders this page's share image (see src/dev/og.js).
+const OG = import.meta.env.DEV ? new URLSearchParams(location.search).get('og') : null;
 
 const VIEW_KEYS = { 1: 'iso', 2: 'front', 3: 'side', 4: 'top', 5: 'inside' };
 const DEFAULT_SECTIONS = ['view', 'explode', 'display', 'section', 'materials'];
@@ -70,6 +73,7 @@ function useShortcuts(engine, { onHelp }) {
 
 export function Viewer({ meta, building, covered = false }) {
   const host = useRef(null);
+  const langRef = useRef('en');
   const [engine, setEngine] = useState(null);
   const { resolved } = useTheme();
   const s = useEngineSnapshot(engine);
@@ -83,12 +87,14 @@ export function Viewer({ meta, building, covered = false }) {
   useEffect(() => { if (s?.selected) setSnap('low'); }, [s?.selected, setSnap]);
 
   useEffect(() => {
-    const e = createEngine(host.current, { onNavigate: navigate });
+    // The engine names language-neutral paths (/joglo/pendapa); links stay in the current language.
+    const e = createEngine(host.current, { onNavigate: (path) => navigate(pathFor(langRef.current, path)) });
     setEngine(e);
     return () => e.dispose();
   }, []);
   useEffect(() => { engine?.setTheme(resolved); }, [engine, resolved]);
   const { lang, t } = useLang();
+  langRef.current = lang;
   useEffect(() => { engine?.setLang(lang); }, [engine, lang]);
   useEffect(() => {
     if (!engine) return undefined;
@@ -97,6 +103,13 @@ export function Viewer({ meta, building, covered = false }) {
     return () => { cancelled = true; };
   }, [engine, meta, building]);
   useShortcuts(covered ? null : engine, { onHelp: () => setHelp(true) });
+
+  const ogStarted = useRef(false);
+  useEffect(() => {
+    if (!OG || !engine || !s?.house || s.loading || ogStarted.current) return;
+    ogStarted.current = true;
+    import('@/dev/og.js').then((m) => m.makeShareImage({ engine, meta, lang, home: OG === 'home' }));
+  }, [engine, s?.house, s?.loading, meta, lang]);
 
   const openDownload = () => {
     setSections((v) => (v.includes('download') ? v : [...v, 'download']));
@@ -113,7 +126,7 @@ export function Viewer({ meta, building, covered = false }) {
       <div className="fixed inset-0 overflow-hidden">
         <div ref={host} className={cn('absolute inset-0', blueprint ? 'viewport-blueprint' : 'viewport-sky')} />
 
-        {ready && !mobile && (
+        {ready && !mobile && !OG && (
           <div className="pointer-events-none absolute inset-0">
             <HoverTooltip />
 
@@ -151,7 +164,7 @@ export function Viewer({ meta, building, covered = false }) {
           </div>
         )}
 
-        {ready && mobile && (
+        {ready && mobile && !OG && (
           <div className="pointer-events-none absolute inset-0">
             <header className="absolute inset-x-3 top-4 flex justify-center">
               <TitleBar meta={meta} />

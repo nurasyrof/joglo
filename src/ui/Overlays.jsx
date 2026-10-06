@@ -86,13 +86,13 @@ export function FooterCredit({ className }) {
 }
 
 export function FooterLinks({ className, linkClassName }) {
-  const { t, tx } = useLang();
+  const { t, tx, href } = useLang();
   return (
     <nav aria-label={t('Site', 'Situs')} className={cn(footerText, 'flex items-center gap-1.5', className)}>
       {SITE_LINKS.map((p, i) => (
         <span key={p.id} className="flex items-center gap-1.5">
           {i > 0 && <span aria-hidden="true">·</span>}
-          <a href={`#/${p.id}`} className={cn('hover:underline', linkClassName)}>{tx(p.short)}</a>
+          <a href={href(`/${p.id}`)} className={cn('hover:underline', linkClassName)}>{tx(p.short)}</a>
         </span>
       ))}
     </nav>

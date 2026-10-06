@@ -1,10 +1,13 @@
-// English / Bahasa Indonesia. The choice is saved per browser; the first visit follows the browser's
-// language (Indonesian browsers get Indonesian, everyone else English).
+// English / Bahasa Indonesia. The URL decides the language: Indonesian pages live under /id.
+// A visitor's first landing on an English URL is sent to /id when their saved choice or their
+// browser says Indonesian (the inline script in index.html does this before the app starts).
 //
 // Interface text is written in place as a pair: t('Guided walk', 'Jelajah terpandu').
 // House content uses { en, id } objects wherever a field is translated; tx() picks the language.
-import { createContext, useContext, useEffect, useState } from 'react';
+// href('/joglo') gives a link in the current language ('/joglo' or '/id/joglo').
+import { createContext, useContext, useEffect } from 'react';
 import { tx } from '@/lib/i18n.js';
+import { navigate, neutralPath, pathFor, useRoute } from './router.js';
 
 export { tx };
 
@@ -12,28 +15,23 @@ export const LANGS = [
   { id: 'id', label: 'Bahasa Indonesia', short: 'ID' },
   { id: 'en', label: 'English', short: 'EN' },
 ];
-const KEY = 'lang';
-
-export function detectLang() {
-  try {
-    const saved = localStorage.getItem(KEY);
-    if (saved === 'en' || saved === 'id') return saved;
-  } catch { /* storage unavailable */ }
-  const prefs = navigator.languages?.length ? navigator.languages : [navigator.language || 'en'];
-  return prefs.some((l) => /^(id|ms)\b/i.test(l)) ? 'id' : 'en';
-}
-
+export const LANG_KEY = 'lang';
 
 const LangContext = createContext(null);
 
 export function LangProvider({ children }) {
-  const [lang, setLangState] = useState(detectLang);
+  const { lang } = useRoute();
   useEffect(() => { document.documentElement.lang = lang; }, [lang]);
   const setLang = (l) => {
-    setLangState(l);
-    try { localStorage.setItem(KEY, l); } catch { /* storage unavailable */ }
+    try { localStorage.setItem(LANG_KEY, l); } catch { /* storage unavailable */ }
+    navigate(pathFor(l, neutralPath(location.pathname)) + location.search, { replace: true });
   };
-  const value = { lang, setLang, t: (en, id) => (lang === 'id' ? id : en), tx: (v) => tx(v, lang) };
+  const value = {
+    lang, setLang,
+    t: (en, id) => (lang === 'id' ? id : en),
+    tx: (v) => tx(v, lang),
+    href: (path) => pathFor(lang, path),
+  };
   return <LangContext.Provider value={value}>{children}</LangContext.Provider>;
 }
 

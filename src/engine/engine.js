@@ -373,8 +373,8 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
     emit();
   }
 
-  const enterBuilding = (id) => onNavigate(`#/${H.meta.id}/${id}`);
-  const backToSite = () => { if (H && !H.single) onNavigate(`#/${H.meta.id}`); };
+  const enterBuilding = (id) => onNavigate(`/${H.meta.id}/${id}`);
+  const backToSite = () => { if (H && !H.single) onNavigate(`/${H.meta.id}`); };
 
   function updateOverlay() {
     if (!H?.overlay) return;
@@ -812,7 +812,8 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
       filename: fileBase(),
     });
   }
-  function screenshot() {
+  // The current view over its sky background, as a canvas (used for screenshots and share images).
+  function captureCanvas() {
     renderer.render(scene, camera);
     const w = cvs.width, h = cvs.height;
     const out = document.createElement('canvas');
@@ -829,6 +830,10 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
     g.fillStyle = grd;
     g.fillRect(0, 0, w, h);
     g.drawImage(cvs, 0, 0);
+    return out;
+  }
+  function screenshot() {
+    const out = captureCanvas();
     const a = document.createElement('a');
     a.download = `${fileBase()}.png`;
     a.href = out.toDataURL('image/png');
@@ -994,6 +999,24 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
     setExposure: set((v) => { renderer.toneMappingExposure = v; }),
     setShadows: set((v) => { S.shadows = v; applyMaterials(); }),
     setTheme: set((t) => { S.theme = t; setTime(S.time); }),
+    // Assembles the model and frames it at once, without animation (used for share images).
+    // zoom < 1 moves the camera closer than the standard view.
+    setShot: set(({ view = 'iso', zoom = 1 } = {}) => {
+      S.explode = S.explodeTarget = 0;
+      applyExplode();
+      const v = viewPose(view, 0);
+      tween = null;
+      controls.target.copy(v.target);
+      camera.position.copy(v.target).addScaledVector(v.pos.clone().sub(v.target), zoom);
+      controls.update();
+      S.view = view;
+    }),
+    // Shifts the picture sideways by a fraction of its width (used to frame share images).
+    setViewShift: (f) => {
+      const [w, h] = size();
+      if (f) camera.setViewOffset(w, h, -f * w, 0, w, h); else camera.clearViewOffset();
+      camera.updateProjectionMatrix();
+    },
     setLang: set((l) => { S.lang = l; relabel(); }),
 
     // Walk
@@ -1002,7 +1025,7 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
     setWalkAuto,
 
     // Files
-    exportModel, screenshot,
+    exportModel, screenshot, captureCanvas,
 
     dispose() {
       alive = false;
