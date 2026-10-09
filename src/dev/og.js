@@ -7,7 +7,7 @@ import { tx } from '@/lib/i18n.js';
 
 const W = 1200, H = 630;
 // How close the camera sits for each house's share image (1 = the standard 3D view).
-const SHOT = { joglo: 0.68, 'rumah-gadang': 0.72, 'uma-mbatangu': 0.74, 'pekarangan-bali': 0.7, tongkonan: 0.7 };
+const SHOT = { joglo: 0.68, 'joglo-pencu': 0.7, 'rumah-gadang': 0.72, 'uma-mbatangu': 0.74, 'pekarangan-bali': 0.7, tongkonan: 0.7 };
 const save = (path, blob) => fetch(`/__save?path=${encodeURIComponent(path)}`, { method: 'POST', body: blob }).then((r) => r.text());
 const toBlob = (canvas, type, q) => new Promise((r) => canvas.toBlob(r, type, q));
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));

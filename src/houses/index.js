@@ -48,6 +48,12 @@ export const HOUSES = [
     art: `<path d="M60 6l8 14 12 6 26 14H14l26-14 12-6Z"/>${stilts([22, 34, 48, 72, 86, 98], 40, 62)}<rect x="12" y="62" width="96" height="4"/>`,
   },
   {
+    id: 'joglo-pencu', name: 'Joglo Pencu', local: 'Omah Pencu', island: 'Java', province: { en: 'Central Java (Kudus)', id: 'Jawa Tengah (Kudus)' }, people: { en: 'Kudus Javanese', id: 'Jawa Kudus' },
+    blurb: { en: 'A merchant’s house under a tall, pointed roof, its timber front and inner rooms richly carved.', id: 'Rumah saudagar di bawah atap yang tinggi dan runcing, dengan dinding depan dan ruang dalam dari kayu yang kaya ukiran.' },
+    status: 'ready', load: () => import('./joglo-pencu/index.js'),
+    art: `<path d="M60 2l12 24 30 14 6 4H12l6-4 30-14Z"/><rect x="20" y="44" width="80" height="14"/><rect x="14" y="58" width="92" height="6"/>`,
+  },
+  {
     id: 'rumah-kebaya', name: 'Rumah Kebaya', local: 'Rumah Betawi', island: 'Java', province: { en: 'Jakarta', id: 'Jakarta' }, people: { en: 'Betawi', id: 'Betawi' },
     blurb: { en: 'Named for a roof that folds like a kebaya, fronted by a wide open veranda.', id: 'Dinamai dari atapnya yang berlipat seperti kebaya, dengan beranda terbuka yang lebar di depannya.' },
     status: 'soon',

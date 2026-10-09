@@ -38,6 +38,7 @@ src/
   houses/
     index.js            registry: every house, its metadata and silhouette
     joglo/              a compound: several buildings on one site
+    joglo-pencu/        a Kudus house plot: the omah, pawon, pekiwan and sisir around a yard
     rumah-gadang/       a compound: house, four rangkiang, surau and yard
     uma-mbatangu/       a village: clan houses around a plaza of stone tombs
     pekarangan-bali/    a Balinese compound laid out by the Sanga Mandala
