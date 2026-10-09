@@ -139,10 +139,22 @@ function build() {
   for (const [sx, sz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) G.add('carved', box(0.07, 1.9, 0.07, sx * 0.82, gedong + 0.45 + 0.95, -4.2 + sz * 0.97));
   frame(G, 'carved', 0.82, 0.97, gedong + 2.37, 0.07, 0.08);
 
-  // ── Rong-rongan: blandar and pengeret on the soko guru, three courses of tumpang sari
+  // ── Sunduk & kili through the soko guru, santen up to the pengeret, and the blandar
+  // (along x) and pengeret (across) on top of them
+  const SK = P('sunduk_kili');
+  const yS = GURU.top - 1.0;
+  for (const z of [-GURU.z, GURU.z]) SK.add('wood', box(2 * GURU.x + 0.6, 0.24, 0.12, 0, yS, z));
+  for (const x of [-GURU.x, GURU.x]) SK.add('wood', box(0.12, 0.24, 2 * GURU.z + 0.6, x, yS - 0.32, 0));
+  for (const z of [-GURU.z, GURU.z]) for (const s of [-1, 1]) SK.add('accent', box(0.05, 0.34, 0.15, s * (GURU.x + 0.24), yS, z));
+  for (const x of [-GURU.x, GURU.x]) for (const s of [-1, 1]) SK.add('accent', box(0.15, 0.34, 0.05, x, yS - 0.32, s * (GURU.z + 0.24)));
+  const sBot = yS - 0.32 + 0.12;
+  for (const x of [-GURU.x, GURU.x]) P('santen').add('carved', box(0.12, GURU.top - sBot, 0.16, x, (GURU.top + sBot) / 2, 0));
+  for (const z of [-GURU.z, GURU.z]) P('blandar').add('carved', box(2 * GURU.x + 0.66, 0.2, 0.26, 0, GURU.top + 0.1, z));
+  for (const x of [-GURU.x, GURU.x]) P('pengeret').add('carved', box(0.26, 0.2, 2 * GURU.z + 0.66, x, GURU.top + 0.1, 0));
+
+  // ── Rong-rongan: three courses of tumpang sari
   // stepping out, then the luweng: seven courses stepping in, closed by a ceiling board
   const RR = P('rong_rongan');
-  frame(RR, 'carved', GURU.x, GURU.z, GURU.top + 0.1, 0.26, 0.2, 0.2);
   const tsBase = GURU.top + 0.2;
   for (let i = 0; i < 3; i++) frame(RR, i % 2 ? 'accent' : 'carved', 2.05 + 0.225 * i, 1.85 + 0.185 * i, tsBase + 0.085 + 0.17 * i, 0.24, 0.17, 0.06);
   const lwBase = tsBase + 0.51;
@@ -189,7 +201,14 @@ function build() {
   }
 
   // Molo, ridge cap, and the crown: a gunungan in the middle flanked by two wayang tiles
-  P('usuk').add('wood', box(2 * PENCU.ix + 0.5, 0.26, 0.2, 0, PENCU.y1 - T - 0.14, 0));
+  const moloY = PENCU.y1 - T - 0.14;
+  P('usuk').add('wood', box(2 * PENCU.ix + 0.5, 0.26, 0.2, 0, moloY, 0));
+  // Ander: two posts on short pengeret above the luweng ceiling, holding up the molo
+  const aBase = lwBase + 0.95;
+  for (const x of [-0.3, 0.3]) {
+    P('pengeret').add('wood', box(0.14, 0.16, 2 * lz + 0.3, x, aBase + 0.08, 0));
+    P('ander').add('wood', box(0.14, moloY - 0.13 - (aBase + 0.16), 0.14, x, (moloY - 0.13 + aBase + 0.16) / 2, 0));
+  }
   GD.add('ornament', box(2 * PENCU.ix + 0.3, 0.14, 0.24, 0, PENCU.y1 + 0.05, 0, 'stone', 1));
   GD.add('ornament', gablePanel(GUNUNGAN.map(([u, y]) => [u, y + PENCU.y1 + 0.1]), 0.07, 'z', 0));
   for (const sx of [-1, 1]) GD.add('ornament', gablePanel(WAYANG.map(([u, y]) => [u + sx * 0.42, y + PENCU.y1 + 0.1]), 0.06, 'z', 0));

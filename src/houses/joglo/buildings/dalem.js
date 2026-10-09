@@ -22,8 +22,8 @@ function build() {
   // The joglo frame, with the smaller pieces merged into fewer parts.
   const frameStore = partStore();
   const counts = jogloStructure(frameStore.P, {
-    pen: 'saka', pit: 'saka', sunduk: 'rangka', blandar: 'rangka', lambang: 'rangka',
-    dadha: 'tumpang_sari', uleng: 'tumpang_sari', dudur: 'usuk', molo: 'usuk',
+    pen: 'saka', pit: 'saka', sunduk: 'rangka', santen: 'rangka', blandar: 'rangka', pengeret: 'rangka', lambang: 'rangka',
+    dadha: 'tumpang_sari', uleng: 'tumpang_sari', dudur: 'usuk', molo: 'usuk', ander: 'usuk',
     mustaka: 'atap', brunjung: 'atap', penanggap: 'atap', penitih: 'atap',
   });
   mergeStore(P, frameStore.parts, { dy: DY });
@@ -116,9 +116,9 @@ const PARTS = [
     specs: [{ en: '32 columns', id: '32 tiang' }],
   },
   {
-    id: 'rangka', cat: 'frame', name: 'Blandar, Sunduk & Lambang Gantung', alias: 'Rangka', en: { en: 'Beams and ties', id: 'Balok dan pengikat' },
+    id: 'rangka', cat: 'frame', name: 'Blandar, Pengeret, Sunduk & Santen', alias: 'Rangka', en: { en: 'Beams and ties', id: 'Balok dan pengikat' },
     explode: [0, 4.7, 0], anchor: [0, 5.1, 4.4],
-    desc: { en: 'The ring beams (blandar and pengeret), through-beams with wedges (sunduk and kili), and the lambang gantung posts between the roof tiers.', id: 'Balok keliling (blandar dan pengeret), balok tembus dengan pasak baji (sunduk dan kili), serta tiang lambang gantung di antara susun atap.' },
+    desc: { en: 'The ring beams (blandar along the length, pengeret across it), the through-beams with their wedges (sunduk and kili), the santen posts between sunduk and pengeret, and the lambang gantung posts between the roof tiers.', id: 'Balok keliling (blandar memanjang, pengeret melintang), balok tembus dengan pasak bajinya (sunduk dan kili), tiang santen di antara sunduk dan pengeret, serta tiang lambang gantung di antara susun atap.' },
     fn: { en: 'Tie the columns into rigid frames without nails and carry the roof tiers.', id: 'Mengikat tiang-tiang menjadi rangka kaku tanpa paku dan memikul susun atap.' },
     meaning: { en: 'Knock-down joinery: the whole dalem can be dismantled and rebuilt elsewhere.', id: 'Sambungan bongkar-pasang: seluruh dalem dapat dibongkar dan didirikan kembali di tempat lain.' },
     specs: [{ en: 'Pegged joints', id: 'Sambungan pasak' }, { en: 'No nails', id: 'Tanpa paku' }],
@@ -164,9 +164,9 @@ const PARTS = [
     specs: [{ en: 'Draped platform', id: 'Balai berkelambu' }, { en: 'Loro blonyo pair', id: 'Sepasang loro blonyo' }],
   },
   {
-    id: 'usuk', cat: 'roof', name: 'Usuk, Dudur & Molo', alias: 'Rangka atap', en: { en: 'Rafters, hips and ridge', id: 'Usuk, jurai, dan bubungan' },
+    id: 'usuk', cat: 'roof', name: 'Usuk, Dudur, Molo & Ander', alias: 'Rangka atap', en: { en: 'Rafters, hips, ridge and ander', id: 'Usuk, jurai, bubungan, dan ander' },
     explode: [0, 9.7, 0], anchor: [4.4, 5.95, 3.9],
-    desc: { en: 'Rafters, battens and hip rafters of the three roof tiers, and the molo ridge beam at the top.', id: 'Usuk, reng, dan jurai dari ketiga susun atap, serta balok bubungan molo di puncaknya.' },
+    desc: { en: 'Rafters, battens and hip rafters of the three roof tiers, the molo ridge beam at the top, and the two ander posts that hold it up.', id: 'Usuk, reng, dan jurai dari ketiga susun atap, balok bubungan molo di puncaknya, serta dua tiang ander yang menyangganya.' },
     fn: { en: 'Carry the clay tiles and give each tier its pitch.', id: 'Memikul genteng tanah liat dan memberi kemiringan pada setiap susun.' },
     meaning: { en: 'The raising of the molo is marked with the munggah molo ceremony.', id: 'Pemasangan molo ditandai dengan upacara munggah molo.' },
     specs: [{ en: '{rafters} rafters', id: '{rafters} usuk' }, { en: '{battens} battens', id: '{battens} reng' }],

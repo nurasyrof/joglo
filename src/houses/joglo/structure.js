@@ -1,6 +1,6 @@
 // The joglo frame shared by the pendapa and the dalem: three column rings on umpak,
-// sunduk & kili, blandar, tumpang sari, dhadha peksi, uleng, lambang gantung and the three
-// roof tiers with rafters, hips, ridge and crowns. Units are metres, floor at DIM.floorTop.
+// sunduk & kili, santen, blandar and pengeret, tumpang sari, dhadha peksi, uleng, lambang gantung,
+// the ander under the molo, and the three roof tiers with rafters, hips, ridge and crowns. Units are metres, floor at DIM.floorTop.
 import { V, box, beam, frame, ring, lathe, slab, tierFaces, rafters, battens } from '../../lib/geometry.js';
 import { umpak } from '../../lib/kit.js';
 
@@ -19,8 +19,8 @@ export const DIM = {
 // Default part ids (the pendapa's); pass `ids` to merge pieces into fewer parts.
 const IDS = {
   umpak: 'umpak', guru: 'saka_guru', pen: 'saka_penanggap', pit: 'saka_penitih',
-  sunduk: 'sunduk_kili', blandar: 'blandar', tumpang: 'tumpang_sari', dadha: 'dadha_peksi',
-  uleng: 'uleng', lambang: 'lambang_gantung', usuk: 'usuk', dudur: 'dudur', molo: 'molo', mustaka: 'mustaka',
+  sunduk: 'sunduk_kili', santen: 'santen', blandar: 'blandar', pengeret: 'pengeret', tumpang: 'tumpang_sari', dadha: 'dadha_peksi',
+  uleng: 'uleng', lambang: 'lambang_gantung', ander: 'ander', usuk: 'usuk', dudur: 'dudur', molo: 'molo', mustaka: 'mustaka',
   brunjung: 'atap_brunjung', penanggap: 'atap_penanggap', penitih: 'atap_penitih',
 };
 
@@ -52,10 +52,18 @@ export function jogloStructure(P, ids = {}) {
   for (const z of [-guru.z, guru.z]) for (const sx of [-1, 1]) SK.add('accent', box(0.05, 0.36, 0.16, sx * (guru.x + 0.27), yS, z));
   for (const x of [-guru.x, guru.x]) for (const sz of [-1, 1]) SK.add('accent', box(0.16, 0.36, 0.05, x, yS - 0.34, sz * (guru.z + 0.27)));
 
-  // ── Blandar & pengeret ring beams
-  frame(P(I.blandar), 'wood', guru.x, guru.z, guru.top + 0.11, 0.26, 0.22, 0.22);
-  frame(P(I.blandar), 'wood', pen.x, pen.z, pen.top + 0.09, 0.2, 0.18, 0.18);
-  frame(P(I.blandar), 'wood', pit.x, pit.z, pit.top + 0.08, 0.18, 0.16, 0.28);
+  // ── Ring beams on each column ring: blandar along the length (x), pengeret across it (z)
+  const rings = (hx, hz, y, w, h, over) => {
+    for (const z of [-hz, hz]) P(I.blandar).add('wood', box(2 * hx + w + 2 * over, h, w, 0, y, z));
+    for (const x of [-hx, hx]) P(I.pengeret).add('wood', box(w, h, 2 * hz + w + 2 * over, x, y, 0));
+  };
+  rings(guru.x, guru.z, guru.top + 0.11, 0.26, 0.22, 0.22);
+  rings(pen.x, pen.z, pen.top + 0.09, 0.2, 0.18, 0.18);
+  rings(pit.x, pit.z, pit.top + 0.08, 0.18, 0.16, 0.28);
+
+  // ── Santen: short posts linking each cross sunduk to the pengeret above it
+  const sBot = yS - 0.34 + 0.13, sTop = guru.top;
+  for (const x of [-guru.x, guru.x]) P(I.santen).add('carved', box(0.12, sTop - sBot, 0.16, x, (sTop + sBot) / 2, 0));
 
   // ── Tumpang sari: five courses stepping outward
   const tsBase = guru.top + 0.22;
@@ -111,9 +119,16 @@ export function jogloStructure(P, ids = {}) {
     }
   }
 
-  // ── Molo (ridge beam) and ridge crown ornaments
+  // ── Molo (ridge beam), and the ander: two posts standing on short pengeret laid over the
+  // top of the frame, holding up the molo
   const B = DIM.brunjung;
-  P(I.molo).add('wood', box(2 * B.ix + 0.5, 0.26, 0.2, 0, B.y1 - t - 0.14, 0));
+  const moloY = B.y1 - t - 0.14;
+  P(I.molo).add('wood', box(2 * B.ix + 0.5, 0.26, 0.2, 0, moloY, 0));
+  const aBase = tsTop + 0.66 + 0.04;
+  for (const x of [-0.75, 0.75]) {
+    P(I.pengeret).add('wood', box(0.14, 0.16, 2 * uz + 0.3, x, aBase + 0.08, 0));
+    P(I.ander).add('wood', box(0.16, moloY - 0.13 - (aBase + 0.16), 0.16, x, (moloY - 0.13 + aBase + 0.16) / 2, 0));
+  }
   P(I.mustaka).add('ornament', box(2 * B.ix + 0.3, 0.16, 0.26, 0, B.y1 + 0.06, 0, 'stone', 1));
   const prof = [[0, 0], [0.2, 0], [0.22, 0.06], [0.14, 0.12], [0.12, 0.2], [0.24, 0.34], [0.2, 0.46],
     [0.1, 0.56], [0.07, 0.66], [0.12, 0.74], [0.05, 0.86], [0, 0.95]];

@@ -113,35 +113,76 @@ export function ListPanelContent({ onPicked, heading = true }) {
 export const aboutTitle = (s, t) => (s.building ? t(`About the ${s.building.name}`, `Tentang ${s.building.name}`) : t('About this house', 'Tentang rumah ini'));
 
 // "About this house" (or the open building in a compound): clamped text that expands in place.
+// For a house, the ideal-type statement comes first and the sources follow the text.
 // `full` shows all of it with no heading, for the mobile sheet where the card itself scrolls.
 export function AboutCardContent({ className, full = false }) {
   const { s } = useEngine();
   const { t } = useLang();
   const [open, setOpen] = useState(false);
   const b = s.building;
-  const paras = b ? [b.desc, b.fn, b.meaning] : s.house.about.paras;
+  const about = s.house.about;
+  const paras = b ? [b.desc, b.fn, b.meaning] : [about.method, ...about.paras].filter(Boolean);
   useEffect(() => setOpen(false), [b?.id, s.house.id]);
+  const label = !b && about.method && (
+    <p className="text-[11px] font-semibold tracking-[0.12em] text-primary uppercase">{t('Ideal-type reconstruction', 'Rekonstruksi tipe ideal')}</p>
+  );
+  const sources = !b && <Sources about={about} />;
   if (full) {
     return (
       <div className={cn('space-y-3 px-5 pb-5 text-[13px] leading-relaxed text-foreground/80', className)}>
+        {label}
         {paras.map((p, i) => <p key={i}>{p}</p>)}
+        {sources}
       </div>
     );
   }
   return (
     <div className={cn('flex min-h-0 flex-col px-4 pt-3.5 pb-3', className)}>
       <h2 className="font-heading text-xl font-semibold">{aboutTitle(s, t)}</h2>
-      <div className={cn('mt-2 min-h-0', open && 'overflow-y-auto pr-1')}>
+      <div className={cn('mt-2 min-h-0 space-y-1.5', open && 'overflow-y-auto pr-1')}>
+        {label}
         <p
           onClick={() => !open && setOpen(true)}
           className={cn('text-[13px] leading-relaxed whitespace-pre-line text-foreground/80', !open && 'line-clamp-8 cursor-pointer')}
         >
           {paras.join('\n\n')}
         </p>
+        {open && <div className="pt-2">{sources}</div>}
       </div>
       <button type="button" onClick={() => setOpen((v) => !v)} className="mt-2 self-start text-xs font-medium text-muted-foreground hover:text-foreground">
         {open ? t('…see less', '…lebih sedikit') : t('…see more', '…selengkapnya')}
       </button>
+    </div>
+  );
+}
+
+// The house's checked sources, and further reading that has not been checked yet.
+function Sources({ about }) {
+  const { t } = useLang();
+  const list = (items) => (
+    <ul className="mt-1.5 space-y-1.5 text-[12px] leading-snug text-foreground/70">
+      {items.map((r, i) => (
+        <li key={i} className="pl-3 -indent-3">
+          {r.url ? <a href={r.url} target="_blank" rel="noopener" className="hover:text-foreground hover:underline">{r.text}</a> : r.text}
+        </li>
+      ))}
+    </ul>
+  );
+  const head = 'text-[11px] font-semibold tracking-[0.12em] text-muted-foreground uppercase';
+  return (
+    <div className="space-y-3 border-t pt-3">
+      <div>
+        <p className={head}>{t('Sources', 'Sumber')}</p>
+        {about.sources.length
+          ? list(about.sources)
+          : <p className="mt-1.5 text-[12px] leading-snug text-foreground/70">{t('The sources for this house are still being checked.', 'Sumber untuk rumah ini masih sedang diperiksa.')}</p>}
+      </div>
+      {about.reading.length > 0 && (
+        <div>
+          <p className={head}>{t('Further reading, not yet checked', 'Bacaan lanjutan, belum diperiksa')}</p>
+          {list(about.reading)}
+        </div>
+      )}
     </div>
   );
 }

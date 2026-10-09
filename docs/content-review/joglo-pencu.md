@@ -128,13 +128,23 @@ No published measured drawings were found, so **all dimensions are our own estim
 | Meaning of "kilungan" | ❔ | Appears in K2 and in the title of Anisa (2003), "susunan bangunan di dalam kilungan"; probably the walled enclosure of a plot or group of houses. Check |
 | Side gate | ✅ | K1 (Pak Kahfi); marked `interp` for the general claim |
 
+### Frame members added after expert feedback (10 October 2026)
+
+| Part | Claim | Status | Source / note |
+|---|---|---|---|
+| Sunduk & kili | Through-beams in the soko guru, locked with wedges | ⚠️ | General Javanese joglo joinery (see the Joglo review). Not described in K1–K4; marked `interp` |
+| Santen | Posts joining the cross sunduk to the pengeret | ⚠️ | K6, for Javanese houses generally |
+| Pengeret | Cross beams on the soko guru, and two short ones carrying the ander | ⚠️ | K6 for the ander on a pengeret; Kudus placement not described |
+| Ander | Two posts holding up the molo of the pencu | ⚠️ | K6 (ander in every Javanese roof type); placement is our reconstruction, marked `interp` |
+
 ## 4. Open questions
 
 1. Kudus names for the roof tiers (we use the Yogyakarta "penanggap").
 2. Whether the gedongan lies under the pencu (K4) or behind the rong-rongan (K1).
 3. Real dimensions: look for measured drawings in Triyanto (1992) or Sardjono (1996), or the Museum Kretek house.
 4. Meaning of "kilungan".
-5. The UB student journal articles (Farid & Antariksa on the symmetry of the joglo pencu interior) and the Petra article on interior layout were blocked by Cloudflare; they may have plans and dimensions.
+5. Whether Kudus houses use sunduk, santen and ander as in the Yogyakarta joglo, and where the ander stands.
+6. The UB student journal articles (Farid & Antariksa on the symmetry of the joglo pencu interior) and the Petra article on interior layout were blocked by Cloudflare; they may have plans and dimensions.
 
 ## 5. Sources
 
@@ -145,9 +155,11 @@ No published measured drawings were found, so **all dimensions are our own estim
 - **K3.** Rofian (2015). Pemanfaatan unsur-unsur arsitektur rumah tradisional sebagai upaya menegaskan identitas pada bangunan modern di Kudus. *Catharsis* 4(1), 58–65. Universitas Negeri Semarang. <https://journal.unnes.ac.id/sju/catharsis/article/view/6829>. Full text read.
 - **K4.** *Rumah Adat Kudus Joglo Pencu: sejarah makna-makna keislaman dalam arsitektur rumah adat Kudus joglo pencu*. Undergraduate thesis (skripsi), UIN Sunan Kalijaga. <https://digilib.uin-suka.ac.id/id/eprint/48095/>. Chapters I and IV–V only. Weak source: also makes historical claims (built from 1500 CE, Kiai Telingsing) that we do not repeat.
 - **K5.** Search-engine summaries of: Universitas Brawijaya student journal (JMA) articles on the joglo pencu; Petra Christian University, *Tata ruang dalam rumah adat Kudus*; Kudus traditional house article in *IJBESR* (UMJ); Good News from Indonesia (2025). Not read in full.
+- **K6.** Dinas Kebudayaan DIY. *Mengenal Bangunan Berarsitektur Tradisional Jawa: Ander, Geganja dan Santen*. <https://budaya.jogjaprov.go.id/artikel/detail/Mengenal-Bangunan-Berarsitektur-Tradisional-Jawa-Ander-Geganja-dan-Santen>. Read via a page summary. About Javanese (Yogyakarta) houses in general.
 
 ### B. To check (not online, or not reachable)
 
+- Prijotomo, J. (2006). *(Re-)Konstruksi Arsitektur Jawa: Griya Jawa dalam Tradisi Tanpatulisan*. Surabaya: Wastu Lanas Grafika.
 - Triyanto (1992). *Makna Ruang dan Penataannya dalam Arsitektur Rumah Kudus*. Thesis, Universitas Indonesia.
 - Sardjono, A. B. (1996). *Rumah-rumah di Kota Lama Kudus*. Thesis, Universitas Gadjah Mada.
 - Wikantari, R. R. (2001). *Sustainability of Historic Environment of Wooden Traditional Houses in the City of Java*. Dissertation, Kobe University.

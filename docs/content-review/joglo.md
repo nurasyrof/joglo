@@ -81,6 +81,20 @@ All sizes, heights, pitches and counts in `specs` (e.g. "16.6 × 14.6 m", "≈52
 
 ---
 
+## 6. Expert feedback, 10 October 2026
+
+A professor's review asked for (1) more accurate framing members, naming the ander and pengeret, (2) references, with Prijotomo (2006) as the main book, and (3) an introduction saying the model is an *ideal type* reconstruction, not based on a particular building. Changes made:
+
+| Change | Status | Source / note |
+|---|---|---|
+| Pengeret split from the blandar into its own part (cross beams of each column ring) | ✅ | S10; S1 |
+| Santen added: posts joining each cross sunduk to the pengeret above | ✅ | S10 (santen links sunduk to pengeret or panyelak; name probably from *samanten*) |
+| Ander added: two posts under the molo, standing on two short pengeret over the uleng | ⚠️ | S10 says the ander stands on a pengeret and holds the molo, joined with purus. Its exact position inside a joglo is our reconstruction; the card says so. Check in Prijotomo (2006) |
+| Geganja (an extra beam sometimes laid on the pengeret) | ❔ | Not modelled; S10 says it is optional |
+| Dalem: pengeret and santen merged into "rangka", ander into "usuk" | — | Same frame as the pendapa |
+| Ideal-type statement now the first paragraph of every house's About text, with an "Ideal-type reconstruction" label | — | The typology paper the reviewer linked (ResearchGate 347911634) could not be opened (403); wording not yet checked against it |
+| About card now shows a Sources list and a separate "Further reading, not yet checked" list | — | See section C |
+
 ## Sources
 
 ### A. Checked for this review
@@ -95,15 +109,19 @@ All sizes, heights, pitches and counts in `specs` (e.g. "16.6 × 14.6 m", "≈52
 - **S7.** "Joglo Hageng", Royal Ambarrukmo Yogyakarta: commercial, used only for the column counts. <https://ambarrukmo.com/joglo-hageng/>
 - **S8.** *Tata Ruang Rumah Bangsawan Yogyakarta*, Dimensi (Petra Christian University). <https://dimensi.petra.ac.id/index.php/ars/article/view/23942/20402>. Search summary only.
 - **S9.** Popular articles (Yoursay/Suara, Good News from Indonesia, blogs) for pringgitan, pendapa, gadri, tumpang sari and keblat papat. Popular only; each claim here still needs a book check.
+- **S10.** Dinas Kebudayaan DIY. *Mengenal Bangunan Berarsitektur Tradisional Jawa: Ander, Geganja dan Santen*. <https://budaya.jogjaprov.go.id/artikel/detail/Mengenal-Bangunan-Berarsitektur-Tradisional-Jawa-Ander-Geganja-dan-Santen>. Read via a page summary. Cites Prijotomo (2006), Jogja Heritage Society (2007) and *Kawroeh Kambeng* (2015).
 
 ### B. Books to check (not online)
 
+- Prijotomo, J. (2006). *(Re-)Konstruksi Arsitektur Jawa: Griya Jawa dalam Tradisi Tanpatulisan*. Surabaya: Wastu Lanas Grafika. Recommended by the reviewer as the main reference; also cited by S10.
 - Prijotomo, J. (1992). *Ideas and Forms of Javanese Architecture*. Yogyakarta: Gadjah Mada University Press.
 - Santosa, R. B. (2000). *Omah: Membaca Makna Rumah Jawa*. Yogyakarta: Yayasan Bentang Budaya.
 - Hamzuri. *Rumah Tradisional Jawa*. Jakarta: Proyek Pengembangan Permuseuman, Depdikbud. Possibly on the Kemendikbud repository: <https://repositori.kemdikbud.go.id/29818/>.
 - Dawson, B., & Gillow, J. (1994). *The Traditional Architecture of Indonesia*. London: Thames & Hudson.
 
-### C. Proposed "Sources" list for the Joglo About card
+### C. "Sources" list for the Joglo About card
+
+Now shown on the site (10 October 2026): S1, S10, Widayat (2004) and Prihatmaji et al. (2014) as sources; Prijotomo (2006), Prijotomo (1992) and Santosa (2000) as further reading, not yet checked. The original proposal follows.
 
 Once F1–F3 are fixed:
 

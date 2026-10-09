@@ -36,7 +36,8 @@ const ABOUT = {
       </P>
       <P>
         It’s a personal, non-commercial project for students, teachers, designers and anyone curious about how Indonesians have
-        built and lived. The models are idealised and still being checked, so if you know these houses well, your corrections are
+        built and lived. Each model is an ideal-type reconstruction: a typical example put together from published sources, not a
+        record of one particular building. They are still being checked, so if you know these houses well, your corrections are
         very welcome. The plan is to keep adding houses until every region of the archipelago is here.
       </P>
     </>
@@ -58,7 +59,8 @@ const ABOUT = {
       </P>
       <P>
         Ini proyek pribadi dan nonkomersial, untuk pelajar, guru, desainer, dan siapa pun yang ingin tahu cara orang Indonesia
-        membangun dan tinggal. Model-modelnya diidealkan dan masih terus diperiksa, jadi jika Anda mengenal rumah-rumah ini dengan
+        membangun dan tinggal. Setiap model adalah rekonstruksi tipe ideal: contoh yang khas, disusun dari sumber-sumber terbitan,
+        bukan rekaman satu bangunan tertentu. Model-modelnya masih terus diperiksa, jadi jika Anda mengenal rumah-rumah ini dengan
         baik, koreksi Anda sangat kami harapkan. Rencananya, rumah akan terus ditambah sampai setiap wilayah Nusantara ada di sini.
       </P>
     </>

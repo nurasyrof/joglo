@@ -866,7 +866,11 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
       ...base,
       house: {
         id: H.meta.id, name: H.meta.name, single: H.single,
-        about: H.def.about && { title: X(H.def.about.title), paras: (X(H.def.about.paras) || []).map(X) },
+        about: H.def.about && {
+          title: X(H.def.about.title), method: X(H.def.about.method), paras: (X(H.def.about.paras) || []).map(X),
+          sources: (H.def.about.sources || []).map((r) => ({ text: X(r.text), url: r.url })),
+          reading: (H.def.about.reading || []).map((r) => ({ text: X(r.text), url: r.url })),
+        },
         hasWalk: list.length > 0, hasOverlay: !!H.overlay,
       },
       mode: S.mode,

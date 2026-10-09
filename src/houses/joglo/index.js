@@ -96,11 +96,23 @@ export default {
   loading: { en: 'Laying out the omah…', id: 'Menata omah…' },
   about: {
     title: { en: 'The Joglo of Yogyakarta', id: 'Joglo Yogyakarta' },
+    method: { en: 'This is a reconstruction of an ideal type, not a record of a particular house. It brings together the buildings and parts that published descriptions treat as typical of a complete Yogyakarta joglo compound, so that each can be seen and named. No real household matches it exactly: they vary widely in size, layout and which buildings they have, and the dimensions here are our own estimates.', id: 'Ini adalah rekonstruksi tipe ideal, bukan rekaman sebuah rumah tertentu. Model ini menghimpun bangunan dan bagian yang dalam berbagai uraian terbitan dianggap khas bagi kompleks joglo Yogyakarta yang lengkap, agar masing-masing dapat dilihat dan dinamai. Tidak ada rumah tangga nyata yang persis sama: semuanya sangat beragam dalam ukuran, tata letak, dan bangunan yang dimiliki, dan ukuran di sini adalah perkiraan kami sendiri.' },
     paras: [
       { en: 'The joglo is the most prestigious form of the traditional Javanese house. Its steep central roof over four master columns was once reserved for the nobility (priyayi) and the courts of Yogyakarta and Surakarta.', id: 'Joglo adalah bentuk rumah tradisional Jawa yang paling bergengsi. Atap tengahnya yang curam di atas empat tiang utama dulu diperuntukkan bagi kaum bangsawan (priyayi) dan keraton Yogyakarta serta Surakarta.' },
       { en: 'A joglo is not one building but a compound (omah) laid out along a central axis, from public to private. The regol gate opens onto a courtyard and the open pendapa, where guests are received. Behind it the pringgitan, a stage for wayang, leads to the enclosed dalem, the family’s home, whose three senthong rooms close the axis. Side wings (gandhok), a family room (gadri), the kitchen (pawon) and the well (pekiwan) complete it.', id: 'Joglo bukan satu bangunan, melainkan sebuah kompleks (omah) yang ditata di sepanjang sumbu tengah, dari publik ke privat. Gerbang regol membuka ke halaman dan pendapa terbuka, tempat tamu diterima. Di belakangnya, pringgitan, panggung untuk wayang, menuju dalem yang tertutup, tempat tinggal keluarga, yang tiga senthongnya menutup sumbu itu. Sayap samping (gandhok), ruang keluarga (gadri), dapur (pawon), dan sumur (pekiwan) melengkapinya.' },
       { en: 'The frame is held together by timber joints rather than nails and rests on stone bases, so it can be taken apart and rebuilt elsewhere. In the 2006 Yogyakarta earthquake, the stiff core around the four saka guru generally held up better than the lighter outer frame.', id: 'Rangkanya disatukan dengan sambungan kayu, bukan paku, dan bertumpu di atas umpak batu, sehingga bisa dibongkar dan didirikan kembali di tempat lain. Dalam gempa Yogyakarta 2006, inti yang kaku di sekeliling empat saka guru umumnya bertahan lebih baik daripada rangka luar yang lebih ringan.' },
-      { en: 'This model is an idealised compound for learning. Real households vary widely in size, layout and which buildings they have.', id: 'Model ini adalah kompleks yang diidealkan untuk belajar. Rumah sebenarnya sangat beragam dalam ukuran, tata letak, dan bangunan yang dimiliki.' },
+    ],
+    // Checked sources (see docs/content-review/joglo.md), and books not yet checked.
+    sources: [
+      { text: 'Dinas Kebudayaan DIY. Mengenal Bangunan Berarsitektur Tradisional Jawa: Bangunan Joglo (parts 1–2).', url: 'https://budaya.jogjaprov.go.id/artikel/detail/Mengenal-Bangunan-Berarsitektur-Tradisional-Jawa-Bangunan-Joglo' },
+      { text: 'Dinas Kebudayaan DIY. Mengenal Bangunan Berarsitektur Tradisional Jawa: Ander, Geganja dan Santen.', url: 'https://budaya.jogjaprov.go.id/artikel/detail/Mengenal-Bangunan-Berarsitektur-Tradisional-Jawa-Ander-Geganja-dan-Santen' },
+      { text: 'Widayat, R. (2004). Krobongan: ruang sakral rumah tradisi Jawa. Dimensi Interior 2(1), 1–21.' },
+      { text: 'Prihatmaji, Y. P., Kitamori, A., et al. (2014). Traditional Javanese wooden houses (joglo) damaged by May 2006 Yogyakarta earthquake, Indonesia. International Journal of Architectural Heritage 8(2).', url: 'https://www.tandfonline.com/doi/abs/10.1080/15583058.2012.692847' },
+    ],
+    reading: [
+      { text: 'Prijotomo, J. (2006). (Re-)Konstruksi Arsitektur Jawa: Griya Jawa dalam Tradisi Tanpatulisan. Surabaya: Wastu Lanas Grafika.' },
+      { text: 'Prijotomo, J. (1992). Ideas and Forms of Javanese Architecture. Yogyakarta: Gadjah Mada University Press.' },
+      { text: 'Santosa, R. B. (2000). Omah: Membaca Makna Rumah Jawa. Yogyakarta: Bentang Budaya.' },
     ],
   },
 
