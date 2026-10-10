@@ -85,7 +85,8 @@ function DownloadSection() {
   );
 }
 
-export function ControlsPanelContent({ openSections, setOpenSections, heading = true }) {
+// `compact` (phones) keeps view, explode and display, and points to a larger screen for the rest.
+export function ControlsPanelContent({ openSections, setOpenSections, heading = true, compact = false }) {
   const { engine, s } = useEngine();
   const { t } = useLang();
   const site = s.mode === 'site';
@@ -147,6 +148,8 @@ export function ControlsPanelContent({ openSections, setOpenSections, heading = 
             </AccordionContent>
           </AccordionItem>
 
+          {!compact && (
+            <>
           <AccordionItem value="section">
             <AccordionTrigger>{t('Section cut', 'Potongan')}</AccordionTrigger>
             <AccordionContent className="space-y-2">
@@ -205,7 +208,14 @@ export function ControlsPanelContent({ openSections, setOpenSections, heading = 
             <AccordionTrigger>{t('Download 3D', 'Unduh 3D')}</AccordionTrigger>
             <AccordionContent><DownloadSection /></AccordionContent>
           </AccordionItem>
+            </>
+          )}
         </Accordion>
+        {compact && (
+          <p className="px-4 pb-4 text-xs leading-relaxed text-muted-foreground">
+            {t('More tools on a laptop or desktop: section cuts, materials, lighting and 3D downloads.', 'Alat lainnya tersedia di laptop atau komputer: potongan, material, pencahayaan, dan unduhan 3D.')}
+          </p>
+        )}
       </ScrollArea>
     </div>
   );

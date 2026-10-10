@@ -66,7 +66,7 @@ export function Toolbar({ onHelp, onDownload }) {
       </ToolButton>
       <Divider />
       <ToolButton label={t('Save screenshot', 'Simpan tangkapan layar')} onClick={() => engine.screenshot()}><Camera /></ToolButton>
-      <ToolButton label={t('Download 3D model', 'Unduh model 3D')} onClick={onDownload}><Download /></ToolButton>
+      {onDownload && <ToolButton label={t('Download 3D model', 'Unduh model 3D')} onClick={onDownload}><Download /></ToolButton>}
     </nav>
   );
 }

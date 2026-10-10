@@ -1,5 +1,5 @@
 // Bottom-centre overlays: the info card for a selected part/building and the guided-walk card.
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, ChevronLeft, ChevronRight, Crosshair, Footprints, Pause, Play, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -37,14 +37,18 @@ function InterpretationBadge() {
   );
 }
 
-export function InfoCard() {
+// `compact` (phones): the card opens short, with the name and two lines of text, so the model
+// stays in view; "more" opens the full card.
+export function InfoCard({ compact = false }) {
   const { engine, s } = useEngine();
   const { t } = useLang();
   const c = s.card;
   const bodyRef = useRef(null);
-  useEffect(() => { bodyRef.current?.scrollTo(0, 0); }, [c?.id]);
+  const [more, setMore] = useState(false);
+  useEffect(() => { bodyRef.current?.scrollTo(0, 0); setMore(false); }, [c?.id]);
   if (!c) return null;
   const building = c.kind === 'building';
+  const short = compact && !more;
   return (
     <section className={cn(shell, 'animate-in fade-in slide-in-from-bottom-3 duration-200')} aria-live="polite">
       <div ref={bodyRef} className="max-h-[48vh] overflow-y-auto px-5 pt-4 pb-4">
@@ -61,11 +65,26 @@ export function InfoCard() {
           <Nav label={t('Next (→)', 'Berikutnya (→)')} onClick={() => engine.step(1)}><ChevronRight /></Nav>
           <Nav label={t('Close (Esc)', 'Tutup (Esc)')} onClick={() => engine.select(null)}><X /></Nav>
         </div>
-        <h3 className="mt-2 font-heading text-3xl leading-none font-semibold tracking-tight">{c.name}</h3>
+        <h3 className={cn('mt-2 font-heading leading-none font-semibold tracking-tight', compact ? 'text-2xl' : 'text-3xl')}>{c.name}</h3>
         <p className="mt-1.5 text-sm text-primary">
           {c.en} <span className="text-muted-foreground">· <i>{c.alias}</i></span>
         </p>
-        <p className="mt-3 text-sm leading-relaxed">{c.desc}</p>
+        <p className={cn('text-sm leading-relaxed', short ? 'mt-2 line-clamp-2' : 'mt-3')} onClick={short ? () => setMore(true) : undefined}>{c.desc}</p>
+        {compact && (
+          <div className="mt-2 flex items-center gap-2">
+            <button type="button" onClick={() => setMore((v) => !v)} className="text-xs font-medium text-muted-foreground hover:text-foreground">
+              {more ? t('…see less', '…lebih sedikit') : t('…see more', '…selengkapnya')}
+            </button>
+            <div className="flex-1" />
+            {short && building && (
+              <Button size="sm" onClick={() => engine.enterBuilding(c.id)}>
+                {t('Enter building', 'Masuk bangunan')} <ArrowRight />
+              </Button>
+            )}
+          </div>
+        )}
+        {!short && (
+        <>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
           <div>
             <h4 className="text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">{t('Function', 'Fungsi')}</h4>
@@ -99,6 +118,8 @@ export function InfoCard() {
             </>
           )}
         </div>
+        </>
+        )}
       </div>
     </section>
   );

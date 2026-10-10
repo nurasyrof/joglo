@@ -931,15 +931,25 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
       const mats = inBuilding() ? (S.selected ? cur.compById[S.selected].mats : null) : S.selBld ? H.bldById[S.selBld].comps.flatMap((c) => c.mats) : null;
       if (mats) for (const m of mats) m.emissiveIntensity = k;
     }
+    if (Math.abs(shift.yTo - shift.y) > 0.0005) { shift.y += (shift.yTo - shift.y) * 0.16; applyShift(); }
     renderer.render(scene, camera);
     labelRenderer.render(scene, camera);
   }
   requestAnimationFrame(frame);
 
+  // Shifts the picture by a fraction of its width (right) and height (up) without moving the camera.
+  // The upward shift eases towards `yTo` so the picture glides when a card opens or closes.
+  const shift = { x: 0, y: 0, yTo: 0 };
+  function applyShift() {
+    const [w, h] = size();
+    if (shift.x || shift.y) camera.setViewOffset(w, h, -shift.x * w, shift.y * h, w, h); else camera.clearViewOffset();
+    camera.updateProjectionMatrix();
+  }
+
   const ro = new ResizeObserver(() => {
     const [w, h] = size();
     camera.aspect = w / h;
-    camera.updateProjectionMatrix();
+    applyShift();
     renderer.setSize(w, h);
     labelRenderer.setSize(w, h);
   });
@@ -1015,11 +1025,11 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
       controls.update();
       S.view = view;
     }),
-    // Shifts the picture sideways by a fraction of its width (used to frame share images).
-    setViewShift: (f) => {
-      const [w, h] = size();
-      if (f) camera.setViewOffset(w, h, -f * w, 0, w, h); else camera.clearViewOffset();
-      camera.updateProjectionMatrix();
+    // Shifts the picture sideways (to frame share images) and upwards (to clear the phone's
+    // bottom sheet), as fractions of its width and height.
+    setViewShift: (x, y = 0) => {
+      shift.x = x; shift.yTo = y;
+      applyShift();
     },
     setLang: set((l) => { S.lang = l; relabel(); }),
 

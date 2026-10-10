@@ -11,7 +11,7 @@ import { AboutCardContent, ListPanelContent, aboutTitle } from './ListPanel.jsx'
 import { ControlsPanelContent } from './ControlsPanel.jsx';
 import { InfoCard, WalkCard } from './Cards.jsx';
 import { FooterCredit, FooterLinks, HelpDialog, HoverTooltip, LoadingScreen, Toolbar } from './Overlays.jsx';
-import { AboveSheet, MobileFooter, SheetCarousel, useSheet } from './MobileSheet.jsx';
+import { AboveSheet, FOOTER_H, MobileFooter, SheetCarousel, SheetHint, useSheet } from './MobileSheet.jsx';
 import { cn } from '@/lib/utils';
 
 // Development only: ?og=house or ?og=home renders this page's share image (see src/dev/og.js).
@@ -85,6 +85,14 @@ export function Viewer({ meta, building, covered = false }) {
   const { setSnap } = sheet;
   // Selecting something lowers the sheet so the model and its info card are in view.
   useEffect(() => { if (s?.selected) setSnap('low'); }, [s?.selected, setSnap]);
+  // On phones the lowered sheet, toolbar and footer cover the bottom of the view, and an open
+  // info card covers more: lift the picture so the model sits in the middle of what is left.
+  const lowH = sheet.heights.low;
+  const cardOpen = !!s?.card && sheet.snap === 'low';
+  useEffect(() => {
+    if (!engine || OG) return;
+    engine.setViewShift(0, mobile ? (FOOTER_H + lowH + 20 + (cardOpen ? 190 : 0)) / (2 * innerHeight) : 0);
+  }, [engine, mobile, lowH, cardOpen]);
 
   useEffect(() => {
     // The engine names language-neutral paths (/joglo/pendapa); links stay in the current language.
@@ -170,19 +178,20 @@ export function Viewer({ meta, building, covered = false }) {
               <TitleBar meta={meta} />
             </header>
             <AboveSheet sheet={sheet} hidden={walking}>
-              {sheet.snap === 'low' && !sheet.drag && <InfoCard />}
+              {sheet.snap === 'low' && !sheet.drag && <InfoCard compact />}
               <WalkCard />
-              <Toolbar onHelp={() => setHelp(true)} onDownload={openDownload} />
+              <Toolbar onHelp={() => setHelp(true)} />
             </AboveSheet>
             <SheetCarousel
               sheet={sheet} hidden={walking} apiRef={carousel}
               cards={[
                 { id: 'about', title: aboutTitle(s, t), body: <AboutCardContent full /> },
                 { id: 'list', title: s.mode === 'site' ? t('Compound', 'Kompleks') : t('Anatomy', 'Anatomi'), scroll: false, body: <ListPanelContent heading={false} /> },
-                { id: 'controls', title: t('Controls', 'Kontrol'), scroll: false, body: <ControlsPanelContent heading={false} openSections={sections} setOpenSections={setSections} /> },
+                { id: 'controls', title: t('Controls', 'Kontrol'), scroll: false, body: <ControlsPanelContent compact heading={false} openSections={sections} setOpenSections={setSections} /> },
               ]}
             />
             <MobileFooter />
+            {!walking && !s.loading && <SheetHint sheet={sheet} />}
           </div>
         )}
 

@@ -1,8 +1,10 @@
 // Small screens: a bottom sheet with three heights (low: the 3D view, mid: a glimpse of every
-// card, high: reading and controls) holding a swipeable carousel of cards. The toolbar and the
+// card, high: reading and controls) holding a swipeable carousel of cards. It opens low, so the
+// model has most of the screen until the visitor pulls the sheet up. The toolbar and the
 // info/walk cards ride on top of the sheet. Drag the handle (or tap it) to change height.
 import { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { BookOpen, ChevronDown, ChevronsDown, Layers, ListTree } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { CREDIT } from '@/config.js';
 import { SITE_LINKS } from './site-links.js';
@@ -33,7 +35,7 @@ const heightsFor = (H) => ({
 export function useSheet() {
   const H = useViewportHeight();
   const heights = heightsFor(H);
-  const [snap, setSnap] = useState('mid');
+  const [snap, setSnap] = useState('low');
   const [drag, setDrag] = useState(null);       // live height while dragging
   return { heights, snap, setSnap, drag, setDrag, height: drag ?? heights[snap] };
 }
@@ -134,6 +136,54 @@ export function AboveSheet({ sheet, hidden, children }) {
     >
       {children}
     </div>
+  );
+}
+
+const HINT_KEY = 'sheet-hint';
+const hintSeen = () => { try { return localStorage.getItem(HINT_KEY) === '1'; } catch { return false; } };
+
+// First visit on a phone: dims the view and points at the lowered sheet, saying what pulling it
+// up is for. Goes away for good on "Got it", a tap outside, or once the sheet is moved.
+export function SheetHint({ sheet }) {
+  const { t } = useLang();
+  const [open, setOpen] = useState(() => !hintSeen());
+  const close = useCallback(() => {
+    setOpen(false);
+    try { localStorage.setItem(HINT_KEY, '1'); } catch { /* storage unavailable */ }
+  }, []);
+  const moved = sheet.snap !== 'low' || sheet.drag != null;
+  useEffect(() => { if (open && moved) close(); }, [open, moved, close]);
+  if (!open || moved) return null;
+  const top = FOOTER_H + sheet.height;
+  const items = [
+    [BookOpen, t('Read about the house and its sources', 'Membaca tentang rumah ini dan sumbernya')],
+    [ListTree, t('Browse its buildings and parts', 'Menelusuri bangunan dan bagian-bagiannya')],
+    [Layers, t('Take the model apart and change the view', 'Mengurai model dan mengganti tampilan')],
+  ];
+  return (
+    <>
+      <div className="pointer-events-auto absolute inset-x-0 top-0 animate-in bg-black/45 duration-300 fade-in" style={{ bottom: top }} onClick={close} aria-hidden="true" />
+      <div
+        role="dialog" aria-label={t('How to use the panel', 'Cara memakai panel')}
+        className="pointer-events-auto absolute inset-x-6 flex animate-in flex-col items-center duration-300 fade-in slide-in-from-bottom-3"
+        style={{ bottom: top + 6 }}
+      >
+        <div className="w-full rounded-2xl border bg-card px-5 py-4 text-card-foreground shadow-xl">
+          <h2 className="font-heading text-xl font-semibold">{t('Pull this panel up', 'Tarik panel ini ke atas')}</h2>
+          <p className="mt-1 text-[13px] leading-relaxed text-foreground/80">
+            {t('Swipe it up, or tap its handle, to:', 'Usap ke atas, atau ketuk pegangannya, untuk:')}
+          </p>
+          <ul className="mt-2.5 space-y-2 text-[13px] leading-snug">
+            {items.map(([Icon, text]) => (
+              <li key={text} className="flex items-center gap-2.5"><Icon className="size-4 shrink-0 text-primary" />{text}</li>
+            ))}
+          </ul>
+          <p className="mt-2.5 text-xs text-muted-foreground">{t('Swipe sideways to switch between the three cards.', 'Usap ke samping untuk berpindah di antara tiga kartu.')}</p>
+          <Button size="sm" className="mt-3 w-full" onClick={close}>{t('Got it', 'Mengerti')}</Button>
+        </div>
+        <ChevronsDown className="mt-1 size-6 animate-bounce text-white drop-shadow" aria-hidden="true" />
+      </div>
+    </>
   );
 }
 
