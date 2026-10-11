@@ -43,7 +43,7 @@ function useShortcuts(engine, { onHelp }) {
       if (e.target.closest?.('input, select, textarea, [contenteditable]') || overlayOpen()) return;
       const k = e.key.toLowerCase();
       if (snap.walk.on) {
-        if (k === 'escape') engine.stopWalk();
+        if (k === 'escape') engine.stopWalk({ fly: false });           // stay where the walk left you
         else if (k === 'arrowright' || k === 'enter') engine.walkNext();
         else if (k === 'arrowleft') engine.walkPrev();
         else if (k === ' ') { e.preventDefault(); engine.setWalkAuto(!snap.walk.auto); }

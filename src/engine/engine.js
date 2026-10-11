@@ -1034,7 +1034,7 @@ export function createEngine(container, { onNavigate = () => {} } = {}) {
     setLang: set((l) => { S.lang = l; relabel(); }),
 
     // Walk
-    startWalk, stopWalk: () => stopWalk(),
+    startWalk, stopWalk: (opts) => stopWalk(opts),
     walkGo: (i) => goStop(i), walkNext, walkPrev: () => goStop(W.i - 1),
     setWalkAuto,
 

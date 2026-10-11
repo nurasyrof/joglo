@@ -1,6 +1,6 @@
 // Bottom-centre overlays: the info card for a selected part/building and the guided-walk card.
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, ChevronLeft, ChevronRight, Crosshair, Footprints, Pause, Play, X } from 'lucide-react';
+import { ArrowRight, Captions, CaptionsOff, ChevronLeft, ChevronRight, Crosshair, Footprints, Pause, Play, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
@@ -125,10 +125,20 @@ export function InfoCard({ compact = false }) {
   );
 }
 
+const NARRATION_KEY = 'walk-narration';
+
+// The guided-walk card. Closing it ends the walk but leaves the camera where it is, so the
+// visitor can look around from that stop. The narration can be hidden to leave only the
+// stop's name and the controls; the choice is remembered.
 export function WalkCard() {
   const { engine, s } = useEngine();
   const { t } = useLang();
   const bar = useRef(null);
+  const [narration, setNarration] = useState(() => { try { return localStorage.getItem(NARRATION_KEY) !== 'off'; } catch { return true; } });
+  const toggleNarration = () => setNarration((v) => {
+    try { localStorage.setItem(NARRATION_KEY, v ? 'off' : 'on'); } catch { /* storage unavailable */ }
+    return !v;
+  });
   useEffect(() => engine.onProgress((p) => { if (bar.current) bar.current.style.transform = `scaleX(${p})`; }), [engine]);
   const w = s.walk;
   if (!w.on) return null;
@@ -141,11 +151,18 @@ export function WalkCard() {
           <Badge className="gap-1.5"><Footprints /> {t('Guided walk', 'Jelajah terpandu')}</Badge>
           <span className="text-xs text-muted-foreground tabular-nums">{w.index + 1} / {w.total}</span>
           <div className="flex-1" />
-          <Nav label={t('End walk (Esc)', 'Akhiri jelajah (Esc)')} onClick={() => engine.stopWalk()}><X /></Nav>
+          <Nav label={narration ? t('Hide narration', 'Sembunyikan narasi') : t('Show narration', 'Tampilkan narasi')} onClick={toggleNarration}>
+            {narration ? <Captions /> : <CaptionsOff />}
+          </Nav>
+          <Nav label={t('Close and stay here (Esc)', 'Tutup dan tetap di sini (Esc)')} onClick={() => engine.stopWalk({ fly: false })}><X /></Nav>
         </div>
-        <h3 key={w.index} className="mt-2 font-heading text-3xl leading-none font-semibold tracking-tight animate-in fade-in duration-500">{w.stop.title}</h3>
-        {w.stop.local && <p className="mt-1.5 text-sm text-primary">{w.stop.local}</p>}
-        <p key={`t${w.index}`} className="mt-3 min-h-[4.5em] text-sm leading-relaxed animate-in fade-in duration-500">{w.stop.text}</p>
+        <h3 key={w.index} className={cn('mt-2 font-heading leading-none font-semibold tracking-tight animate-in fade-in duration-500', narration ? 'text-3xl' : 'text-xl')}>{w.stop.title}</h3>
+        {narration && (
+          <>
+            {w.stop.local && <p className="mt-1.5 text-sm text-primary">{w.stop.local}</p>}
+            <p key={`t${w.index}`} className="mt-3 min-h-[4.5em] text-sm leading-relaxed animate-in fade-in duration-500">{w.stop.text}</p>
+          </>
+        )}
         <div className="mt-3 flex items-center gap-2">
           <div className="flex items-center gap-1.5">
             {w.titles.map((title, i) => (
