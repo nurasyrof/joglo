@@ -130,13 +130,18 @@ const NARRATION_KEY = 'walk-narration';
 // The guided-walk card. Closing it ends the walk but leaves the camera where it is, so the
 // visitor can look around from that stop. The narration can be hidden to leave only the
 // stop's name and the controls; the choice is remembered.
-export function WalkCard() {
+// `compact` (phones): the narration starts hidden, so the walk from room to room fills the
+// screen, and a labelled button brings the description up. Phones remember their own choice.
+export function WalkCard({ compact = false }) {
   const { engine, s } = useEngine();
   const { t } = useLang();
   const bar = useRef(null);
-  const [narration, setNarration] = useState(() => { try { return localStorage.getItem(NARRATION_KEY) !== 'off'; } catch { return true; } });
+  const key = compact ? `${NARRATION_KEY}-phone` : NARRATION_KEY;
+  const [narration, setNarration] = useState(() => {
+    try { const v = localStorage.getItem(key); return v ? v === 'on' : !compact; } catch { return !compact; }
+  });
   const toggleNarration = () => setNarration((v) => {
-    try { localStorage.setItem(NARRATION_KEY, v ? 'off' : 'on'); } catch { /* storage unavailable */ }
+    try { localStorage.setItem(key, v ? 'off' : 'on'); } catch { /* storage unavailable */ }
     return !v;
   });
   useEffect(() => engine.onProgress((p) => { if (bar.current) bar.current.style.transform = `scaleX(${p})`; }), [engine]);
@@ -148,12 +153,19 @@ export function WalkCard() {
       <div ref={bar} className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-primary" />
       <div className="px-5 pt-4 pb-4">
         <div className="flex items-center gap-2">
-          <Badge className="gap-1.5"><Footprints /> {t('Guided walk', 'Jelajah terpandu')}</Badge>
-          <span className="text-xs text-muted-foreground tabular-nums">{w.index + 1} / {w.total}</span>
+          <Badge className="gap-1.5" aria-label={t('Guided walk', 'Jelajah terpandu')}><Footprints /> {!compact && t('Guided walk', 'Jelajah terpandu')}</Badge>
+          <span className="text-xs whitespace-nowrap text-muted-foreground tabular-nums">{w.index + 1} / {w.total}</span>
           <div className="flex-1" />
-          <Nav label={narration ? t('Hide narration', 'Sembunyikan narasi') : t('Show narration', 'Tampilkan narasi')} onClick={toggleNarration}>
-            {narration ? <Captions /> : <CaptionsOff />}
-          </Nav>
+          {compact ? (
+            <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={toggleNarration}>
+              {narration ? <CaptionsOff /> : <Captions />}
+              {narration ? t('Hide description', 'Sembunyikan penjelasan') : t('Read description', 'Baca penjelasan')}
+            </Button>
+          ) : (
+            <Nav label={narration ? t('Hide narration', 'Sembunyikan narasi') : t('Show narration', 'Tampilkan narasi')} onClick={toggleNarration}>
+              {narration ? <Captions /> : <CaptionsOff />}
+            </Nav>
+          )}
           <Nav label={t('Close and stay here (Esc)', 'Tutup dan tetap di sini (Esc)')} onClick={() => engine.stopWalk({ fly: false })}><X /></Nav>
         </div>
         <h3 key={w.index} className={cn('mt-2 font-heading leading-none font-semibold tracking-tight animate-in fade-in duration-500', narration ? 'text-3xl' : 'text-xl')}>{w.stop.title}</h3>
@@ -164,7 +176,7 @@ export function WalkCard() {
           </>
         )}
         <div className="mt-3 flex items-center gap-2">
-          <div className="flex items-center gap-1.5">
+          <div className="flex min-w-0 items-center gap-1.5">
             {w.titles.map((title, i) => (
               <Tooltip key={title}>
                 <TooltipTrigger asChild>
@@ -189,7 +201,7 @@ export function WalkCard() {
             <TooltipContent>{w.auto ? t('Pause (space)', 'Jeda (spasi)') : t('Auto-play (space)', 'Putar otomatis (spasi)')}</TooltipContent>
           </Tooltip>
           <Button size="sm" onClick={() => engine.walkNext()}>
-            {last ? t('Finish', 'Selesai') : <>{t('Next stop', 'Titik berikutnya')} <ArrowRight /></>}
+            {last ? t('Finish', 'Selesai') : <>{compact ? t('Next', 'Lanjut') : t('Next stop', 'Titik berikutnya')} <ArrowRight /></>}
           </Button>
         </div>
       </div>

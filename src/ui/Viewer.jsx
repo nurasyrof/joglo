@@ -179,7 +179,7 @@ export function Viewer({ meta, building, covered = false }) {
             </header>
             <AboveSheet sheet={sheet} hidden={walking}>
               {sheet.snap === 'low' && !sheet.drag && <InfoCard compact />}
-              <WalkCard />
+              <WalkCard compact />
               <Toolbar onHelp={() => setHelp(true)} />
             </AboveSheet>
             <SheetCarousel
