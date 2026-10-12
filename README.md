@@ -44,6 +44,7 @@ src/
     pekarangan-bali/    a Balinese compound laid out by the Sanga Mandala
     tongkonan/          a Toraja row of houses facing their rice barns, and the rante
     honai/              a Baliem Valley silimo: men's and women's round houses, kitchen and sty in a double fence
+    rumah-betang/       a Dayak Ngaju longhouse with its kitchen, the monuments to the dead and the river
   lib/
     geometry.js · kit.js  procedural building blocks
     utils.js            shadcn `cn` helper

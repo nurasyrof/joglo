@@ -90,9 +90,9 @@ export const HOUSES = [
     art: `<path d="M60 4l36 62H24Z"/><rect x="59" y="0" width="2" height="6"/><rect x="54" y="54" width="12" height="12" fill-opacity=".35"/>`,
   },
   {
-    id: 'rumah-betang', name: 'Rumah Betang', local: 'Lamin', island: 'Kalimantan', province: { en: 'Central Kalimantan', id: 'Kalimantan Tengah' }, people: { en: 'Dayak', id: 'Dayak' },
+    id: 'rumah-betang', name: 'Rumah Betang', local: 'Huma Betang', island: 'Kalimantan', province: { en: 'Central Kalimantan', id: 'Kalimantan Tengah' }, people: { en: 'Dayak Ngaju', id: 'Dayak Ngaju' },
     blurb: { en: 'A communal longhouse on tall piles, home to many families under one roof.', id: 'Rumah panjang komunal di atas tiang tinggi, tempat tinggal banyak keluarga di bawah satu atap.' },
-    status: 'soon',
+    status: 'ready', load: () => import('./rumah-betang/index.js'),
     art: `<path d="M6 26l10-10h88l10 10Z"/><rect x="10" y="26" width="100" height="12"/>${stilts(range(14, 106, 8), 38)}`,
   },
   {
