@@ -43,6 +43,7 @@ src/
     uma-mbatangu/       a village: clan houses around a plaza of stone tombs
     pekarangan-bali/    a Balinese compound laid out by the Sanga Mandala
     tongkonan/          a Toraja row of houses facing their rice barns, and the rante
+    honai/              a Baliem Valley silimo: men's and women's round houses, kitchen and sty in a double fence
   lib/
     geometry.js · kit.js  procedural building blocks
     utils.js            shadcn `cn` helper

@@ -109,8 +109,8 @@ export const HOUSES = [
   },
   {
     id: 'honai', name: 'Honai', local: 'Pilamo', island: 'Maluku & Papua', province: { en: 'Highland Papua', id: 'Papua Pegunungan' }, people: { en: 'Dani', id: 'Dani' },
-    blurb: { en: 'A round hut with a thick thatched dome that keeps highland nights warm.', id: 'Pondok bundar beratap kubah jerami tebal yang menjaga hangat di malam pegunungan.' },
-    status: 'soon',
+    blurb: { en: 'Round houses under thick grass domes, gathered in a fenced family compound.', id: 'Rumah-rumah bundar berkubah rumput tebal, berkumpul dalam kompleks keluarga yang berpagar.' },
+    status: 'ready', load: () => import('./honai/index.js'),
     art: `<path d="M20 50c2-26 22-38 40-38s38 12 40 38Z"/><rect x="30" y="50" width="60" height="16"/><rect x="55" y="54" width="10" height="12" fill-opacity=".35"/>`,
   },
 ];
