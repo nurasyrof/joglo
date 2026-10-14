@@ -86,7 +86,7 @@ export const HOUSES = [
   {
     id: 'mbaru-niang', name: 'Mbaru Niang', local: 'Wae Rebo', island: 'Bali & Nusa Tenggara', province: { en: 'East Nusa Tenggara', id: 'Nusa Tenggara Timur' }, people: { en: 'Manggarai', id: 'Manggarai' },
     blurb: { en: 'A tall conical house of many storeys, shared by several families.', id: 'Rumah kerucut yang tinggi dan bertingkat, dihuni bersama oleh beberapa keluarga.' },
-    status: 'soon',
+    status: 'ready', load: () => import('./mbaru-niang/index.js'),
     art: `<path d="M60 4l36 62H24Z"/><rect x="59" y="0" width="2" height="6"/><rect x="54" y="54" width="12" height="12" fill-opacity=".35"/>`,
   },
   {
