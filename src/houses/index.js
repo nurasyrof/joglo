@@ -26,7 +26,7 @@ export const HOUSES = [
   {
     id: 'rumah-bolon', name: 'Rumah Bolon', local: 'Jabu Bolon', island: 'Sumatra', province: { en: 'North Sumatra', id: 'Sumatera Utara' }, people: { en: 'Batak Toba', id: 'Batak Toba' },
     blurb: { en: 'A great house on piles with a steep saddle roof and carved, overhanging gables.', id: 'Rumah besar di atas tiang dengan atap pelana yang curam dan tebeng berukir yang menjorok.' },
-    status: 'soon',
+    status: 'ready', load: () => import('./rumah-bolon/index.js'),
     art: `<path d="M8 12c16 9 32 12 52 12s36-3 52-12L98 40H22Z"/><rect x="26" y="40" width="68" height="12"/>${stilts(range(30, 90, 10))}`,
   },
   {
