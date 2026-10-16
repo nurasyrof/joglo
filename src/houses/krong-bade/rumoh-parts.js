@@ -1,0 +1,98 @@
+// Anatomy text for the rumoh Aceh.
+
+export const CATEGORIES = [
+  { id: 'bawah', label: { en: 'Below the floor', id: 'Di bawah lantai' }, local: 'Yup moh', color: '#7f8a6a' },
+  { id: 'ruang', label: { en: 'The three parts', id: 'Tiga bagian rumah' }, local: 'Seuramoe', color: '#c58a4a' },
+  { id: 'atap',  label: { en: 'Roof', id: 'Atap' },                     local: 'Atap', color: '#b0624a' },
+];
+
+export const PARTS = [
+  {
+    id: 'tameh', cat: 'bawah', name: 'Tameh', alias: 'Tiang bulat', en: { en: 'Round posts', id: 'Tiang bulat' },
+    explode: [0, 0, 0], anchor: [6.25, 1.4, 3.75], focusDir: [0.7, 0.15, 1],
+    desc: { en: 'Round timber posts in four rows along the house, 2.5 m apart each way, every one standing on a flat stone.', id: 'Tiang kayu bulat dalam empat baris sepanjang rumah, berjarak 2,5 m ke segala arah, masing-masing berdiri di atas batu pipih.' },
+    fn: { en: 'They lift the floor well above the ground. The middle two rows are the tallest and are put up first; the shorter front and back rows follow.', id: 'Tiang-tiang ini mengangkat lantai jauh dari tanah. Dua baris tengah adalah yang tertinggi dan didirikan lebih dulu; baris depan dan belakang yang lebih pendek menyusul.' },
+    meaning: { en: 'A house is counted by its posts, always in even numbers: 16, 18, 22 or 24, and at most 40. The posts are set with the root end down, as the tree once grew.', id: 'Rumah dihitung menurut tiangnya, selalu genap: 16, 18, 22, atau 24, dan paling banyak 40. Tiang ditanam dengan pangkal di bawah, seperti pohonnya dahulu tumbuh.' },
+    specs: [{ en: '{posts} posts', id: '{posts} tiang' }, { en: '4 rows', id: '4 baris' }, { en: '2.5 m apart', id: 'Jarak 2,5 m' }],
+  },
+  {
+    id: 'tameh_raja', cat: 'bawah', name: 'Tameh Raja & Tameh Putroe', alias: 'Tiang raja dan tiang putri', en: { en: 'King and queen posts', id: 'Tiang raja dan tiang putri' },
+    explode: [0, 0, 0], anchor: [-1.25, 4.6, 1.25], focusDir: [0.4, 0.3, 1],
+    desc: { en: 'Two named posts beside the main bedroom: the tameh raja on the north side and the tameh putroe on the south.', id: 'Dua tiang bernama di sisi kamar tidur utama: tameh raja di sisi utara dan tameh putroe di sisi selatan.' },
+    fn: { en: 'They mark the boundary between the bedrooms and the galleries.', id: 'Keduanya menandai batas antara kamar-kamar tidur dan serambi.' },
+    meaning: { en: 'The most honoured posts of the house. A small piece of gold is set into the queen post.', id: 'Tiang yang paling dimuliakan di rumah. Sepotong kecil emas disisipkan ke dalam tiang putri.' },
+    specs: [{ en: '2 posts', id: '2 tiang' }, { en: 'North and south', id: 'Utara dan selatan' }],
+  },
+  {
+    id: 'lhue', cat: 'bawah', name: 'Lhue', alias: 'Balok lantai', en: { en: 'Floor beams', id: 'Balok lantai' },
+    explode: [0, 0.8, 0], anchor: [-5, 2.1, 3.9], focusDir: [-0.4, -0.2, 1],
+    desc: { en: 'Beams along the rows of posts with joists across them, at two levels: one for the galleries and one, higher, for the middle.', id: 'Balok di sepanjang baris tiang dengan gelagar melintang di atasnya, pada dua ketinggian: satu untuk serambi dan satu, lebih tinggi, untuk bagian tengah.' },
+    fn: { en: 'They carry the floor boards. The whole frame is pegged together without nails.', id: 'Rangka ini memikul papan lantai. Seluruh rangka dirakit dengan pasak tanpa paku.' },
+    meaning: { en: 'Pegged joints let the frame move with the ground, so the house rides out earthquakes.', id: 'Sambungan berpasak membuat rangka dapat bergerak mengikuti tanah, sehingga rumah tahan terhadap gempa.' },
+    specs: [{ en: 'Pegged, no nails', id: 'Berpasak, tanpa paku' }],
+  },
+  {
+    id: 'reunyeun', cat: 'bawah', name: 'Reunyeun', alias: 'Tangga', en: { en: 'Front stair', id: 'Tangga depan' },
+    explode: [0, 0, 2.5], anchor: [0.6, 1.6, 5.2], focusDir: [0.7, 0.3, 1],
+    desc: { en: 'A steep wooden stair up to the door of the front gallery.', id: 'Tangga kayu yang curam menuju pintu serambi depan.' },
+    fn: { en: 'The way into the house. The front gallery is also called seuramoe reunyeun, “the gallery with the stair”.', id: 'Jalan masuk ke rumah. Serambi depan juga disebut seuramoe reunyeun, “serambi bertangga”.' },
+    meaning: { en: 'It enters on the long side of the house, never at the gable ends.', id: 'Tangga masuk di sisi panjang rumah, tidak pernah di ujung gunungan.' },
+    specs: [{ en: 'Door 1.8 × 0.8 m', id: 'Pintu 1,8 × 0,8 m' }],
+  },
+  {
+    id: 'yup_moh', cat: 'bawah', name: 'Yup Moh', alias: 'Kolong rumah', en: { en: 'Under the house', id: 'Kolong rumah' },
+    explode: [0, 0, 0], anchor: [-3.75, 1.1, 0.3], focusDir: [-0.4, 0.2, 1],
+    desc: { en: 'The shaded ground between the posts, with a bench and a loom.', id: 'Tanah teduh di antara tiang-tiang, dengan sebuah bangku dan alat tenun.' },
+    fn: { en: 'Children play here, women weave songket, and neighbours stop to talk. Things are stored here too.', id: 'Anak-anak bermain di sini, kaum perempuan menenun songket, dan tetangga singgah bercakap. Barang-barang juga disimpan di sini.' },
+    meaning: { en: 'Lifting the house was also about keeping the living floor clean: the house is raised on posts in keeping with the Islamic idea of purity.', id: 'Mengangkat rumah juga demi menjaga lantai hunian tetap bersih: rumah dibangun berpanggung sejalan dengan konsep suci dalam Islam.' },
+    specs: [{ en: 'Floor +2.5 m', id: 'Lantai +2,5 m' }],
+  },
+  {
+    id: 'seuramoe_keue', cat: 'ruang', name: 'Seuramoe Keue', alias: 'Serambi depan', en: { en: 'Front gallery', id: 'Serambi depan' },
+    explode: [0, 1.6, 2], anchor: [3.75, 4.2, 3.95], focusDir: [0.4, 0.2, 1],
+    desc: { en: 'A long open room along the whole front of the house, with the door and small windows, behind a carved front wall.', id: 'Ruang terbuka memanjang di sepanjang bagian depan rumah, dengan pintu dan jendela-jendela kecil, di balik dinding depan yang berukir.' },
+    fn: { en: 'The men’s and public part of the house: guests are received here, boys sleep here, and children learn to recite the Qur’an. At weddings and feasts the guests eat here.', id: 'Bagian rumah untuk kaum lelaki dan bersifat publik: tamu diterima di sini, anak laki-laki tidur di sini, dan anak-anak belajar mengaji. Saat perkawinan dan kenduri, tamu dijamu makan di sini.' },
+    meaning: { en: 'The front of the house belongs to the outside world; the further in, the more private.', id: 'Bagian depan rumah milik dunia luar; makin ke dalam, makin privat.' },
+    specs: [{ en: '12.5 × 2.5 m', id: '12,5 × 2,5 m' }, { en: 'Windows 1 × 0.6 m', id: 'Jendela 1 × 0,6 m' }],
+  },
+  {
+    id: 'rumoh_inong', cat: 'ruang', name: 'Rumoh Inong', alias: 'Seuramoe teungoh', en: { en: 'Middle part', id: 'Bagian tengah' },
+    explode: [0, 3.2, 0], anchor: [-4.2, 4.4, 0], focusDir: [0.3, 0.6, 1],
+    desc: { en: 'The core of the house, half a metre higher than the galleries: the jurei, the parents’ bedroom at the west end, the anjong at the east end, and a passage (rambat) between them.', id: 'Inti rumah, setengah meter lebih tinggi daripada serambi: jurei, kamar orang tua di ujung barat, anjong di ujung timur, dan lorong (rambat) di antara keduanya.' },
+    fn: { en: 'The bedrooms of the household. The anjong is for the daughter of the house; newly-weds use one of the rooms.', id: 'Kamar-kamar tidur keluarga. Anjong untuk anak gadis; pasangan pengantin baru memakai salah satu kamar.' },
+    meaning: { en: 'Rumoh inong means “mother house”. A house passes to the daughters, and a married couple lives in her parents’ house until their first child is born.', id: 'Rumoh inong berarti “rumah ibu”. Rumah diwariskan kepada anak perempuan, dan pasangan yang menikah tinggal di rumah orang tua sang istri hingga anak pertama lahir.' },
+    specs: [{ en: 'Floor +0.5 m higher', id: 'Lantai 0,5 m lebih tinggi' }, { en: '2 bedrooms', id: '2 kamar tidur' }],
+  },
+  {
+    id: 'seuramoe_likot', cat: 'ruang', name: 'Seuramoe Likot', alias: 'Serambi belakang', en: { en: 'Back gallery', id: 'Serambi belakang' },
+    explode: [0, 1.6, -2], anchor: [4.6, 3.6, -3.8], focusDir: [0.4, 0.4, -1],
+    desc: { en: 'The long room at the back, with the hearth and the water jars.', id: 'Ruang memanjang di bagian belakang, dengan tungku dan tempayan air.' },
+    fn: { en: 'The women’s part of the house: cooking, eating together as a family, weaving and embroidery, and receiving women guests.', id: 'Bagian rumah untuk kaum perempuan: memasak, makan bersama keluarga, menenun dan menyulam, serta menerima tamu perempuan.' },
+    meaning: { en: 'It is the most private part. When more room is needed a separate kitchen house (rumoh dapu) is built on behind.', id: 'Inilah bagian yang paling privat. Bila ruang perlu ditambah, rumah dapur tersendiri (rumoh dapu) dibangun di belakangnya.' },
+    specs: [{ en: '12.5 × 2.5 m', id: '12,5 × 2,5 m' }, { en: 'Hearth', id: 'Tungku' }],
+  },
+  {
+    id: 'rangka_atap', cat: 'atap', name: 'Rangka Atap', alias: 'Kuda-kuda dan kasau', en: { en: 'Roof frame', id: 'Rangka atap' }, lift: true,
+    explode: [0, 5, 0], anchor: [3, 6.2, 2],
+    desc: { en: 'Rafters on a ridge beam and on the tall middle posts, with battens across them.', id: 'Kasau di atas balok bubungan dan tiang-tiang tengah yang tinggi, dengan reng melintang di atasnya.' },
+    fn: { en: 'Carries the thatch. The roof is tied on with rope so that in a fire it can be cut loose and pulled down.', id: 'Memikul atap rumbia. Atap diikat dengan tali sehingga saat kebakaran dapat diputus dan dijatuhkan.' },
+    meaning: { en: 'Losing the roof could save the house: the fire was taken away from the timber below.', id: 'Kehilangan atap dapat menyelamatkan rumah: api dijauhkan dari kayu di bawahnya.' }, interp: true,
+    specs: [{ en: '{rafters} rafters', id: '{rafters} kasau' }, { en: 'Tied on', id: 'Diikat' }],
+  },
+  {
+    id: 'atap', cat: 'atap', name: 'Atap Rumbia', alias: 'Atap pelana', en: { en: 'Thatched roof', id: 'Atap rumbia' }, roof: true, lift: true,
+    explode: [0, 6.6, 0], anchor: [0, 8.2, 2.2],
+    desc: { en: 'A steep gable roof thatched with leaves of the sago palm, its ridge running east–west.', id: 'Atap pelana yang curam dari daun rumbia, dengan bubungan membujur dari timur ke barat.' },
+    fn: { en: 'Sheds the heavy rain and shades the walls. Today many houses have zinc roofs instead.', id: 'Mengalirkan hujan lebat dan meneduhi dinding. Kini banyak rumah beratap seng sebagai gantinya.' },
+    meaning: { en: 'The east–west ridge puts the gables towards the qibla: the west, the direction of Mecca.', id: 'Bubungan yang membujur timur–barat menempatkan gunungan ke arah kiblat: barat, arah Mekkah.' },
+    specs: [{ en: 'Ridge +8.7 m', id: 'Bubungan +8,7 m' }, { en: 'Sago-palm thatch', id: 'Atap rumbia' }],
+  },
+  {
+    id: 'tulak_angen', cat: 'atap', name: 'Tulak Angen', alias: 'Tolak angin', en: { en: 'Gable screens', id: 'Tolak angin' }, lift: true,
+    explode: [0, 5.6, 0], anchor: [6.8, 6.0, 0], focusDir: [1, 0.2, 0.3],
+    desc: { en: 'The triangular boards closing each end of the roof, carved in openwork.', id: 'Papan segitiga yang menutup tiap ujung atap, diukir tembus.' },
+    fn: { en: 'Air passes through the carving, so the space under the roof stays ventilated.', id: 'Udara mengalir melalui ukirannya, sehingga ruang di bawah atap tetap berangin.' },
+    meaning: { en: 'Carving on the gables, windows and boards uses plant, geometric and natural motifs and verses of the Qur’an. It is added after the house is built.', id: 'Ukiran pada gunungan, jendela, dan papan memakai motif tumbuhan, geometris, alam, dan ayat-ayat Al-Qur’an. Ukiran ditambahkan setelah rumah selesai dibangun.' },
+    specs: [{ en: '2 gables', id: '2 gunungan' }, { en: 'Openwork carving', id: 'Ukiran tembus' }],
+  },
+];

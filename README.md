@@ -47,6 +47,7 @@ src/
     rumah-betang/       a Dayak Ngaju longhouse with its kitchen, the monuments to the dead and the river
     mbaru-niang/        Wae Rebo: seven cone houses in an open circle around the compang
     rumah-bolon/        a Batak Toba huta: houses facing their rice barns inside a bamboo-planted rampart
+    krong-bade/         a rumoh Aceh in its yard, with the krong padé granary and a roofed gateway
   lib/
     geometry.js · kit.js  procedural building blocks
     utils.js            shadcn `cn` helper

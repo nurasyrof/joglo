@@ -19,8 +19,8 @@ const range = (a, b, step) => Array.from({ length: Math.floor((b - a) / step) + 
 export const HOUSES = [
   {
     id: 'krong-bade', name: 'Rumah Krong Bade', local: 'Rumoh Aceh', island: 'Sumatra', province: { en: 'Aceh', id: 'Aceh' }, people: { en: 'Acehnese', id: 'Aceh' },
-    blurb: { en: 'A long timber house raised on round posts, entered by a stair at the front.', id: 'Rumah kayu memanjang di atas tiang-tiang bulat, dimasuki lewat tangga di bagian depan.' },
-    status: 'soon',
+    blurb: { en: 'A long timber house on round posts, lying east–west towards the qibla.', id: 'Rumah kayu memanjang di atas tiang-tiang bulat, membujur timur–barat ke arah kiblat.' },
+    status: 'ready', load: () => import('./krong-bade/index.js'),
     art: `<path d="M16 34 60 8l44 26Z"/><rect x="24" y="34" width="72" height="16"/>${stilts(range(28, 92, 8), 50)}<path d="M40 50 32 66" stroke="currentColor" stroke-width="2"/>`,
   },
   {
